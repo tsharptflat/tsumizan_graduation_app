@@ -283,3 +283,10 @@
 ### 画面遷移図
 Figma:
 https://www.figma.com/design/jpYQM16kqOQ2w9d3J5h353/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=2-1380&t=TQUh9pKaQL3aBRBF-4
+
+---
+
+### ER図
+https://gyazo.com/3b77239678c7267f24432a169892b937
+
+---
