@@ -1,0 +1,2 @@
+class GameLibrariesController < ApplicationController
+end
