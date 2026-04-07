@@ -214,6 +214,9 @@ GEM
       rack-openid (~> 1.4)
       ruby-openid (~> 2.1, >= 2.1.8)
       version_gem (~> 1.1, >= 1.1.8)
+    omniauth-rails_csrf_protection (2.0.1)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     omniauth-steam (1.0.6)
       multi_json
       omniauth-openid
@@ -435,6 +438,7 @@ DEPENDENCIES
   factory_bot_rails
   jbuilder
   jsbundling-rails
+  omniauth-rails_csrf_protection
   omniauth-steam
   pg (~> 1.1)
   pry-rails
@@ -532,6 +536,7 @@ CHECKSUMS
   nokogiri (1.19.2-x86_64-linux-musl) sha256=93128448e61a9383a30baef041bf1f5817e22f297a1d400521e90294445069a8
   omniauth (2.1.4) sha256=42a05b0496f0d22e1dd85d42aaf602f064e36bb47a6826a27ab55e5ba608763c
   omniauth-openid (2.0.2) sha256=dabfe9f319ec2b23044d7aac4a7d9e55b6b82201dbd015a8bc83657db316dec1
+  omniauth-rails_csrf_protection (2.0.1) sha256=c6e3204d7e3925bb537cb52d50fdfc9f05293f1a9d87c5d4ab4ca3a39ba8c32d
   omniauth-steam (1.0.6) sha256=30aec81aad72d739887de50822d58685650616baf8e78bb418004c710e8d98e2
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
   parallel (1.28.0) sha256=33e6de1484baf2524792d178b0913fc8eb94c628d6cfe45599ad4458c638c970
