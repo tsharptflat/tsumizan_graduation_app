@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_05_142757) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_09_144042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -97,6 +97,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_05_142757) do
     t.string "steam_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "uid"
     t.index ["steam_id"], name: "index_users_on_steam_id", unique: true
   end
 
