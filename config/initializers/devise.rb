@@ -1,4 +1,3 @@
-config.omniauth :steam, 
-                "APP_ID", 
-                "APP_SECRET",
-                callback_url: "CALLBACK_URL"
+Devise.setup do |config|
+  config.omniauth :steam, ENV['STEAM_WEB_API_KEY']
+end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "omniauth_callbacks/steam"
   root "static_pages#top"
 
   resource :user, only: %i[show]
