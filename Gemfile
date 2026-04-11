@@ -45,6 +45,8 @@ gem 'slim-rails'
 
 gem 'cloudinary'
 
+gem 'devise'
+
 gem 'omniauth-steam'
 gem 'omniauth-rails_csrf_protection'
 
