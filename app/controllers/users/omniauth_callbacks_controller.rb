@@ -2,6 +2,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 skip_before_action :verify_authenticity_token, only: :steam
 
   def steam
+    logger.debug "--- OmniAuth Auth Hash ---"
+    logger.debug request.env['omniauth.auth'].inspect
     @user = User.from_omniauth(request.env['omniauth.auth'])
 
     if @user.persisted?
