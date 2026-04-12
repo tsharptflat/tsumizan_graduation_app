@@ -5,12 +5,10 @@ skip_before_action :verify_authenticity_token, only: :steam
     @user = User.from_omniauth(request.env['omniauth.auth'])
 
     if @user.persisted?
-      session[:user_id] = @user.id
-      flash[:notice] = 'サインインに成功しました'
-      redirect_to user_path(@user)
+      sign_in(:user, @user)
+      redirect_to after_sign_in_path_for(@user)
     else
-      flash[:alert] = 'サインインに失敗しました'
-      redirect_to root_path
+      redirect_to root_path, alert: @user.errors.full_messages.join("\n")
     end
   end
 
