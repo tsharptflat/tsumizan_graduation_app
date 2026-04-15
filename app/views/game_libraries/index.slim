@@ -1,7 +1,7 @@
-- @user_game_libraries.each do |game|
+- @user_game_libraries.each do |library|
     .game
       .game-info
         .game-name
-          = game['name']
+          = library.game.game_title
         .game-playtime
-          = "プレイ時間: #{(game['playtime_forever'] / 60.0).round(2)}時間"
+          = "プレイ時間: #{(library.minutes_played / 60.0).round(2)}時間"

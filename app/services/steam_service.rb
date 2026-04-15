@@ -11,7 +11,8 @@ class SteamService
       query: {
         key: @api_key,
         steamid: steam_id,
-        include_appinfo: true
+        include_appinfo: true,
+        include_played_free_games: true
       }
     }
     response = self.class.get('/IPlayerService/GetOwnedGames/v1/', options)
