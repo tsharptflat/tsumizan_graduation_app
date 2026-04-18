@@ -9,9 +9,9 @@ class SteamApiService
       filters: 'price_overview'
     })
 
-    data = response.parsed_response.dig(steam_app_id.to_s, 'data', 'price_overview', 'final')
-    return nil unless data
+    data = response.parsed_response.dig(steam_app_id.to_s, 'data')
+    return nil unless data.is_a?(Hash)
 
-    data / 100.0
+    data.dig('price_overview', 'final')
   end
 end
