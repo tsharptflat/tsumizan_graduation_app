@@ -18,7 +18,7 @@ class SteamService
     response = self.class.get('/IPlayerService/GetOwnedGames/v1/', options)
 
     if response.success?
-      response.parsed_response['response']['games'] || []
+      response.parsed_response.dig('response', 'games') || []
     else
       []
     end

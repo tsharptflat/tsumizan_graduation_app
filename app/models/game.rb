@@ -13,4 +13,10 @@ class Game < ApplicationRecord
     end
     game
   end
+
+  def self.update_price_from_steam_spy(steam_app_id)
+    steam_spy_service = SteamSpyService.new
+    game_info = steam_spy_service.get_game_info(steam_app_id)
+    update(price: game_info['price'])
+  end
 end
