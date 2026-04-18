@@ -9,6 +9,8 @@ class GameLibrariesController < ApplicationController
       library = current_user.user_game_libraries.find_or_initialize_by(game_id: game.id)
       library.minutes_played = data['playtime_forever'] || 0
       library.save!
+
+      UpdateGamePriceJob.perform_now(game.steam_app_id) if game.price.nil?
     end
     @user_game_libraries = current_user.user_game_libraries.includes(:game)
   end
