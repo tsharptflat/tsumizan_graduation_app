@@ -1,32 +1,80 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
+#character_type
 character_type = CharacterType.find_or_create_by!(name: 'いらすと子') do |ct|
   ct.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
 end
 
-character_text_condition = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
-  ctc.min_price = 10000
+#総額ごとのconditions
+condition_show_min = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
+  ctc.min_price = 0
+  ctc.max_price = 0
+end
+
+condition_show_low = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
+  ctc.min_price = 1
+  ctc.max_price = 5000
+end
+
+condition_show_med = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
+  ctc.min_price = 5001
+  ctc.max_price = 10000
+end
+
+condition_show_high = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
+  ctc.min_price = 10001
   ctc.max_price = 30000
 end
 
-character_expression = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
+condition_show_max = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1) do |ctc|
+  ctc.min_price = 30001
+  ctc.max_price = nil
+end
+
+#表情差分
+expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
   ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
 end
 
-CharacterText.find_or_create_by!(character_text_condition_id: character_type_condition.id, character_expression_id: character_expression.id) do |ct|
-  ct.text = 'テストですよ！'
+expression_happy = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'happy') do |ce|
+  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_4_laugh_nkgkla.png'
 end
 
-user = User.find(3)
+expression_surprised = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'surprised') do |ce|
+  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086276/business_woman2_3_surprise_ss4wsg.png'
+end
 
+expression_disappointed = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'disappointed') do |ce|
+  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086276/business_woman2_4_think_cqlpap.png'
+end
+
+expression_shock = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'shock') do |ce|
+  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman2_2_shock_nmiaai.png'
+end
+
+#テキスト
+CharacterText.find_or_create_by!(character_text_condition_id: condition_show_min.id, character_expression_id: expression_happy.id) do |ct|
+  ct.text = '積みゲーなし！素晴らしいですね！'
+end
+
+CharacterText.find_or_create_by!(character_text_condition_id: condition_show_low.id, character_expression_id: expression_neutral.id) do |ct|
+  ct.text = 'いい消化状況ですね！増やさないように注意していきましょう！'
+end
+
+CharacterText.find_or_create_by!(character_text_condition_id: condition_show_med.id, character_expression_id: expression_neutral.id) do |ct|
+  ct.text = '少し積んでいるゲームもあるようですね、次にどれをプレイしていきますか？'
+end
+
+CharacterText.find_or_create_by!(character_text_condition_id: condition_show_high.id, character_expression_id: expression_disappointed.id) do |ct|
+  ct.text = '少し積みゲーが多いようですね…ここからプレイしていきましょう！'
+end
+
+CharacterText.find_or_create_by!(character_text_condition_id: condition_show_max.id, character_expression_id: expression_shock.id) do |ct|
+  ct.text = '…'
+end
+
+#ユーザー指定
+user = User.find_by(uid: '76561198369759270')
+
+#ユーザーキャラ
 UserCharacter.find_or_create_by!(user_id: user.id, character_type_id: character_type.id) do |uc|
   uc.name = 'ユーザー命名'
   uc.friendship_point = 0
