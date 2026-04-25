@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_22_043139) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_25_041708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,10 +26,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_22_043139) do
 
   create_table "character_text_conditions", force: :cascade do |t|
     t.bigint "character_type_id", null: false
-    t.integer "page", null: false
+    t.string "page", null: false
     t.integer "friendship_level", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "min_price"
+    t.integer "max_price"
     t.index ["character_type_id", "page", "friendship_level"], name: "idx_char_text_cond_on_type_page_level", unique: true
     t.index ["character_type_id"], name: "index_character_text_conditions_on_character_type_id"
   end
