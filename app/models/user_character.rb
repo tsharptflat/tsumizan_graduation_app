@@ -5,4 +5,10 @@ class UserCharacter < ApplicationRecord
 
   validates :name, presence: true
   validates :friendship_point, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  def self.find_or_create_default_character(user)
+    find_or_create_by!(user_id: user.id, character_type_id: CharacterType.find_by(name: 'いらすと子').id) do |uc|
+      uc.name = '仮'
+    end
+  end
 end

@@ -6,9 +6,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       sign_in(:user, @user)
-      UserCharacter.find_or_create_by!(user_id: @user.id, character_type_id: CharacterType.find_by(name: 'いらすと子').id) do |uc|
-        uc.name = '仮'
-      end
+      UserCharacter.find_or_create_default_character(@user)
       redirect_to after_sign_in_path_for(@user)
     else
       redirect_to root_path, alert: @user.errors.full_messages.join("\n")
