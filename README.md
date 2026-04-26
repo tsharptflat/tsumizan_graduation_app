@@ -178,7 +178,7 @@
 - SteamworksWebAPIを使用したライブラリおよびゲーム定価の取得
 - 積みゲーの定義、および積みゲーリストとその定価総額の提示
 - 次にプレイするゲームの提案機能
-- オリジナルキャラクターによる積み状況や総額等を受けたフィードバック機能
+- キャラクターによる積み状況や総額等を受けたフィードバック機能
 
 ### 本リリースで作る機能
 - 積みゲーの消化履歴や、積んでからクリアまでの時間などが確認できる 積みゲーリザルト機能
@@ -249,7 +249,7 @@
 ### 10-1. 使用予定の技術
 
 - フレームワーク：Ruby on Rails
-- DB：MySQL
+- DB：PostgreSQL
 - デプロイ先：Render
 - 使用予定ライブラリ（Gem）：
   - rspec-rails
@@ -260,9 +260,19 @@
   - bullet
   - annotate
   - slim
+  - devise
+  - cloudinary
+  - omniauth-steam
+  - omniauth-rails_csrf_protection
+  - rexml
+  - httparty
 
 - OpenID
 - Steamworks WebAPI
+- Steam Store API（非公式・コミュニティで広く利用されているエンドポイント）
+  - ゲームの定価取得に使用
+  - 公式ドキュメントは存在しないが、多くの開発者に利用されている
+
 
 ---
 
