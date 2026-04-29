@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   def after_sign_in_path_for(resource)
-    loading_path
+    loading_user_game_libraries_path
   end
 
   def after_sign_out_path_for(resource_or_scope)
