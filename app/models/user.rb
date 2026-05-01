@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   devise :timeoutable, :omniauthable, omniauth_providers: [ :steam ]
 
+  TOP_PAGE_USER_RANKINGS = 3
+
   def self.from_omniauth(auth)
     user = find_or_initialize_by(provider: auth.provider, uid: auth.uid)
     user.name = auth.info.nickname
