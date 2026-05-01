@@ -2,9 +2,45 @@
 @import 'bootstrap-icons/font/bootstrap-icons';
 
 nav {
-  background-color: #1A2838;
+  background-color: #171D25;
 }
 
 body {
-  background-color: #2D3238;
+  background-color: #1B2838;
+}
+
+.btn-color {
+    background-color: #67707B;
+}
+
+.price-display {
+  font-size: 10rem;
+}
+
+.character-fixed {
+  position: fixed;
+  bottom: 10rem;
+  right: 10rem;
+}
+
+.character-size{
+  width: 400px;
+  height: 400px;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #131C27;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+// 吹き出しの三角部分
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -18px;  // 三角の位置
+  left: 20px;
+  border: 10px solid transparent;
+  border-top-color: #131C27;
 }
