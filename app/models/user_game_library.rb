@@ -35,4 +35,8 @@ class UserGameLibrary < ApplicationRecord
   def self.total_price(user)
     user.user_game_libraries.unplayed.joins(:game).sum('games.price')
   end
+
+  def self.total_games_count(user)
+    user.user_game_libraries.unplayed.joins(:game).count
+  end
 end

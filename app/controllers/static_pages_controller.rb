@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
-  def show
+  def top
+    @users = User.all.limit(User::TOP_PAGE_USER_RANKINGS)
   end
 end
