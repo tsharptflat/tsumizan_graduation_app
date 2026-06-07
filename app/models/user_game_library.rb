@@ -30,6 +30,9 @@ class UserGameLibrary < ApplicationRecord
 
       library.minutes_played = data['playtime_forever'] || 0
       library.last_played_at = rtime && rtime > 0 ? Time.at(rtime) : nil
+      if library.unplayed_date.nil? && library.last_played_at.present? && library.minutes_played <= UNPLAYED_THRESHOLD_MINUTES && library.cleared_date.nil? && Time.current - library.last_played_at >= 1.month
+        library.unplayed_date = library.last_played_at + 1.month
+      end
       library.save!
     end
     UpdateGamePriceJob.perform_now(game.steam_app_id) if game.price.nil?
