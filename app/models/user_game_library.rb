@@ -14,6 +14,8 @@ class UserGameLibrary < ApplicationRecord
   scope :not_cleared, -> { where(cleared_date: nil)}
   scope :cleared, -> { where.not(cleared_date: nil)}
   scope :unplayed, -> { where('minutes_played <= ?', UNPLAYED_THRESHOLD_MINUTES).merge(not_recently_played).merge(not_cleared) }
+  scope :cleared_after_unplayed, -> { where.not(unplayed_date: nil).merge(cleared)}
+
   scope :cheapest_games, -> { joins(:game).merge(Game.order(price: 'asc')).limit(CHEAPEST_GAMES_LIMIT) }
 
   def self.recommend_3
