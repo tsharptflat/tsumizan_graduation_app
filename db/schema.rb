@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_01_140731) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_18_125918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_01_140731) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_character_types_on_name", unique: true
+  end
+
+  create_table "game_genre_types", force: :cascade do |t|
+    t.integer "genre_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "game_genres", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "game_genre_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_genre_type_id"], name: "index_game_genres_on_game_genre_type_id"
+    t.index ["game_id"], name: "index_game_genres_on_game_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -111,6 +127,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_01_140731) do
   add_foreign_key "character_text_conditions", "character_types"
   add_foreign_key "character_texts", "character_expressions"
   add_foreign_key "character_texts", "character_text_conditions"
+  add_foreign_key "game_genres", "game_genre_types"
+  add_foreign_key "game_genres", "games"
   add_foreign_key "user_characters", "character_types"
   add_foreign_key "user_characters", "outfit_items"
   add_foreign_key "user_characters", "users"
