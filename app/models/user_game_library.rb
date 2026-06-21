@@ -38,6 +38,7 @@ class UserGameLibrary < ApplicationRecord
       library.save!
     end
     UpdateGamePriceJob.perform_now(game.steam_app_id) if game.price.nil?
+    UpdateGameGenreJob.perform_now(game.steam_app_id) if game.game_genres.empty?
   end
 
   def self.total_price(user)
@@ -47,4 +48,10 @@ class UserGameLibrary < ApplicationRecord
   def self.total_games_count(user)
     user.user_game_libraries.unplayed.joins(:game).count
   end
-end
+
+  def self.unplayed_game_genres(user)
+    libraries = user.user_game_libraries.unplayed.includes(game: :game_genre_types)
+    genre_names = libraries.flat_map { |library| library.game.game_genre_types.map { |genre| genre.name } }
+    genre_names.tally.sort_by{ |x| x[1] }
+  end
+  end

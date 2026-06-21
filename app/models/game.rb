@@ -1,6 +1,8 @@
 class Game < ApplicationRecord
   has_many :user_game_libraries, dependent: :destroy
   has_many :users, through: :user_game_libraries
+  has_many :game_genres
+  has_many :game_genre_types, through: :game_genres
 
   validates :game_title, presence: true
   validates :steam_app_id, presence: true, uniqueness: true

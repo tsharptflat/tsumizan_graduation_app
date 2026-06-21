@@ -5,6 +5,12 @@ class StatisticsController < ApplicationController
     @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)# .limit(UserGameLibrary::TSUMIGE_LIST_LIMIT)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
     @cleared_after_unplayed_games = current_user.user_game_libraries.cleared_after_unplayed.includes(:game)
+
+    game_genres = UserGameLibrary.unplayed_game_genres(current_user)
+    max_count = game_genres.map{ |x| x[1] }.max
+    min_count = game_genres.map{ |x| x[1] }.min
+    @most_unplayed_game_genres = game_genres.select{ |x| x[1] == max_count }
+    @least_unplayed_game_genres = game_genres.select{ |x| x[1] == min_count }
   end
 
   def update_cleared_games
