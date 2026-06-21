@@ -23,6 +23,19 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
 
 div.card.text-white.w-50.border-0.mx-auto.mt-5
   div.card-header.card-header-color.pb-0
+    p.p-1 逆レコメンド
+  div.card-body.card-body-color.d-flex
+    - @most_unplayed_game_genres.each do |genre|
+      p.me-4 一番詰んでるゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
+      p.me-4
+        = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
+    - @least_unplayed_game_genres.each do |genre|
+      p.me-4 一番詰んでないゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
+      p.me-4
+        = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
+
+div.card.text-white.w-50.border-0.mx-auto.mt-5
+  div.card-header.card-header-color.pb-0
     span.p-1 積みゲーリスト
   div.d-flex.justify-content-between.px-3.card-header-color
     span.col-6 ゲームタイトル
