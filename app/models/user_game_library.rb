@@ -49,9 +49,9 @@ class UserGameLibrary < ApplicationRecord
     user.user_game_libraries.unplayed.joins(:game).count
   end
 
-  def self.most_unplayed_game_genres(user)
+  def self.unplayed_game_genres(user)
     libraries = user.user_game_libraries.unplayed.includes(game: :game_genre_types)
     genre_names = libraries.flat_map { |library| library.game.game_genre_types.map { |genre| genre.name } }
-    genre_names.tally.sort_by{ |x| x[1] }.last
+    genre_names.tally.sort_by{ |x| x[1] }
   end
   end
