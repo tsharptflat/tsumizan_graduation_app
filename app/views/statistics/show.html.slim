@@ -4,6 +4,7 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
   div.card-body.card-body-color.d-flex
     p.me-4 積みゲー総額: #{number_to_currency(@total_price, precision: 0, unit: '¥')}
     p.me-4 積みゲー本数: #{@unplayed_games.count}
+    p.me-4 全体消化率: #{@cleared_game_count_rate.round(2)}%
 
 div.card.text-white.w-50.border-0.mx-auto.mt-5
   div.card-header.card-header-color.pb-0

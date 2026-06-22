@@ -54,4 +54,8 @@ class UserGameLibrary < ApplicationRecord
     genre_names = libraries.flat_map { |library| library.game.game_genre_types.map { |genre| genre.name } }
     genre_names.tally.sort_by{ |x| x[1] }
   end
+
+  def self.cleared_game_count_rate(user)
+    user.user_game_libraries.where.not(cleared_date: nil).count.to_f / user.user_game_libraries.count.to_f * 100
   end
+end
