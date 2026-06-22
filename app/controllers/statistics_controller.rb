@@ -6,6 +6,8 @@ class StatisticsController < ApplicationController
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
     @cleared_after_unplayed_games = current_user.user_game_libraries.cleared_after_unplayed.includes(:game)
 
+    @cleared_game_count_rate = UserGameLibrary.cleared_game_count_rate(current_user)
+
     game_genres = UserGameLibrary.unplayed_game_genres(current_user)
     max_count = game_genres.map{ |x| x[1] }.max
     min_count = game_genres.map{ |x| x[1] }.min
