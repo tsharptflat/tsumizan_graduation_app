@@ -37,8 +37,8 @@ class UserGameLibrary < ApplicationRecord
       end
       library.save!
     end
-    UpdateGamePriceJob.perform_now(game.steam_app_id) if game.price.nil?
-    UpdateGameGenreJob.perform_now(game.steam_app_id) if game.game_genres.empty?
+    UpdateGamePriceJob.perform_later(game.steam_app_id) if game.price.nil?
+    UpdateGameGenreJob.perform_later(game.steam_app_id) if game.game_genres.empty?
   end
 
   def self.total_price(user)

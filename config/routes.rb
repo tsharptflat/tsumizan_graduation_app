@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  require "sidekiq/web" # require the web UI
+  mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+  
   devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
