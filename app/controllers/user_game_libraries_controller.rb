@@ -7,6 +7,7 @@ class UserGameLibrariesController < ApplicationController
       UserGameLibrary.sync_game_playtime_and_price(current_user, data)
     end
     @user_game_libraries = current_user.user_game_libraries.includes(:game)
+    Task.check_and_update_progress!(current_user)
     redirect_to user_path
   end
 end

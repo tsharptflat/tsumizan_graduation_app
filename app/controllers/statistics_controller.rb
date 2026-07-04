@@ -27,7 +27,10 @@ class StatisticsController < ApplicationController
       @user_game_library.find(id).update!(cleared_date: Time.current)
     end
 
+    Task.check_and_update_progress!(current_user)
+
     redirect_to statistic_path, notice: 'クリア済みゲームを更新しました。'
+
   rescue #update!で例外エラーが発生したときの処理 beginが省略されている rescue単体にendは不要
     redirect_to statistic_path, alert: 'クリア済みゲームの更新に失敗しました。'
   end
