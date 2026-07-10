@@ -6,7 +6,7 @@ class TaskCondition < ApplicationRecord
     def current_value(user)
       case condition_type
       when 'tsumige'
-        UserGameLibrary.total_games_count(user)
+        UserGameLibrary.cleared_games_count(user)
       when 'playtime'
         UserGameLibrary.total_playtime_count(user)
       when 'friendship_level'

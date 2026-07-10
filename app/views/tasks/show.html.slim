@@ -1,0 +1,11 @@
+div.container
+  div.d-flex.justify-content-between.align-items-center.mb-3
+    = link_to '< 戻る', tasks_path, class: 'btn btn-secondary text-white rounded-pill px-4'
+    span = params[:id]
+
+  div.list-group
+    - @tasks.each do |task|
+      - user_task = @user_tasks_by_task_id[task.id]
+      div.list-group-item.d-flex.justify-content-between.align-items-center.py-3.text-white class=task_row_class(user_task)
+        span = task.name
+        span = "#{task.task_rewards.first.point}ポイント"

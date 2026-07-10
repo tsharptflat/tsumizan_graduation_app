@@ -21,6 +21,18 @@ body {
     background-color: #606872;
 }
 
+.task-row-pending {
+    background-color: #325C80;
+}
+
+.task-row-claimable {
+    background-color: #326E4F;
+}
+
+.task-row-claimed {
+    background-color: #4A4A4A;
+}
+
 .price-display {
   font-size: 10rem;
 }

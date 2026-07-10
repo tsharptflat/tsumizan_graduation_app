@@ -27,4 +27,10 @@ Rails.application.routes.draw do
       patch 'update_cleared_games'
     end
   end
+
+  resources :tasks, only: %i[index show] do
+    collection do
+      patch 'obtain_all_rewards'
+    end
+  end
 end

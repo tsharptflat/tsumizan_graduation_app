@@ -1,0 +1,29 @@
+div.container
+  h1 タスク
+
+  div.row.row-cols-2.g-4.mt-2
+    div.col
+      = link_to task_path('tsumige'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
+        | 積みゲー消化
+        - if @tsumige_count.to_i > 0
+          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @tsumige_count
+    div.col
+      = link_to task_path('trophies'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
+        | トロフィー獲得数
+        - if @trophies_count.to_i > 0
+          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @trophies_count
+    div.col
+      = link_to task_path('playtime'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
+        | プレイ時間？
+        - if @playtime_count.to_i > 0
+          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @playtime_count
+    div.col
+      = link_to task_path('friendship_level'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
+        | キャラ好感度
+        - if @friendship_count.to_i > 0
+          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @friendship_count
+  div.d-flex.justify-content-center.mt-4
+    = button_to obtain_all_rewards_tasks_path, method: :patch, class: "btn btn-secondary text-white w-30 py-4 rounded-4 position-relative" do
+      | 一括受取
+      - if @obtainable_user_tasks_total_count.to_i > 0
+        span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @obtainable_user_tasks_total_count
