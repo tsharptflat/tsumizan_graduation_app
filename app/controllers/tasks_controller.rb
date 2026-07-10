@@ -7,6 +7,9 @@ class TasksController < ApplicationController
     @playtime_count = obtainable_user_tasks_by_genre_count['playtime']
     @trophies_count = obtainable_user_tasks_by_genre_count['trophies']
     @friendship_count = obtainable_user_tasks_by_genre_count['friendship_level']
+
+    @user_wallet = current_user.user_wallet
+
   end
 
   def show

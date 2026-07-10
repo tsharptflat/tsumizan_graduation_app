@@ -13,6 +13,14 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to '積みゲー統計', statistic_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
+        button.btn.btn-secondary.dropdown-toggle.text-white.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
+        ul.dropdown-menu
+          li
+            = link_to '育成', '#', class: 'dropdown-item'
+            = link_to 'マイレージ交換', '#', class: 'dropdown-item'
+            = link_to 'マイレージ確認', tasks_path, class: 'dropdown-item'
+
+      div.dropdown.pe-3
         button.btn.btn-secondary.dropdown-toggle.text-white type="button" data-bs-toggle="dropdown" aria-expanded="false" #{current_user.name}
         ul.dropdown-menu
           li
