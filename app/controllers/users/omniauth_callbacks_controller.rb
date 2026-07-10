@@ -7,6 +7,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.persisted?
       sign_in(:user, @user)
       UserCharacter.find_or_create_default_character(@user)
+      UserWallet.find_or_create_wallet(@user)
       redirect_to after_sign_in_path_for(@user)
     else
       redirect_to root_path, alert: @user.errors.full_messages.join("\n")

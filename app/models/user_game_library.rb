@@ -58,4 +58,12 @@ class UserGameLibrary < ApplicationRecord
   def self.cleared_game_count_rate(user)
     user.user_game_libraries.where.not(cleared_date: nil).count.to_f / user.user_game_libraries.count.to_f * 100
   end
+
+  def self.cleared_games_count(user)
+    user.user_game_libraries.cleared.count
+  end
+
+  def self.total_playtime_count(user)
+    user.user_game_libraries.sum(:minutes_played)
+  end
 end
