@@ -13,7 +13,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :uid, presence: true, uniqueness: true
 
-  devise :timeoutable, :omniauthable, omniauth_providers: [ :steam ]
+  devise :omniauthable, omniauth_providers: [ :steam ]
 
   TOP_PAGE_USER_RANKINGS = 3
 

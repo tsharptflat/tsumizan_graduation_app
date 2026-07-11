@@ -14,6 +14,8 @@ condition_show_high = CharacterTextCondition.find_or_create_by!(character_type_i
 
 condition_show_max = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 30001, max_price: nil)
 
+condition_communicate_show = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'user_characters_show', friendship_level: 1, min_price: 0, max_price: 999999999)
+
 # 表情差分
 expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
   ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
@@ -36,20 +38,45 @@ expression_shock = CharacterExpression.find_or_create_by!(character_type_id: cha
 end
 
 # テキスト
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_min.id, character_expression_id: expression_happy.id)
-ct.update!(text: '積みゲーなし！素晴らしいですね！')
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_min.id, character_expression_id: expression_happy.id) do |ct|
+  ct.text = '積みゲーなし！素晴らしいですね！'
+end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_low.id, character_expression_id: expression_neutral.id)
-ct.update!(text: 'いい消化状況ですね！増やさないように注意していきましょう！')
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_low.id, character_expression_id: expression_neutral.id) do |ct|
+  ct.text = 'いい消化状況ですね！増やさないように注意していきましょう！'
+end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_med.id, character_expression_id: expression_neutral.id)
-ct.update!(text: '少し積んでいるゲームもあるようですね、次にどれをプレイしていきますか？')
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_med.id, character_expression_id: expression_neutral.id) do |ct|
+  ct.text = '少し積んでいるゲームもあるようですね、次にどれをプレイしていきますか？'
+end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_high.id, character_expression_id: expression_disappointed.id)
-ct.update!(text: '少し積みゲーが多いようですね…ここからプレイしていきましょう！')
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_high.id, character_expression_id: expression_disappointed.id) do |ct|
+  ct.text = '少し積みゲーが多いようですね…ここからプレイしていきましょう！'
+end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_max.id, character_expression_id: expression_shock.id)
-ct.update!(text: 'なかなかの積み具合ですね…')
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_max.id, character_expression_id: expression_shock.id) do |ct|
+  ct.text = 'なかなかの積み具合ですね…'
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちわんわん！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちジョン！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちリチャード！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちアニス！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちファブル！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
 
 # タスク(積みゲー消化)
 (1..7).each do |n|
