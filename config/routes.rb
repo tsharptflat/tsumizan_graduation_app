@@ -33,4 +33,10 @@ Rails.application.routes.draw do
       patch 'obtain_all_rewards'
     end
   end
+
+  resources :user_characters, only: %i[index show] do
+    member do
+      get 'communicate'
+    end
+  end
 end
