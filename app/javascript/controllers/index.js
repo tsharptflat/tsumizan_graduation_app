@@ -4,5 +4,8 @@
 
 import { application } from "./application"
 
+import GiftModalController from "./gift_modal_controller"
+application.register("gift-modal", GiftModalController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)

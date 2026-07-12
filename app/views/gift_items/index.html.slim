@@ -1,0 +1,32 @@
+div.container
+  div.d-flex.justify-content-between.align-items-center.mb-3
+    = link_to '< 戻る', user_character_path(@user_character), class: 'btn btn-secondary text-white rounded-pill px-4'
+
+  div.row
+    div.col-4.text-center
+      = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 200)
+
+    div#dom_id
+      p 初期表示用テキストだよ～
+
+    div.col-8
+      - @user_gift_items.each do |user_gift_item|
+        div.list-group-item.d-flex.justify-content-between.align-items-center.py-3.text-white.mb-2 data-bs-toggle="modal" data-bs-target="#gift_modal_#{user_gift_item.id}"
+          span id="gift_item_#{user_gift_item.id}" = "#{user_gift_item.gift_item.name}（所持数：#{user_gift_item.quantity}）"
+
+        div.modal.fade id="gift_modal_#{user_gift_item.id}" tabindex="-1" data-controller="gift-modal"
+          div.modal-dialog
+            div.modal-content
+              div.modal-header
+                h5.modal-title = user_gift_item.gift_item.name
+                button.btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+              div.modal-body
+                p = user_gift_item.gift_item.description
+                = form_with url: present_gift_user_character_gift_items_path(@user_character), method: :patch, data: { action: 'turbo:submit-end->gift-modal#close' } do |f|
+                  = f.hidden_field :gift_item_id, value: user_gift_item.gift_item_id
+                  div.mb-3
+                    label.form-label 個数
+                    = f.number_field :count, value: 1, min: 1, max: user_gift_item.quantity, class: 'form-control'
+                  div.d-flex.justify-content-end.gap-2
+                    button.btn.btn-secondary type="button" data-bs-dismiss="modal" やめておく
+                    = f.submit 'プレゼントする', class: 'btn btn-primary'

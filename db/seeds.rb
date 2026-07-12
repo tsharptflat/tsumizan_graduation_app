@@ -3,18 +3,30 @@ character_type = CharacterType.find_or_create_by!(name: 'いらすと子') do |c
   ct.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
 end
 
-# 総額ごとのconditions
-condition_show_min = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 0, max_price: 0)
+# 状況ごとのconditions
+## 総額
+condition_show_min = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 0, max_price: 0)
+condition_show_min.update!(friendship_level: 1)
 
-condition_show_low = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 1, max_price: 5000)
+condition_show_low = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 1, max_price: 5000)
+condition_show_low.update!(friendship_level: 1)
 
-condition_show_med = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 5001, max_price: 10000)
+condition_show_med = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 5001, max_price: 10000)
+condition_show_med.update!(friendship_level: 1)
 
-condition_show_high = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 10001, max_price: 30000)
+condition_show_high = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 10001, max_price: 30000)
+condition_show_high.update!(friendship_level: 1)
 
-condition_show_max = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'users_show', friendship_level: 1, min_price: 30001, max_price: nil)
+condition_show_max = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 30001, max_price: nil)
+condition_show_max.update!(friendship_level: 1)
 
-condition_communicate_show = CharacterTextCondition.find_or_create_by!(character_type_id: character_type.id, page: 'user_characters_show', friendship_level: 1, min_price: 0, max_price: 999999999)
+## キャラ詳細ページ用
+condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 999999999)
+condition_communicate_show.update!(friendship_level: 1)
+
+## ギフトページ用
+condition_gift_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999)
+condition_gift_show.update!(friendship_level: 1)
 
 # 表情差分
 expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
@@ -75,6 +87,10 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_com
 end
 
 ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちファブル！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとう！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
