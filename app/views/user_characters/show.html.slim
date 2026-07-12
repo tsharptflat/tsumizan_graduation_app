@@ -5,9 +5,9 @@ div.container.text-center
     = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 300)
 
   div#dom_id
-    p.text-white テキスト表示テスト
+    p.text-white #{@character_text.text}
 
   div.d-flex.justify-content-center.gap-3.mt-4
-    = link_to 'プレゼントを渡す', '#', class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
+    = link_to 'プレゼントを渡す', user_character_gift_items_path(@user_character), class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
     = link_to '話す', communicate_user_character_path, data: { turbo_stream: true }, class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
     = link_to '衣装を変更する', '#', class: 'btn btn-secondary text-white rounded-4 px-4 py-3'

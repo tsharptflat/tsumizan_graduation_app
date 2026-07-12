@@ -1,0 +1,6 @@
+= turbo_stream.replace 'dom_id' do
+  div#dom_id
+    p #{@character_text.text}
+
+= turbo_stream.replace "gift_item_#{@current_user_gift_item.id}" do 
+    span = "#{@current_user_gift_item.gift_item.name}（所持数：#{@current_user_gift_item.quantity}）"

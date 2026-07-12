@@ -1,0 +1,7 @@
+div.container
+  div.d-flex.justify-content-between.align-items-center.mb-3
+    = link_to '< 戻る', user_character_gift_items_path(@user_character), class: 'btn btn-secondary text-white rounded-pill px-4'
+
+  h1.text-white = @user_gift_item.gift_item.name
+  p.text-white = @user_gift_item.gift_item.description
+  p.text-white 所持数：#{@user_gift_item.quantity}
