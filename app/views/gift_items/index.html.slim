@@ -12,7 +12,7 @@ div.container
     div.col-8
       - @user_gift_items.each do |user_gift_item|
         div.list-group-item.d-flex.justify-content-between.align-items-center.py-3.text-white.mb-2 data-bs-toggle="modal" data-bs-target="#gift_modal_#{user_gift_item.id}"
-          span id="gift_item_#{user_gift_item.id}" = "#{user_gift_item.gift_item.name}（所持数：#{user_gift_item.quantity}）"
+          span id="gift_item_#{user_gift_item.id}" data-bs-toggle="tooltip" title="#{user_gift_item.gift_item.description} +#{user_gift_item.gift_item.friendship_point}p" data-controller="tooltip" = "#{user_gift_item.gift_item.name}（所持数：#{user_gift_item.quantity}）"
 
         div.modal.fade id="gift_modal_#{user_gift_item.id}" tabindex="-1" data-controller="gift-modal"
           div.modal-dialog
