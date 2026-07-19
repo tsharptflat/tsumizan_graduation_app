@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   require "sidekiq/web" # require the web UI
   mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
   
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
   devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
@@ -42,6 +46,12 @@ Rails.application.routes.draw do
       collection do
         patch 'present_gift'
       end
+    end
+  end
+
+  resources :contacts, only: [:new, :create] do
+    collection do
+      post 'confirm'
     end
   end
 
