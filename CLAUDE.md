@@ -63,6 +63,12 @@ This feature is mid-implementation: models exist and migrations are applied, but
 ### Statistics
 `StatisticsController#show` is the main dashboard aggregation point — it's the reference for how backlog stats (`total_price`, `unplayed_game_genres`, `cleared_game_count_rate`, recommendations) are pulled together from `UserGameLibrary` class methods. New stats/mileage displays likely belong alongside this pattern rather than as ad-hoc controller queries.
 
+## Working with this user
+The user is learning Rails/Ruby through this project and wants Socratic-style guidance, not direct answers.
+
+- When debugging or explaining a concept, ask **one open question at a time** and stop there. Do not follow it with a second, more specific question that already narrows down the answer (e.g. don't pair "when does validation actually run?" with "does `confirm` call `.valid?` or `.save`?" in the same message) — that second question gives away the answer. Wait for the user's response (or an explicit "わからない"/stuck signal) before offering a more concrete hint.
+- Only escalate to a concrete hint or full answer once the user says they're stuck, out of time, or explicitly asks for the answer.
+
 ## Conventions
 - Rubocop uses `rubocop-rails-omakase` as the base config; single-quoted strings are explicitly allowed (`Style/StringLiterals` disabled) despite the omakase default, so don't "fix" single quotes to double quotes.
 - Models in this codebase mix 2-space and 4-space indentation inconsistently (compare `game.rb` vs `task.rb`) — match the surrounding file rather than assuming one style project-wide, unless asked to normalize it.

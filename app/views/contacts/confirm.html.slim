@@ -1,0 +1,22 @@
+div.container
+  h1.text-white 入力内容の確認
+
+  div.text-white.mb-4
+    dl
+      dt お名前
+      dd = @contact.name
+
+      dt メールアドレス
+      dd = @contact.email
+
+      dt お問い合わせ内容
+      dd = simple_format(@contact.content)
+
+  = form_with model: @contact, url: contacts_path, method: :post, data: { turbo: false } do |f|
+    = f.hidden_field :name
+    = f.hidden_field :email
+    = f.hidden_field :content
+
+    div.d-flex.gap-2
+      = link_to '修正する', new_contact_path, class: 'btn btn-secondary text-white'
+      = f.submit '送信する', class: 'btn btn-primary'
