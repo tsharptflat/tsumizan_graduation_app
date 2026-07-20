@@ -12,5 +12,5 @@ div.text-center.mt-5
     = button_to "積みゲー統計へ", statistic_path, method: :get, class: "btn btn-color text-white"
 
 div.text-center.mt-5 class="twitter"
-    = link_to "https://twitter.com/share?url=#{user_path(current_user)}&text=総積み金額は#{@total_price}円！" do
+    = link_to "https://twitter.com/share?url=#{user_url}&text=総積み金額は#{@total_price}円！" do
         i class="fa-brands fa-x-twitter"
