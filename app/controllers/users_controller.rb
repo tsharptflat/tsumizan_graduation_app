@@ -5,7 +5,8 @@ class UsersController < ApplicationController
     @character_text = CharacterTextService.new.get_character_text(current_user.user_characters.first, @page, @total_price)
     @character_expression = @character_text.character_expression
 
-    set_meta_tags og: { image: ogp_image_url(id: current_user.id) }
+    set_meta_tags og: { image: ogp_image_url(id: current_user.id) },
+                  twitter: { card: 'summary_large_image', image: ogp_image_url(id: current_user.id) }
   end
 
   def destroy
