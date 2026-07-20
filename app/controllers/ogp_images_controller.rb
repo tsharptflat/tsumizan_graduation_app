@@ -7,6 +7,7 @@ class OgpImagesController < ApplicationController
         image = Rails.cache.fetch("ogp_image/#{user.id}/#{total_price}") do
             OgpImageService.new(user).generate
         end
+        response.headers["Content-Length"] = image.bytesize.to_s
         send_data image, type: 'image/png', disposition: 'inline'
     end
 end
