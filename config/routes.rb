@@ -55,6 +55,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'users/:id/ogp.png', to: 'ogp_images#show', as: 'ogp_image'
+
   get '/terms', to: 'static_pages#terms'
   get '/privacy_policy', to: 'static_pages#privacy_policy'
 end
