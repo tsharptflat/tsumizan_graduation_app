@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'users/:id/share', to: 'user_shares#show', as: 'user_share'
   get 'users/:id/ogp.png', to: 'ogp_images#show', as: 'ogp_image'
 
   get '/terms', to: 'static_pages#terms'
