@@ -41,3 +41,6 @@
 
 .env
 .env.*
+
+# Windows: marker files added to downloaded files
+*:Zone.Identifier
