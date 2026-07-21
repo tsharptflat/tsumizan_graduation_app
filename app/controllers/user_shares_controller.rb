@@ -1,4 +1,5 @@
 class UserSharesController < ApplicationController
+    allow_browser versions: {}
     skip_before_action :authenticate_user!
 
     def show
