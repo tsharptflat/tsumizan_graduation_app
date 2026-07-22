@@ -6,6 +6,8 @@ class UpdateGamePriceJob < ApplicationJob
     return unless game
 
     prices = SteamApiService.new.get_game_price_and_genre(steam_app_id)
+    return unless prices
+
     game.update(price: prices[:price])
   end
 end
