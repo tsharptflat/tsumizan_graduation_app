@@ -13,6 +13,15 @@ class StatisticsController < ApplicationController
     min_count = game_genres.map{ |x| x[1] }.min
     @most_unplayed_game_genres = game_genres.select{ |x| x[1] == max_count }
     @least_unplayed_game_genres = game_genres.select{ |x| x[1] == min_count }
+
+    cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
+    @best_cost_performance_games = cost_performance_ranking[:best]
+    @worst_cost_performance_games = cost_performance_ranking[:worst]
+  end
+
+  def cost_performance_detailed_ranking
+    cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
+    @all_cost_performance_games = cost_performance_ranking[:all]
   end
 
   def update_cleared_games

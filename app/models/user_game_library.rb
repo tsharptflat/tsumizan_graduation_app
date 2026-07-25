@@ -3,6 +3,7 @@ class UserGameLibrary < ApplicationRecord
   CHEAPEST_GAMES_LIMIT = 10
   RECOMMENDATION_COUNT = 3
   TSUMIGE_LIST_LIMIT = 10
+  COST_PERFORMANCE_RANKING_LIMIT = 3
 
   belongs_to :user
   belongs_to :game
@@ -39,6 +40,15 @@ class UserGameLibrary < ApplicationRecord
     end
     UpdateGamePriceJob.perform_later(game.steam_app_id) if game.price.nil?
     UpdateGameGenreJob.perform_later(game.steam_app_id) if game.game_genres.empty?
+  end
+
+  def self.cost_performance_ranking(user)
+    ranked = user.user_game_libraries.includes(:game).joins(:game).where.not(games: { price: nil }).where('games.price > 0').sort_by{ |library| -((library.minutes_played + 1).to_f / library.game.price)}
+    {
+      best: ranked.first(COST_PERFORMANCE_RANKING_LIMIT),
+      worst: ranked.last(COST_PERFORMANCE_RANKING_LIMIT).reverse,
+      all: ranked
+    }
   end
 
   def self.total_price(user)

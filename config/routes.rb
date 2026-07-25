@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resource :statistic, only: %i[show] do
     member do
       patch 'update_cleared_games'
+      get 'cost_performance_detailed_ranking'
     end
   end
 
