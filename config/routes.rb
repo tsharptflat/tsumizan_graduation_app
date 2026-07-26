@@ -50,6 +50,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :shop_items, only: %i[index] do
+    member do
+      patch 'purchase_item'
+    end
+  end
+
   resources :contacts, only: [:new, :create] do
     collection do
       post 'confirm'
