@@ -132,6 +132,48 @@ TaskReward.find_or_create_by!(task_id: task.id) do |tr|
   tr.point = 100
 end
 
+# ギフトアイテム
+gift_item1 = GiftItem.find_or_create_by!(name: 'test_item') do |gi|
+  gi.friendship_point = 10
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト'
+  gi.description = 'テスト用のギフトアイテムです'
+end
+
+gift_item2 = GiftItem.find_or_create_by!(name: 'test_item2') do |gi|
+  gi.friendship_point = 20
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト2'
+  gi.description = 'テスト用のギフトアイテム2です'
+end
+
+gift_item3 = GiftItem.find_or_create_by!(name: 'test_item3') do |gi|
+  gi.friendship_point = 30
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト3'
+  gi.description = 'テスト用のギフトアイテム3です'
+end
+
+# 衣装アイテム
+outfit_item1 = OutfitItem.find_or_create_by!(name: 'testoutfit') do |oi|
+  oi.description = 'テスト用のアウトフィットです'
+  oi.image_path = 'https://placehold.jp/150x150.png'
+end
+
+# ショップ商品
+ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item1.id) do |si|
+  si.price = 100.0
+end
+
+ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item2.id) do |si|
+  si.price = 200.0
+end
+
+ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item3.id) do |si|
+  si.price = 300.0
+end
+
+ShopItem.find_or_create_by!(item_type: 'OutfitItem', item_id: outfit_item1.id) do |si|
+  si.price = 50.0
+end
+
 =begin
 #ユーザー指定
 user = User.find_or_create_by(uid: '76561198369759270')

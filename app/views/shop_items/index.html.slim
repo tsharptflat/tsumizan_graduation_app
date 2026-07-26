@@ -1,0 +1,41 @@
+ div.container data-controller="shop-preview"
+  div.d-flex.justify-content-between.align-items-center.mb-3
+    = link_to '< 戻る', user_path(current_user), class: 'btn btn-secondary text-white rounded-pill px-4'
+    span#user_wallet_point.text-white = "#{current_user.user_wallet.point}P"
+
+  div.row
+    div.col-4.text-center.position-relative
+      - first_item = @shop_items.first&.item
+      = image_tag(first_item&.image_path, data: { shop_preview_target: 'image' }, alt: 'アイテム画像', width: 200)
+      p.text-white data-shop-preview-target="description" = first_item&.description
+      div.toast.fade.position-absolute.top-100.start-50.translate-middle-x.mt-2 id="purchase_toast" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000"
+        div.toast-body
+
+    div.col-8
+      ol.list-group
+        - @shop_items.each do |shop_item|
+          - owned = shop_item_owned?(shop_item, @owned_outfit_item_ids)
+          - if owned
+            li.list-group-item.d-flex.justify-content-between.align-items-center.py-3.mb-2.shop-item-owned
+              span = shop_item.item.name
+              span 所持済み
+          - else
+            li.list-group-item.d-flex.justify-content-between.align-items-center.py-3.mb-2 data-action="mouseover->shop-preview#show" data-bs-toggle="modal" data-bs-target="#shop_item_modal_#{shop_item.id}" data-shop-preview-image-param="#{shop_item.item.image_path}" data-shop-preview-description-param="#{shop_item.item.description}"
+              span = shop_item.item.name
+              span = "#{shop_item.price}P"
+
+            div.modal.fade id="shop_item_modal_#{shop_item.id}" tabindex="-1" data-controller="gift-modal"
+              div.modal-dialog
+                div.modal-content
+                  div.modal-header
+                    h5.modal-title = "#{shop_item.item.name}を交換しますか？"
+                    button.btn-close type="button" data-bs-dismiss="modal" aria-label="Close"
+                  div.modal-body
+                    = form_with url: purchase_item_shop_item_path(shop_item), method: :patch, data: { action: 'turbo:submit-end->gift-modal#close' } do |f|
+                      - if shop_item.item_type == 'GiftItem'
+                        div.mb-3
+                          label.form-label 個数
+                          = f.number_field :count, value: 1, min: 1, class: 'form-control'
+                      div.d-flex.justify-content-end.gap-2
+                        button.btn.btn-secondary type="button" data-bs-dismiss="modal" やめておく
+                        = f.submit '交換する', class: 'btn btn-primary'

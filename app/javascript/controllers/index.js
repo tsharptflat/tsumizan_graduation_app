@@ -12,3 +12,9 @@ application.register("hello", HelloController)
 
 import TooltipController from "./tooltip_controller"
 application.register("tooltip", TooltipController)
+
+import ShopPreviewController from "./shop_preview_controller"
+application.register("shop-preview", ShopPreviewController)
+
+import ToastController from "./toast_controller"
+application.register("toast", ToastController)
