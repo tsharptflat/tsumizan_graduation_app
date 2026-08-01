@@ -80,4 +80,31 @@ class UserGameLibrary < ApplicationRecord
   def self.any_library_game_prices_nil?(user)
     user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil }).exists?
   end
+
+  
+  def self.game_statistics_count(game)
+    game.user_game_libraries.count
+  end
+
+  def self.game_statistics_unplayed_percentage(game)
+    total_count = game.user_game_libraries.count.to_f
+    unplayed = game.user_game_libraries.unplayed.count.to_f
+    (unplayed / total_count) * 100
+  end
+
+  def self.game_statistics_cleared_rate(game)
+    total_count = game.user_game_libraries.count.to_f
+    cleared = game.user_game_libraries.cleared.count.to_f
+    (cleared / total_count) * 100
+  end
+
+  def self.game_statistics_average_playtime(game)
+    game.user_game_libraries.average(:minutes_played)
+  end
+  
+  def self.game_statistics_average_unplayed_time(game)
+    unplayed_time_array = game.user_game_libraries.unplayed.where.not(user_game_libraries: { unplayed_date: nil }).pluck(:unplayed_date).map { |date| (Date.current - date).to_i }
+    return 0 if unplayed_time_array.empty?
+    unplayed_time_array.sum.to_f / unplayed_time_array.size
+  end
 end
