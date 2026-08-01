@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   def show
+    @user = current_user
     @page = 'users_show'
     @total_price = UserGameLibrary.total_price(current_user)
     @character_text = CharacterTextService.new.get_character_text(current_user.user_characters.first, @page, @total_price)

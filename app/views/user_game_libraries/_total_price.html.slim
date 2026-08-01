@@ -1,0 +1,6 @@
+span#total_price
+    - if UserGameLibrary.any_library_game_prices_nil?(user)
+        span.fs-3 計算中…
+        span.loader
+    - else
+        = number_to_currency(total_price, precision: 0, unit: '¥')
