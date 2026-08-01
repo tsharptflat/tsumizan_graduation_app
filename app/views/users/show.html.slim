@@ -1,6 +1,8 @@
+= turbo_stream_from current_user
+
 p.text-center.fs-1.mt-5.mb-0 あなたの積みゲー総額は
 div.text-center.price-display.fw-bold.mt-0
-    = number_to_currency(@total_price, precision: 0, unit: '¥')
+    = render "user_game_libraries/total_price", total_price: @total_price, user: @user
 
 div.character-fixed
     div.speech-bubble.mb-3.d-flex.align-items-center

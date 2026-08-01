@@ -38,7 +38,7 @@ class UserGameLibrary < ApplicationRecord
       end
       library.save!
     end
-    UpdateGamePriceJob.perform_later(game.steam_app_id) if game.price.nil?
+    UpdateGamePriceJob.perform_later(user.id, game.steam_app_id) if game.price.nil?
     UpdateGameGenreJob.perform_later(game.steam_app_id) if game.game_genres.empty?
   end
 
@@ -75,5 +75,9 @@ class UserGameLibrary < ApplicationRecord
 
   def self.total_playtime_count(user)
     user.user_game_libraries.sum(:minutes_played)
+  end
+
+  def self.any_library_game_prices_nil?(user)
+    user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil }).exists?
   end
 end
