@@ -4,11 +4,7 @@ p.text-center.fs-1.mt-5.mb-0 あなたの積みゲー総額は
 div.text-center.price-display.fw-bold.mt-0
     = render "user_game_libraries/total_price", total_price: @total_price, user: @user
 
-div.character-fixed
-    div.speech-bubble.mb-3.d-flex.align-items-center
-        p.mb-0 = @character_text.text
-    div.text-center
-        = image_tag(@character_expression.image_path, width: 200)
+= render "user_characters/character_display", character_text: @character_text, character_expression: @character_expression
 
 div.text-center.mt-5
     = button_to "積みゲー統計へ", statistic_path, method: :get, class: "btn btn-color text-white"

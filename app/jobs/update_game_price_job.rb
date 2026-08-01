@@ -13,10 +13,18 @@ class UpdateGamePriceJob < ApplicationJob
       game.update(price: prices[:price] || 0)
       unless UserGameLibrary.any_library_game_prices_nil?(user)
         Turbo::StreamsChannel.broadcast_replace_to(
-          user, 
+          user,
           target: "total_price",
           partial: "user_game_libraries/total_price",
           locals: { total_price: UserGameLibrary.total_price(user), user: user }
+        )
+
+        character_text = CharacterTextService.new.get_character_text(user.user_characters.first, 'users_show', UserGameLibrary.total_price(user))
+        Turbo::StreamsChannel.broadcast_replace_to(
+          user,
+          target: "character_display",
+          partial: "user_characters/character_display",
+          locals: { character_text: character_text, character_expression: character_text.character_expression }
         )
       end
     else

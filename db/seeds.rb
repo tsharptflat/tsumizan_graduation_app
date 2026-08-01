@@ -20,6 +20,10 @@ condition_show_high.update!(friendship_level: 1)
 condition_show_max = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show', min_price: 30001, max_price: nil)
 condition_show_max.update!(friendship_level: 1)
 
+## 価格取得中(読み込み中)用
+condition_show_loading = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show_loading', min_price: 0, max_price: 999999999)
+condition_show_loading.update!(friendship_level: 1)
+
 ## キャラ詳細ページ用
 condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 999999999)
 condition_communicate_show.update!(friendship_level: 1)
@@ -68,6 +72,10 @@ end
 
 ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_max.id, character_expression_id: expression_shock.id) do |ct|
   ct.text = 'なかなかの積み具合ですね…'
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_loading.id, character_expression_id: expression_happy.id) do |ct|
+  ct.text = '少しドキドキしますね…！'
 end
 
 ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちわんわん！') do |ct|
