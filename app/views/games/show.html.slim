@@ -1,0 +1,59 @@
+div.card.text-white.w-50.border-0.mx-auto.mt-5
+  div.card-header.card-header-color.pb-0
+    p.p-1 = @game.game_title
+  div.card-body.card-body-color
+    div.text-center.mb-3
+      = image_tag steam_banner_image(@game), class: 'img-fluid rounded'
+    p.me-4 ジャンル: #{@game.game_genre_types.map(&:name).join('/')}
+    p.me-4 価格: #{number_to_currency(@game.price, precision: 0, unit: '¥')}
+    p.me-4
+      = link_to 'Steamストアページへ', steam_store_link(@game), target: :_blank, rel: 'noopener noreferrer', class: 'btn btn-secondary text-white'
+
+div.card.text-white.w-50.border-0.mx-auto.mt-5
+  div.card-header.card-header-color.pb-0
+    p.p-1 みんなの積み状況
+  div.card-body.card-body-color.d-flex
+    p.me-4 所持者数: #{@possessed_user_count}人
+    p.me-4 積み率: #{@unplayed_percentage.round(1)}%
+    p.me-4 クリア率: #{@cleared_percentage.round(1)}%
+
+div.card.text-white.w-50.border-0.mx-auto.mt-5
+  div.card-header.card-header-color.pb-0
+    p.p-1 平均 と #{@user.name} さんの比較
+  div.d-flex.justify-content-between.px-3.card-header-color
+    span.col-4
+    span.col-4 みんなの平均
+    span.col-4 #{@user.name}
+  div.card-body.card-body-color.d-flex
+    ol.w-100.px-3
+      li.d-flex.justify-content-between
+        span.col-4 プレイ時間
+        span.col-4 = "#{(@average_playtime / 60.0).round(1)}時間"
+        span.col-4
+          - if @current_user_game
+            = "#{(@current_user_game.minutes_played / 60.0).round(1)}時間"
+          - else
+            | 未所持
+      li.d-flex.justify-content-between
+        span.col-4 積んでからの期間
+        span.col-4 = "#{@average_unplayed_time.round(1)}日"
+        span.col-4
+          - if @current_user_game && @current_user_game.unplayed_date
+            = "#{(Date.current - @current_user_game.unplayed_date).to_i}日"
+          - elsif @current_user_game
+            | 積んでいません
+          - else
+            | 未所持
+      li.d-flex.justify-content-between
+        span.col-4 クリア状況
+        span.col-4 = "#{@cleared_percentage.round(1)}%の人がクリア済み"
+        span.col-4
+          - if @current_user_game.nil?
+            | 未所持
+          - elsif @current_user_game.cleared_date
+            | クリア済み
+          - else
+            | 未クリア
+
+div.w-50.mx-auto.mt-5.mb-5.text-center
+  iframe src="https://store.steampowered.com/widget/#{@game.steam_app_id}/" width="100%" height="190" frameborder="0"

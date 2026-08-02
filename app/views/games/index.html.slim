@@ -1,0 +1,22 @@
+div.card.text-white.w-50.border-0.mx-auto.mt-5
+  div.card-header.card-header-color.pb-0
+    p.p-1 ゲーム一覧
+  div.d-flex.gap-3.px-3.pb-2.card-header-color
+    = link_to '名前順', games_path(sort: 'name'), class: 'text-white'
+    = link_to '価格の安い順', games_path(sort: 'price_asc'), class: 'text-white'
+    = link_to '価格の高い順', games_path(sort: 'price_desc'), class: 'text-white'
+    = link_to '積み率順', games_path(sort: 'unplayed_rate'), class: 'text-white'
+    = link_to '所持者数順', games_path(sort: 'possessed_count'), class: 'text-white'
+  div.d-flex.justify-content-between.px-3.card-header-color
+    span.col-3 ゲームタイトル
+    span.col-2 所持者数
+    span.col-2 積み率
+    span.col-5 サムネ
+  div.card-body.card-body-color
+    ol.w-100.px-3
+      - @games.each do |game|
+        li.d-flex.justify-content-between.align-items-center.mt-3
+          span.col-3 = link_to game.game_title, game_path(game)
+          span.col-2 = "#{@all_games_count.fetch(game.id, 0)}人"
+          span.col-2 = "#{((@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) * 100).round(1)}%"
+          span.col-5 = image_tag steam_thumbnail_image(game), class: 'img-fluid', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
