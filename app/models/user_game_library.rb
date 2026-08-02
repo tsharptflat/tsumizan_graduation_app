@@ -81,9 +81,20 @@ class UserGameLibrary < ApplicationRecord
     user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil }).exists?
   end
 
+
+#ゲームの一覧画面に使用
+  def self.all_games_count
+    UserGameLibrary.group(:game_id).count
+  end
+
+  def self.all_unplayed_games_count
+    UserGameLibrary.unplayed.group(:game_id).count
+  end
+
   
+#ゲームごとの詳細画面に使用
   def self.game_statistics_count(game)
-    game.user_game_libraries.count
+    game.user_game_libraries.size
   end
 
   def self.game_statistics_unplayed_percentage(game)
