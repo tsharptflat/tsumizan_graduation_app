@@ -3,20 +3,19 @@ class GamesController < ApplicationController
         @all_games_count = UserGameLibrary.all_games_count
         @all_unplayed_games_count = UserGameLibrary.all_unplayed_games_count
 
-
         @games = case params[:sort]
         when "name"
-            Game.order(:game_title)
+            Game.order(:game_title).page(params[:page])
         when "price_asc"
-            Game.order(price: :asc)
+            Game.order(price: :asc).page(params[:page])
         when "price_desc"
-            Game.order(price: :desc)
+            Game.order(price: :desc).page(params[:page])
         when "possessed_count"
-            Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }
+            Kaminari.paginate_array(Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         when "unplayed_rate"
-            Game.all.sort_by{ |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }
+            Kaminari.paginate_array(Game.all.sort_by{ |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }).page(params[:page])
         else
-            Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }
+            Kaminari.paginate_array(Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         end
     end
 
