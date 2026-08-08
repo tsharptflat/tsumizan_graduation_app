@@ -26,7 +26,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :games, only: %i[index show]
+  resources :games, only: %i[index show] do
+    collection do
+      get :search_suggestions
+    end
+  end
 
   resource :statistic, only: %i[show] do
     member do

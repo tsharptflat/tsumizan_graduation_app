@@ -20,3 +20,4 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
           span.col-2 = "#{@all_games_count.fetch(game.id, 0)}人"
           span.col-2 = "#{((@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) * 100).round(1)}%"
           span.col-5 = image_tag steam_thumbnail_image(game), class: 'img-fluid', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+    = paginate @games

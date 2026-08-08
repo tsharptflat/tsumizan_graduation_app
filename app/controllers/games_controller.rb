@@ -1,23 +1,30 @@
 class GamesController < ApplicationController
+    SEARCH_SUGGESTION_LIMITS = 5
+
     def  index
         @all_games_count = UserGameLibrary.all_games_count
         @all_unplayed_games_count = UserGameLibrary.all_unplayed_games_count
 
-
         @games = case params[:sort]
         when "name"
-            Game.order(:game_title)
+            @q.result(distinct: true).order(:game_title).page(params[:page])
         when "price_asc"
-            Game.order(price: :asc)
+            @q.result(distinct: true).order(price: :asc).page(params[:page])
         when "price_desc"
-            Game.order(price: :desc)
+            @q.result(distinct: true).order(price: :desc).page(params[:page])
         when "possessed_count"
-            Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         when "unplayed_rate"
-            Game.all.sort_by{ |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }).page(params[:page])
         else
-            Game.all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         end
+    end
+
+    def search_suggestions
+        @suggestions = Game.ransack(game_title_cont: params[:q]).result.limit(SEARCH_SUGGESTION_LIMITS)
+        @all_games_count = UserGameLibrary.all_games_count
+        @all_unplayed_games_count = UserGameLibrary.all_unplayed_games_count
     end
 
     def show
