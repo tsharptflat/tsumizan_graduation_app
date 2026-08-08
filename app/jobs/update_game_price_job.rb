@@ -10,7 +10,7 @@ class UpdateGamePriceJob < ApplicationJob
     user = User.find_by(id: user_id)
 
     if prices
-      game.update(price: prices[:price] || 0)
+      game.update(price: prices[:price] || 0, game_title: prices[:name].presence || game.game_title)
       unless UserGameLibrary.any_library_game_prices_nil?(user)
         Turbo::StreamsChannel.broadcast_replace_to(
           user,

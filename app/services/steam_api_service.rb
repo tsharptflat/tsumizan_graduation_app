@@ -7,11 +7,11 @@ class SteamApiService
       appids: steam_app_id,
       cc: 'jp',
       l: 'japanese',
-      filters: 'price_overview,genres'
+      filters: 'basic,price_overview,genres'
     })
 
     data = response.parsed_response.dig(steam_app_id.to_s, 'data')
-    return {price: nil, genres: nil} unless data.is_a?(Hash)
-    {price: data.dig('price_overview', 'final')&./(100.0), genres: data.dig('genres')}
+    return {price: nil, genres: nil, name: nil} unless data.is_a?(Hash)
+    {price: data.dig('price_overview', 'final')&./(100.0), genres: data.dig('genres'), name: data['name']}
   end
 end
