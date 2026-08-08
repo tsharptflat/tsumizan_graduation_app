@@ -8,6 +8,13 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
     p.me-4 積みゲー本数: #{@unplayed_games.count}
     p.me-4 全体消化率: #{@cleared_game_count_rate.round(2)}%
 
+div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="snapshot-chart" data-snapshot-chart-labels-value="#{@user_statistic_snapshots.pluck(:recorded_on).to_json}" data-snapshot-chart-prices-value="#{@user_statistic_snapshots.pluck(:total_price).to_json}" data-snapshot-chart-rates-value="#{@user_statistic_snapshots.pluck(:unplayed_rate).to_json}"
+  div.card-header.card-header-color.pb-0
+    p.p-1 積みゲー推移
+  div.card-body.card-body-color
+    div.rounded.p-2 style="background-color: #7d8791;"
+      canvas data-snapshot-chart-target="canvas"
+
 div.card.text-white.w-50.border-0.mx-auto.mt-5
   div.card-header.card-header-color.pb-0
     p.p-1 ネクストプレイ提案

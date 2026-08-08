@@ -19,9 +19,12 @@ class ApplicationController < ActionController::Base
   end
 
   def save_user_statistic_snapshot
+    return if session[:snapshot_recorded_on] == Date.current.to_s
+
     UserStatisticSnapshot.record_for(current_user)
-    rescue => e
-      Rails.logger.error(e.message)
+    session[:snapshot_recorded_on] = Date.current.to_s
+  rescue => e
+    Rails.logger.error(e.message)
   end
 
 end
