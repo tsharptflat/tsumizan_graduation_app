@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   before_action :authenticate_user!, unless: :devise_controller?
+  before_action :set_search
 
   def after_sign_in_path_for(resource)
     loading_user_game_libraries_path
@@ -11,4 +12,9 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(resource_or_scope)
     root_path
   end
+
+  def set_search
+    @q = Game.ransack(params[:q])
+  end
+
 end

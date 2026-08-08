@@ -27,7 +27,8 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to 'ログアウト', destroy_user_session_path, class: 'dropdown-item', data: {turbo_method: :delete}
             = link_to 'アカウント削除', user_path , class: 'dropdown-item', data: {turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }
 
-      div.pe-3
-        = search_form_for  @q do |f|
-          = f.search_field :game_title_cont
-          = f.submit "検索"
+      div.position-relative data-controller="search"
+        = search_form_for @q, html: { class: "d-flex align-items-center" } do |f|
+          = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
+          = f.submit "検索", class: "btn btn-color text-white"
+        = turbo_frame_tag "search_suggestions", data: { search_target: "frame" }, class: "position-absolute top-100 end-0 mt-1", style: "z-index: 1050; width: 350px;"

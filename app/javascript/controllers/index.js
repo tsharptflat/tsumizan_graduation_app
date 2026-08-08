@@ -10,11 +10,14 @@ application.register("gift-modal", GiftModalController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
-import TooltipController from "./tooltip_controller"
-application.register("tooltip", TooltipController)
+import SearchController from "./search_controller"
+application.register("search", SearchController)
 
 import ShopPreviewController from "./shop_preview_controller"
 application.register("shop-preview", ShopPreviewController)
 
 import ToastController from "./toast_controller"
 application.register("toast", ToastController)
+
+import TooltipController from "./tooltip_controller"
+application.register("tooltip", TooltipController)

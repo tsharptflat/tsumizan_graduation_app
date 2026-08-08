@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
+    SEARCH_SUGGESTION_LIMITS = 5
+
     def  index
-        @q = Game.ransack(params[:q])
         @all_games_count = UserGameLibrary.all_games_count
         @all_unplayed_games_count = UserGameLibrary.all_unplayed_games_count
 
@@ -18,6 +19,12 @@ class GamesController < ApplicationController
         else
             Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         end
+    end
+
+    def search_suggestions
+        @suggestions = Game.ransack(game_title_cont: params[:q]).result.limit(SEARCH_SUGGESTION_LIMITS)
+        @all_games_count = UserGameLibrary.all_games_count
+        @all_unplayed_games_count = UserGameLibrary.all_unplayed_games_count
     end
 
     def show
