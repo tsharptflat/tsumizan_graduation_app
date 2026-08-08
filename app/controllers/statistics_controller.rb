@@ -17,6 +17,8 @@ class StatisticsController < ApplicationController
     cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
     @best_cost_performance_games = cost_performance_ranking[:best]
     @worst_cost_performance_games = cost_performance_ranking[:worst]
+
+    @user_statistic_snapshots = current_user.user_statistic_snapshots.order(:recorded_on)
   end
 
   def cost_performance_detailed_ranking

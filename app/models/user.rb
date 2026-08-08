@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :user_gift_items, dependent: :destroy
   has_many :gift_items, through: :user_gift_items
   has_one :user_wallet, dependent: :destroy
+  has_many :user_statistic_snapshots, dependent: :destroy
 
   validates :name, presence: true
   validates :uid, presence: true, uniqueness: true

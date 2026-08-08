@@ -16,6 +16,9 @@ application.register("search", SearchController)
 import ShopPreviewController from "./shop_preview_controller"
 application.register("shop-preview", ShopPreviewController)
 
+import SnapshotChartController from "./snapshot_chart_controller"
+application.register("snapshot-chart", SnapshotChartController)
+
 import ToastController from "./toast_controller"
 application.register("toast", ToastController)
 

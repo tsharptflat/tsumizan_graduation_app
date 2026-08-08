@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_26_040356) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_08_050112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -189,6 +189,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_26_040356) do
     t.index ["user_id"], name: "index_user_outfit_items_on_user_id"
   end
 
+  create_table "user_statistic_snapshots", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "recorded_on", null: false
+    t.integer "total_price"
+    t.decimal "unplayed_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "recorded_on"], name: "index_user_statistic_snapshots_on_user_id_and_recorded_on", unique: true
+    t.index ["user_id"], name: "index_user_statistic_snapshots_on_user_id"
+  end
+
   create_table "user_tasks", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "task_id"
@@ -232,6 +243,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_26_040356) do
   add_foreign_key "user_game_libraries", "users"
   add_foreign_key "user_outfit_items", "outfit_items"
   add_foreign_key "user_outfit_items", "users"
+  add_foreign_key "user_statistic_snapshots", "users"
   add_foreign_key "user_tasks", "tasks"
   add_foreign_key "user_tasks", "users"
   add_foreign_key "user_wallets", "users"
