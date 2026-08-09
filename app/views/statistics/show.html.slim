@@ -60,12 +60,15 @@ div.mx-auto.mt-5 style="max-width: 960px;"
             | ネクストプレイ提案
         div.card-body.card-body-color.d-flex.flex-column.gap-3
           - @recommended_games.each do |library|
-            div.p-3.rounded.stat-tile.d-flex.justify-content-between.align-items-center
-              = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fs-5 fw-bold'
-              - if library.last_played_at
-                span.text-muted-steam = library.last_played_at&.strftime('%Y年%m月%d日')
-              - else
-                span.text-muted-steam 未プレイ
+            div.p-3.rounded.stat-tile
+              = link_to game_path(library.game) do
+                = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.d-flex.justify-content-between.align-items-center
+                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                - if library.last_played_at
+                  span.text-muted-steam.small = library.last_played_at&.strftime('%Y年%m月%d日')
+                - else
+                  span.text-muted-steam.small 未プレイ
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
