@@ -16,8 +16,26 @@ body {
   flex-direction: column;
 }
 
+.card {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.link-steam-accent {
+  color: #66c0f4;
+
+  &:hover {
+    color: #8fd3ff;
+  }
+}
+
 .text-muted-steam {
     color: #8f98a0;
+}
+
+.stat-tile {
+    flex: 1 1 0;
+    background: linear-gradient(135deg, #4a5568, #5c6678);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-steam-share {
@@ -100,7 +118,7 @@ body {
 }
 
 .card-header-color {
-    background-color: #2a475e;
+    background: linear-gradient(135deg, #2f4f68, #223c50);
 }
 
 .card-body-color {
@@ -192,6 +210,7 @@ nav.pagination {
 .price-display {
   font-size: 10rem;
   line-height: 1;
+  text-shadow: 5px 5px 0 rgba(255, 255, 255, 0.2);
 }
 
 .character-fixed {

@@ -2,9 +2,9 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-sea
   div.card-header.card-header-color.pb-0
     p.p-1 ゲームを選択
   div.d-flex.gap-3.px-3.pb-2.card-header-color
-    = link_to 'すべて', picker_play_focus_path(slot: @slot, q: params[:q]), class: 'text-white'
-    = link_to '未クリア', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'uncleared'), class: 'text-white'
-    = link_to 'クリア済み', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'cleared'), class: 'text-white'
+    = link_to 'すべて', picker_play_focus_path(slot: @slot, q: params[:q]), class: 'link-steam-accent'
+    = link_to '未クリア', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'uncleared'), class: 'link-steam-accent'
+    = link_to 'クリア済み', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'cleared'), class: 'link-steam-accent'
 
   div.card-body.card-body-color
     = form_with url: picker_play_focus_path, method: :get, class: "d-flex align-items-center mb-3" do |f|
