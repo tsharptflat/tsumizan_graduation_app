@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_08_050112) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_09_013801) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -165,6 +165,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_08_050112) do
     t.datetime "last_played_at"
     t.date "cleared_date"
     t.date "unplayed_date"
+    t.integer "play_focus", default: 0, null: false
     t.index ["game_id"], name: "index_user_game_libraries_on_game_id"
     t.index ["user_id", "game_id"], name: "index_user_game_libraries_on_user_id_and_game_id", unique: true
     t.index ["user_id"], name: "index_user_game_libraries_on_user_id"

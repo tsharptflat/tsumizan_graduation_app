@@ -11,6 +11,8 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
           li
             = link_to '積みゲー総額', user_path, class: 'dropdown-item'
             = link_to '積みゲー統計', statistic_path, class: 'dropdown-item'
+            = link_to 'ゲーム一覧', games_path, class: 'dropdown-item'
+            = link_to 'プレイ状況', play_focus_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
         button.btn.btn-secondary.dropdown-toggle.text-white.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
@@ -24,10 +26,15 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
         button.btn.btn-secondary.dropdown-toggle.text-white type="button" data-bs-toggle="dropdown" aria-expanded="false" #{current_user.name}
         ul.dropdown-menu
           li
+            - if @now_playing_libraries.present?
+              - @now_playing_libraries.each do |library|
+                = link_to "今プレイ中のゲーム: #{library.game.game_title}", play_focus_path, class: 'dropdown-item'
+            - else
+              = link_to '今プレイ中のゲーム: 未設定', play_focus_path, class: 'dropdown-item'
             = link_to 'ログアウト', destroy_user_session_path, class: 'dropdown-item', data: {turbo_method: :delete}
             = link_to 'アカウント削除', user_path , class: 'dropdown-item', data: {turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }
 
-      div.position-relative data-controller="search"
+      div.position-relative data-controller="search" data-search-url-value=search_suggestions_games_path
         = search_form_for @q, html: { class: "d-flex align-items-center" } do |f|
           = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
           = f.submit "検索", class: "btn btn-color text-white"

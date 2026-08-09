@@ -4,12 +4,17 @@ class UserGameLibrary < ApplicationRecord
   RECOMMENDATION_COUNT = 3
   TSUMIGE_LIST_LIMIT = 10
   COST_PERFORMANCE_RANKING_LIMIT = 3
+  NOW_PLAYING_LIMIT = 3
+  NEXT_UP_LIMIT = 1
 
   belongs_to :user
   belongs_to :game
 
+  enum play_focus: { unfocused: 0, now_playing: 1, next_up: 2 }
+
   validates :game_id, uniqueness: { scope: :user_id }
   validates :minutes_played, numericality: { greater_than_or_equal_to: 0 }
+  validate :play_focus_slot_limit, if: :play_focus_changed?
 
   scope :not_recently_played, -> { where(last_played_at: nil).or(where('last_played_at < ?', 1.month.ago)) }
   scope :not_cleared, -> { where(cleared_date: nil)}
@@ -124,5 +129,16 @@ class UserGameLibrary < ApplicationRecord
     unplayed_time_array = game.user_game_libraries.unplayed.where.not(user_game_libraries: { unplayed_date: nil }).pluck(:unplayed_date).map { |date| (Date.current - date).to_i }
     return 0 if unplayed_time_array.empty?
     unplayed_time_array.sum.to_f / unplayed_time_array.size
+  end
+
+  private
+
+  def play_focus_slot_limit
+    return if unfocused?
+
+    limit = now_playing? ? NOW_PLAYING_LIMIT : NEXT_UP_LIMIT
+    current_count = user.user_game_libraries.where(play_focus: play_focus).where.not(id: id).count
+
+    errors.add(:play_focus, "の上限に達しています") if current_count >= limit
   end
 end

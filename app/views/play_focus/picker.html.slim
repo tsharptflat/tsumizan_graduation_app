@@ -1,0 +1,32 @@
+div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-search-url-value=picker_play_focus_path(slot: @slot, cleared: @cleared_filter) data-search-clear-on-empty-value="false"
+  div.card-header.card-header-color.pb-0
+    p.p-1 ゲームを選択
+  div.d-flex.gap-3.px-3.pb-2.card-header-color
+    = link_to 'すべて', picker_play_focus_path(slot: @slot, q: params[:q]), class: 'text-white'
+    = link_to '未クリア', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'uncleared'), class: 'text-white'
+    = link_to 'クリア済み', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'cleared'), class: 'text-white'
+
+  div.card-body.card-body-color
+    = form_with url: picker_play_focus_path, method: :get, class: "d-flex align-items-center mb-3" do |f|
+      = hidden_field_tag :slot, @slot
+      = hidden_field_tag :cleared, @cleared_filter
+      = f.search_field :q, value: params[:q], data: { action: "input->search#search" }, class: "search-input rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
+      = f.submit "検索", class: "btn btn-color text-white"
+
+    = turbo_frame_tag "picker_results", data: { search_target: "frame" } do
+      ul.list-unstyled.w-100.px-3
+        - @available_libraries.each do |library|
+          li.mb-2.d-flex.align-items-center.justify-content-between
+            = button_to set_slot_play_focus_path(library_id: library.id, slot: @slot), method: :patch, form: { data: { turbo_frame: "_top" } }, class: "search-suggestion-item d-flex align-items-center text-white text-decoration-none p-2 border-0 text-start flex-grow-1" do
+              = image_tag steam_thumbnail_image(library.game), class: 'me-3', style: 'width: 92px; height: 35px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div
+                div = library.game.game_title
+                div.small = "プレイ時間: #{(library.minutes_played / 60.0).round(1)}時間 / 価格: ¥#{library.game.price} / #{library.cleared_date ? 'クリア済み' : '未クリア'}"
+                - if library.unplayed_date && library.cleared_date.nil?
+                  div.small = "積み時間: #{(Date.current - library.unplayed_date).to_i}日"
+            - if library.cleared_date
+              = button_to "未クリアに戻す", revert_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm ms-2"
+            - else
+              = button_to "クリアにする", update_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm ms-2"
+
+    = link_to "戻る", play_focus_path, class: "btn btn-secondary text-white mt-3"

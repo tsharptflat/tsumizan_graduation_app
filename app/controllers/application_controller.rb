@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :set_search
   before_action :save_user_statistic_snapshot, if: :user_signed_in?
+  before_action :set_now_playing_libraries, if: :user_signed_in?
 
   def after_sign_in_path_for(resource)
     loading_user_game_libraries_path
@@ -25,6 +26,10 @@ class ApplicationController < ActionController::Base
     session[:snapshot_recorded_on] = Date.current.to_s
   rescue => e
     Rails.logger.error(e.message)
+  end
+
+  def set_now_playing_libraries
+    @now_playing_libraries = current_user.user_game_libraries.now_playing.includes(:game)
   end
 
 end
