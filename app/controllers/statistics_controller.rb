@@ -1,4 +1,13 @@
 class StatisticsController < ApplicationController
+  CHART_RANGES = {
+    'week' => 1.week,
+    'month' => 1.month,
+    'half_year' => 6.months,
+    'year' => 1.year,
+    'all' => nil
+  }.freeze
+  DEFAULT_CHART_RANGE = 'month'
+
   def show
     @user = current_user
     @total_price = UserGameLibrary.total_price(current_user)
@@ -20,7 +29,10 @@ class StatisticsController < ApplicationController
     @best_cost_performance_games = cost_performance_ranking[:best]
     @worst_cost_performance_games = cost_performance_ranking[:worst]
 
+    @chart_range = CHART_RANGES.key?(params[:chart_range]) ? params[:chart_range] : DEFAULT_CHART_RANGE
     @user_statistic_snapshots = current_user.user_statistic_snapshots.order(:recorded_on)
+    duration = CHART_RANGES[@chart_range]
+    @user_statistic_snapshots = @user_statistic_snapshots.where(recorded_on: duration.ago..) if duration
   end
 
   def cost_performance_detailed_ranking

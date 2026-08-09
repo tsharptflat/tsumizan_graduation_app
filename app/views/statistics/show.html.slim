@@ -38,6 +38,9 @@ div.mx-auto.mt-5 style="max-width: 960px;"
       p.p-1.fs-4.mb-0
         i.bi.bi-graph-up.me-2
         | 積みゲー推移
+    div.d-flex.gap-3.px-3.pb-2.card-header-color
+      - [['1週間', 'week'], ['1か月', 'month'], ['半年', 'half_year'], ['1年', 'year'], ['全期間', 'all']].each do |label, key|
+        = link_to label, statistic_path(chart_range: key), class: key == @chart_range ? 'text-white fw-bold' : 'link-steam-accent'
     div.card-body.card-body-color.p-4
       div.rounded.p-3 style="background-color: #8b929b; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);"
         canvas data-snapshot-chart-target="canvas"
