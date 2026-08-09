@@ -4,15 +4,55 @@ div.container style="margin-top: 10rem;"
     div.text-center.pb-4
         =  button_to 'Steamアカウントでログイン', user_steam_omniauth_authorize_path, method: :post, class: "btn btn-color text-white", data: { turbo: false }
 
-    div.d-flex.justify-content-center
-        ul
-            li あなたが積んでいるゲームの定価総額を計算
-            li 積みゲー消化サポート機能
-            li 積みゲー消化推移（実装予定）
+    h2.text-center.pb-3 積みゲー金額ランキング
 
-    h2.text-center.pb-3 style="margin-top: 3rem;" 積みゲー金額ランキング
-
-    div.d-flex.justify-content-center
+    div.d-flex.justify-content-center.pb-5
         ol
             - @unplayed_price_and_count_ranking_users.each do |user_price_count|
                 li = "¥#{user_price_count[1]} (#{user_price_count[2]}本)"
+
+    div.card.text-white.w-75.border-0.mx-auto.mb-5
+        div.card-header.card-header-color.pb-0
+            p.p-1
+                i.bi.bi-question-circle.me-2
+                | 積み算とは？
+        div.card-body.card-body-color
+            p.mb-4 積み算は、Steamの積みゲー（未プレイ・未クリアのゲーム）を楽しく消化するためのWebサービスです。
+            div.d-flex.gap-3.flex-wrap.justify-content-center
+                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                    p.mb-2
+                        i.bi.bi-bar-chart-fill.me-2
+                        strong 積みゲー可視化
+                    p.small.mb-0 Steamの積みゲーを総額・積み率・推移グラフで把握できます。
+                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                    p.mb-2
+                        i.bi.bi-people-fill.me-2
+                        strong 他ユーザーとの比較
+                    p.small.mb-0 自分の積みゲー状況を、他のユーザーの平均と比較できます。
+                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                    p.mb-2
+                        i.bi.bi-chat-heart-fill.me-2
+                        strong キャラと一緒に
+                    p.small.mb-0 キャラクターとの交流やマイレージで、消化のモチベーションを維持できます。
+
+    div.card.text-white.w-75.border-0.mx-auto.mb-5
+        div.card-header.card-header-color.pb-0
+            p.p-1
+                i.bi.bi-patch-question-fill.me-2
+                | よくある質問
+        div.card-body.card-body-color
+            details.mb-3
+                summary.fw-bold ログイン情報は安全ですか？
+                p.small.mt-2.mb-0 ログインにはSteam公式のOpenID認証を使用しており、パスワードなどの認証情報は一切保存していません。
+            details.mb-3
+                summary.fw-bold 積みゲー総額が表示されないのはなぜですか？
+                p.small.mt-2.mb-0 初回ログイン時は価格取得まで時間がかかる場合がございます。反映まで少し待ってから再読み込みしてみてください。
+            details.mb-3
+                summary.fw-bold 積みゲーの判定はどうやって決まりますか？
+                p.small.mt-2.mb-0 プレイ時間が2時間以下で直近1ヶ月プレイしていない、かつクリア済みステータスに変更していないゲームを積みゲーとして判定しています。
+            details.mb-3
+                summary.fw-bold クリア済みの判定は自動で反映されますか？
+                p.small.mt-2.mb-0 Steam側からクリア済みかどうかを取得する手段がないため、各ページの「クリアにする」ボタンから手動で設定する仕様になっています。
+            details.mb-3
+                summary.fw-bold 積みゲー推移グラフはどのタイミングで記録されますか？
+                p.small.mt-2.mb-0 ログイン中にアクセスすると、その日の最初の1回だけ自動で記録されます。アクセスがなかった日の積み状況は記録されません。
