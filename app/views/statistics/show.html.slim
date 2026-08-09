@@ -53,18 +53,14 @@ div.mx-auto.mt-5 style="max-width: 960px;"
           p.p-1.fs-4.mb-0
             i.bi.bi-play-circle-fill.me-2
             | ネクストプレイ提案
-        div.d-flex.justify-content-between.px-3.card-header-color
-          span ゲームタイトル
-          span 最終プレイ日
-        div.card-body.card-body-color
-          ol.w-100.px-3
-            - @recommended_games.each do |library|
-              li.d-flex.justify-content-between
-                span = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-                - if library.last_played_at
-                  span = library.last_played_at&.strftime('%Y年%m月%d日')
-                - else
-                  span 未プレイ
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - @recommended_games.each do |library|
+            div.p-3.rounded.stat-tile.d-flex.justify-content-between.align-items-center
+              = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fs-5 fw-bold'
+              - if library.last_played_at
+                span.text-muted-steam = library.last_played_at&.strftime('%Y年%m月%d日')
+              - else
+                span.text-muted-steam 未プレイ
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
