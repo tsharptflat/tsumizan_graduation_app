@@ -10,6 +10,7 @@ class PlayFocusController < ApplicationController
     @available_libraries = @available_libraries.where('games.game_title ILIKE ?', "%#{params[:q]}%") if params[:q].present?
     @available_libraries = @available_libraries.cleared if @cleared_filter == 'cleared'
     @available_libraries = @available_libraries.not_cleared if @cleared_filter == 'uncleared'
+    @available_libraries = @available_libraries.page(params[:page])
   end
 
   def set_slot

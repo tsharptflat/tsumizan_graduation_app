@@ -6,7 +6,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
   - if user_signed_in?
     div.ms-auto.d-flex
       div.dropdown.pe-3
-        button.btn.btn-secondary.dropdown-toggle.text-white.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲー分析
+        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲー分析
         ul.dropdown-menu
           li
             = link_to '積みゲー総額', user_path, class: 'dropdown-item'
@@ -15,7 +15,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to 'プレイ状況', play_focus_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
-        button.btn.btn-secondary.dropdown-toggle.text-white.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
+        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
         ul.dropdown-menu
           li
             = link_to '育成', '#', class: 'dropdown-item'
@@ -23,7 +23,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to 'マイレージ確認', tasks_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
-        button.btn.btn-secondary.dropdown-toggle.text-white type="button" data-bs-toggle="dropdown" aria-expanded="false" #{current_user.name}
+        button.nav-tab-toggle.dropdown-toggle type="button" data-bs-toggle="dropdown" aria-expanded="false" #{current_user.name}
         ul.dropdown-menu
           li
             - if @now_playing_libraries.present?
@@ -36,6 +36,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
 
       div.position-relative data-controller="search" data-search-url-value=search_suggestions_games_path
         = search_form_for @q, html: { class: "d-flex align-items-center" } do |f|
-          = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
-          = f.submit "検索", class: "btn btn-color text-white"
+          = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input form-control rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
+          = f.button type: "submit", class: "btn btn-steam-search" do
+            i.bi.bi-search
         = turbo_frame_tag "search_suggestions", data: { search_target: "frame" }, class: "position-absolute top-100 end-0 mt-1", style: "z-index: 1050; width: 350px;"

@@ -28,5 +28,6 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-sea
               = button_to "未クリアに戻す", revert_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm ms-2"
             - else
               = button_to "クリアにする", update_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm ms-2"
+      = paginate @available_libraries
 
     = link_to "戻る", play_focus_path, class: "btn btn-secondary text-white mt-3"
