@@ -46,8 +46,10 @@ div.mx-auto.mt-5 style="max-width: 960px;"
   div.row.g-5.mb-5
     div.col-lg-6
       div.card.text-white.border-0.h-100
-        div.card-header.card-header-color.pb-0
-          p.p-1 ネクストプレイ提案
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-play-circle-fill.me-2
+            | ネクストプレイ提案
         div.d-flex.justify-content-between.px-3.card-header-color
           span ゲームタイトル
           span 最終プレイ日
@@ -63,8 +65,10 @@ div.mx-auto.mt-5 style="max-width: 960px;"
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
-        div.card-header.card-header-color.pb-0
-          p.p-1 逆レコメンド
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-lightbulb-fill.me-2
+            | 逆レコメンド
         div.card-body.card-body-color
           - @most_unplayed_game_genres.each do |genre|
             p.mb-1 一番詰んでるゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
@@ -78,8 +82,10 @@ div.mx-auto.mt-5 style="max-width: 960px;"
   div.row.g-5.mb-5
     div.col-lg-6
       div.card.text-white.border-0.h-100
-        div.card-header.card-header-color.pb-0
-          span.p-1 積みゲーリスト
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-hourglass-split.me-2
+            | 積みゲーリスト
         div.d-flex.justify-content-between.px-3.card-header-color
           span.col-6 ゲームタイトル
           span.col-5 プレイ時間
@@ -96,8 +102,10 @@ div.mx-auto.mt-5 style="max-width: 960px;"
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
-        div.card-header.card-header-color.pb-0
-          p.p-1 一度積んでからクリアしたゲーム一覧
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-award-fill.me-2
+            | 一度積んでからクリアしたゲーム一覧
         div.card-body.card-body-color
           ol.w-100.px-3
             - @cleared_after_unplayed_games.each do |library|
@@ -107,8 +115,10 @@ div.mx-auto.mt-5 style="max-width: 960px;"
                 span.col-6 = "#{(library.cleared_date - library.unplayed_date).to_i}日"
 
   div.card.text-white.border-0.mb-5
-    div.card-header.card-header-color.pb-0
-      p.p-1 コスパランキング
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-bar-chart-line-fill.me-2
+        | コスパランキング
     div.card-body.card-body-color
       ol.w-100.px-3
         - @best_cost_performance_games.each do |library|
