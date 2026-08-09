@@ -1,12 +1,7 @@
 class StatisticsController < ApplicationController
-  CHART_RANGES = {
-    'week' => 1.week,
-    'month' => 1.month,
-    'half_year' => 6.months,
-    'year' => 1.year,
-    'all' => nil
-  }.freeze
+  CHART_RANGES = %w[week month half_year year all].freeze
   DEFAULT_CHART_RANGE = 'month'
+  CHART_RANGE_OFFSET_OPTIONS_COUNT = 12
 
   def show
     @user = current_user
@@ -29,10 +24,13 @@ class StatisticsController < ApplicationController
     @best_cost_performance_games = cost_performance_ranking[:best]
     @worst_cost_performance_games = cost_performance_ranking[:worst]
 
-    @chart_range = CHART_RANGES.key?(params[:chart_range]) ? params[:chart_range] : DEFAULT_CHART_RANGE
+    @chart_range = CHART_RANGES.include?(params[:chart_range]) ? params[:chart_range] : DEFAULT_CHART_RANGE
+    @chart_range_offset = @chart_range == 'all' ? 0 : params[:chart_range_offset].to_i.clamp(0, CHART_RANGE_OFFSET_OPTIONS_COUNT - 1)
+    @chart_range_options = chart_range_offset_options(@chart_range)
+
     @user_statistic_snapshots = current_user.user_statistic_snapshots.order(:recorded_on)
-    duration = CHART_RANGES[@chart_range]
-    @user_statistic_snapshots = @user_statistic_snapshots.where(recorded_on: duration.ago..) if duration
+    start_date, end_date = chart_range_period(@chart_range, @chart_range_offset)
+    @user_statistic_snapshots = @user_statistic_snapshots.where(recorded_on: start_date..end_date) if start_date
   end
 
   def cost_performance_detailed_ranking
@@ -58,5 +56,50 @@ class StatisticsController < ApplicationController
 
   rescue #update!で例外エラーが発生したときの処理 beginが省略されている rescue単体にendは不要
     redirect_to statistic_path, alert: 'クリア済みゲームの更新に失敗しました。'
+  end
+
+  private
+
+  def chart_range_period(range, offset)
+    today = Date.current
+    case range
+    when 'week'
+      start_date = today.beginning_of_week - offset.weeks
+      [start_date, start_date.end_of_week]
+    when 'month'
+      start_date = today.beginning_of_month - offset.months
+      [start_date, start_date.end_of_month]
+    when 'half_year'
+      current_half_start = today.month <= 6 ? today.beginning_of_year : today.beginning_of_year + 6.months
+      start_date = current_half_start - (offset * 6).months
+      [start_date, start_date + 6.months - 1.day]
+    when 'year'
+      start_date = today.beginning_of_year - offset.years
+      [start_date, start_date.end_of_year]
+    else
+      [nil, nil]
+    end
+  end
+
+  def chart_range_offset_options(range)
+    return [] if range == 'all'
+
+    (0...CHART_RANGE_OFFSET_OPTIONS_COUNT).map do |offset|
+      start_date, end_date = chart_range_period(range, offset)
+      [chart_range_period_label(range, start_date, end_date), offset]
+    end
+  end
+
+  def chart_range_period_label(range, start_date, end_date)
+    case range
+    when 'week'
+      "#{start_date.strftime('%-m/%-d')}〜#{end_date.strftime('%-m/%-d')}"
+    when 'month'
+      "#{start_date.year}年#{start_date.month}月"
+    when 'half_year'
+      "#{start_date.year}年#{start_date.month <= 6 ? '上半期' : '下半期'}"
+    when 'year'
+      "#{start_date.year}年"
+    end
   end
 end
