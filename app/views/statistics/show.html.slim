@@ -25,7 +25,7 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
     ol.w-100.px-3
       - @recommended_games.each do |library|
         li.d-flex.justify-content-between
-          span = library.game.game_title
+          span = link_to library.game.game_title, game_path(library.game), class: 'text-white'
           - if library.last_played_at
             span = library.last_played_at&.strftime('%Y年%m月%d日')
           - else
@@ -56,7 +56,7 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
       ol.w-100.px-3
         - @unplayed_games.each do |library|
           li.d-flex.justify-content-between
-            span.col-6 = library.game.game_title
+            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
             span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
             span.col-6 = check_box_tag "cleared_game_ids[]", library.id
       = f.submit "更新する"
@@ -68,7 +68,7 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
     ol.w-100.px-3
       - @cleared_after_unplayed_games.each do |library|
         li.d-flex.justify-content-between
-          span.col-6 = library.game.game_title
+          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
           span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
           span.col-6 = "#{(library.cleared_date - library.unplayed_date).to_i}日"
 
@@ -79,13 +79,13 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
     ol.w-100.px-3
       - @best_cost_performance_games.each do |library|
         li.d-flex.justify-content-between
-          span.col-6 = library.game.game_title
+          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
           span.col-6 = "¥#{library.game.price}"
           span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
           span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
       - @worst_cost_performance_games.each do |library|
         li.d-flex.justify-content-between
-          span.col-6 = library.game.game_title
+          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
           span.col-6 = "¥#{library.game.price}"
           span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
           span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"

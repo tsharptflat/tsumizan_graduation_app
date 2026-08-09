@@ -39,6 +39,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :play_focus, only: %i[show] do
+    member do
+      get 'picker'
+      patch 'set_slot'
+      patch 'clear_slot'
+      patch 'update_cleared_games'
+      patch 'revert_cleared_games'
+    end
+  end
+
   resources :tasks, only: %i[index show] do
     collection do
       patch 'obtain_all_rewards'
