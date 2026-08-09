@@ -34,7 +34,7 @@ div.mx-auto.mt-5 style="max-width: 960px;"
         div.fs-4.fw-bold = "#{@cleared_game_count_rate.round(2)}%"
 
   = turbo_frame_tag "snapshot_chart" do
-    div.card.text-white.border-0.mb-5 data-controller="snapshot-chart" data-snapshot-chart-labels-value="#{@user_statistic_snapshots.pluck(:recorded_on).to_json}" data-snapshot-chart-prices-value="#{@user_statistic_snapshots.pluck(:total_price).to_json}" data-snapshot-chart-rates-value="#{@user_statistic_snapshots.pluck(:unplayed_rate).to_json}"
+    div.card.text-white.border-0.mb-5 data-controller="snapshot-chart" data-snapshot-chart-labels-value="#{@chart_labels.to_json}" data-snapshot-chart-prices-value="#{@chart_prices.to_json}" data-snapshot-chart-rates-value="#{@chart_rates.to_json}"
       div.card-header.card-header-color.py-3
         p.p-1.fs-4.mb-0
           i.bi.bi-graph-up.me-2
