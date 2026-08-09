@@ -31,6 +31,7 @@ class StatisticsController < ApplicationController
     @user_statistic_snapshots = current_user.user_statistic_snapshots.order(:recorded_on)
     start_date, end_date = chart_range_period(@chart_range, @chart_range_offset)
     @user_statistic_snapshots = @user_statistic_snapshots.where(recorded_on: start_date..end_date) if start_date
+    @chart_labels, @chart_prices, @chart_rates = chart_series(@user_statistic_snapshots, start_date, end_date)
   end
 
   def cost_performance_detailed_ranking
@@ -59,6 +60,16 @@ class StatisticsController < ApplicationController
   end
 
   private
+
+  def chart_series(snapshots, start_date, end_date)
+    return [snapshots.pluck(:recorded_on), snapshots.pluck(:total_price), snapshots.pluck(:unplayed_rate)] unless start_date
+
+    snapshots_by_date = snapshots.index_by(&:recorded_on)
+    dates = (start_date..end_date).to_a
+    prices = dates.map { |date| snapshots_by_date[date]&.total_price }
+    rates = dates.map { |date| snapshots_by_date[date]&.unplayed_rate }
+    [dates, prices, rates]
+  end
 
   def chart_range_period(range, offset)
     today = Date.current
