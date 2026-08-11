@@ -45,7 +45,7 @@ div.mx-auto.mt-5 style="max-width: 960px;"
         - if @chart_range_options.any?
           = form_with url: statistic_path, method: :get, class: "ms-auto" do |f|
             = hidden_field_tag :chart_range, @chart_range
-            = select_tag :chart_range_offset, options_for_select(@chart_range_options, @chart_range_offset), class: "form-select form-select-sm w-auto", onchange: "this.form.requestSubmit()"
+            = select_tag :chart_range_offset, options_for_select(@chart_range_options, @chart_range_offset), class: "form-select form-select-sm w-auto search-input", onchange: "this.form.requestSubmit()"
       div.card-body.card-body-color.p-4
         div.rounded.p-3 style="background-color: #8b929b; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);"
           canvas data-snapshot-chart-target="canvas"
@@ -59,20 +59,25 @@ div.mx-auto.mt-5 style="max-width: 960px;"
             i.bi.bi-play-circle-fill.me-2
             | ネクストプレイ提案
         div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
           - @recommended_games.each do |library|
-            div.p-3.rounded.stat-tile.d-flex.justify-content-between.align-items-center
-              div
-                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fs-5 fw-bold'
-                - if library.last_played_at
-                  div.text-muted-steam = library.last_played_at&.strftime('%Y年%m月%d日')
+            div.p-3.rounded.stat-tile
+              = link_to game_path(library.game) do
+                = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.d-flex.justify-content-between.align-items-end
+                div
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                  - if library.last_played_at
+                    div.text-muted-steam.small = "最終プレイ：#{library.last_played_at&.strftime('%Y年%m月%d日')}"
+                  - else
+                    div.text-muted-steam.small 最終プレイ：未プレイ
+                - if library.next_up?
+                  div.d-flex.align-items-center.gap-2
+                    span.small.text-muted-steam 設定中
+                    = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
                 - else
-                  div.text-muted-steam 未プレイ
-              - if library.next_up?
-                div.d-flex.align-items-center.gap-2
-                  span.small.text-muted-steam 設定中
-                  = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
-              - else
-                = button_to "次にプレイに設定", set_slot_play_focus_path(library_id: library.id, slot: 'next_up'), method: :patch, class: "btn btn-color text-white btn-sm", form: { data: { turbo_confirm: (@next_up_library ? "「#{@next_up_library.game.game_title}」から「#{library.game.game_title}」に変更しますか?" : nil) } }
+                  = button_to "次にプレイに設定", set_slot_play_focus_path(library_id: library.id, slot: 'next_up'), method: :patch, class: "btn btn-color text-white btn-sm", form: { data: { turbo_confirm: (@next_up_library ? "「#{@next_up_library.game.game_title}」から「#{library.game.game_title}」に変更しますか?" : nil) } }
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
@@ -80,15 +85,31 @@ div.mx-auto.mt-5 style="max-width: 960px;"
           p.p-1.fs-4.mb-0
             i.bi.bi-lightbulb-fill.me-2
             | 逆レコメンド
-        div.card-body.card-body-color
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
           - @most_unplayed_game_genres.each do |genre|
-            p.mb-1 一番詰んでるゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
-            p.mb-3
-              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
+            div.p-3.rounded.stat-tile
+              - example_game = @genre_example_games[genre[0]]
+              - if example_game
+                = link_to game_path(example_game) do
+                  = image_tag steam_banner_image(example_game), class: 'w-100 rounded mb-2', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.small.text-muted-steam
+                i.bi.bi-graph-up-arrow.me-1
+                | 最も詰んでいるゲーム数の多いジャンル
+              div.fs-5.fw-bold.mb-1 = "#{genre[0]}(#{genre[1]}個)"
+              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer", class: 'link-steam-accent small'
           - @least_unplayed_game_genres.each do |genre|
-            p.mb-1 一番詰んでないゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
-            p.mb-0
-              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
+            div.p-3.rounded.stat-tile
+              - example_game = @genre_example_games[genre[0]]
+              - if example_game
+                = link_to game_path(example_game) do
+                  = image_tag steam_banner_image(example_game), class: 'w-100 rounded mb-2', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.small.text-muted-steam
+                i.bi.bi-graph-down-arrow.me-1
+                | 最も詰んでいるゲーム数の少ないジャンル
+              div.fs-5.fw-bold.mb-1 = "#{genre[0]}(#{genre[1]}個)"
+              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer", class: 'link-steam-accent small'
 
   div.row.g-5.mb-5
     div.col-lg-6
@@ -102,14 +123,17 @@ div.mx-auto.mt-5 style="max-width: 960px;"
           span.col-5 プレイ時間
           span.col-3 クリア
         div.card-body.card-body-color
-          = form_with url: update_cleared_games_statistic_path, method: :patch do |f|
-            ol.w-100.px-3
-              - @unplayed_games.each do |library|
-                li.d-flex.justify-content-between
-                  span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-                  span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-                  span.col-6 = check_box_tag "cleared_game_ids[]", library.id
-            = f.submit "更新する"
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
+          - else
+            = form_with url: update_cleared_games_statistic_path, method: :patch do |f|
+              ol.w-100.px-3
+                - @unplayed_games.each do |library|
+                  li.d-flex.justify-content-between
+                    span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
+                    span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
+                    span.col-6 = check_box_tag "cleared_game_ids[]", library.id
+              = f.submit "更新する"
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
