@@ -40,8 +40,9 @@ class StatisticsController < ApplicationController
   end
 
   def cost_performance_detailed_ranking
-    cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
-    @all_cost_performance_games = cost_performance_ranking[:all]
+    ranked_games = UserGameLibrary.cost_performance_ranking(current_user)[:all]
+    @max_cost_performance_score = ranked_games.first&.cost_performance_score || 0
+    @all_cost_performance_games = Kaminari.paginate_array(ranked_games).page(params[:page])
   end
 
   def update_cleared_games
