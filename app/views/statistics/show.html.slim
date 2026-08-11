@@ -1,92 +1,171 @@
 = turbo_stream_from current_user
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 #{@user.name}
-  div.card-body.card-body-color.d-flex
-    p.me-4 積みゲー総額: #{render "user_game_libraries/total_price", total_price: @total_price, user: @user}
-    p.me-4 積みゲー本数: #{@unplayed_games.count}
-    p.me-4 全体消化率: #{@cleared_game_count_rate.round(2)}%
+div.mx-auto.mt-5 style="max-width: 960px;"
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-person-circle.me-2
+        | #{@user.name} さんの積みゲー統計
+    div.card-body.card-body-color.d-flex.flex-wrap.gap-3
+      div.text-center.p-3.rounded.stat-tile
+        div.small.text-muted-steam
+          i.bi.bi-currency-yen.me-1
+          | 積みゲー総額
+        div.fs-4.fw-bold = render "user_game_libraries/total_price", total_price: @total_price, user: @user
+      div.text-center.p-3.rounded.stat-tile
+        div.small.text-muted-steam
+          i.bi.bi-controller.me-1
+          | 総本数
+        div.fs-4.fw-bold = @total_games_count
+      div.text-center.p-3.rounded.stat-tile
+        div.small.text-muted-steam
+          i.bi.bi-hourglass-split.me-1
+          | 積みゲー本数
+        div.fs-4.fw-bold = @unplayed_games.count
+      div.text-center.p-3.rounded.stat-tile
+        div.small.text-muted-steam
+          i.bi.bi-pie-chart-fill.me-1
+          | 積みゲー率
+        div.fs-4.fw-bold = "#{@unplayed_rate.round(1)}%"
+      div.text-center.p-3.rounded.stat-tile
+        div.small.text-muted-steam
+          i.bi.bi-check2-circle.me-1
+          | 全体消化率
+        div.fs-4.fw-bold = "#{@cleared_game_count_rate.round(2)}%"
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="snapshot-chart" data-snapshot-chart-labels-value="#{@user_statistic_snapshots.pluck(:recorded_on).to_json}" data-snapshot-chart-prices-value="#{@user_statistic_snapshots.pluck(:total_price).to_json}" data-snapshot-chart-rates-value="#{@user_statistic_snapshots.pluck(:unplayed_rate).to_json}"
-  div.card-header.card-header-color.pb-0
-    p.p-1 積みゲー推移
-  div.card-body.card-body-color
-    div.rounded.p-2 style="background-color: #7d8791;"
-      canvas data-snapshot-chart-target="canvas"
+  = turbo_frame_tag "snapshot_chart" do
+    div.card.text-white.border-0.mb-5 data-controller="snapshot-chart" data-snapshot-chart-labels-value="#{@chart_labels.to_json}" data-snapshot-chart-prices-value="#{@chart_prices.to_json}" data-snapshot-chart-rates-value="#{@chart_rates.to_json}"
+      div.card-header.card-header-color.py-3
+        p.p-1.fs-4.mb-0
+          i.bi.bi-graph-up.me-2
+          | 積みゲー推移
+      div.d-flex.flex-wrap.align-items-center.gap-3.px-3.pb-2.card-header-color
+        - [['1週間', 'week'], ['1か月', 'month'], ['半年', 'half_year'], ['1年', 'year'], ['全期間', 'all']].each do |label, key|
+          = link_to label, statistic_path(chart_range: key), class: key == @chart_range ? 'text-white fw-bold' : 'link-steam-accent'
+        - if @chart_range_options.any?
+          = form_with url: statistic_path, method: :get, class: "ms-auto" do |f|
+            = hidden_field_tag :chart_range, @chart_range
+            = select_tag :chart_range_offset, options_for_select(@chart_range_options, @chart_range_offset), class: "form-select form-select-sm w-auto search-input", onchange: "this.form.requestSubmit()"
+      div.card-body.card-body-color.p-4
+        div.rounded.p-3 style="background-color: #8b929b; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);"
+          canvas data-snapshot-chart-target="canvas"
+        p.small.text-muted-steam.mt-2.mb-0 ※1日1度サイトへアクセス時に積みゲー総額と積みゲー率が記録されます。アクセスがなかった日は記録されません。
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 ネクストプレイ提案
-  div.d-flex.justify-content-between.px-3.card-header-color
-    span ゲームタイトル
-    span 最終プレイ日
-  div.card-body.card-body-color.d-flex
-    ol.w-100.px-3
-      - @recommended_games.each do |library|
-        li.d-flex.justify-content-between
-          span = link_to library.game.game_title, game_path(library.game), class: 'text-white'
-          - if library.last_played_at
-            span = library.last_played_at&.strftime('%Y年%m月%d日')
+  div.row.g-5.mb-5
+    div.col-lg-6
+      div.card.text-white.border-0.h-100
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-play-circle-fill.me-2
+            | ネクストプレイ提案
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
+          - @recommended_games.each do |library|
+            div.p-3.rounded.stat-tile
+              = link_to game_path(library.game) do
+                = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.d-flex.justify-content-between.align-items-end
+                div
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                  - if library.last_played_at
+                    div.text-muted-steam.small = "最終プレイ：#{library.last_played_at&.strftime('%Y年%m月%d日')}"
+                  - else
+                    div.text-muted-steam.small 最終プレイ：未プレイ
+                - if library.next_up?
+                  div.d-flex.align-items-center.gap-2
+                    span.small.text-muted-steam 設定中
+                    = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
+                - else
+                  = button_to "次にプレイに設定", set_slot_play_focus_path(library_id: library.id, slot: 'next_up'), method: :patch, class: "btn btn-color text-white btn-sm", form: { data: { turbo_confirm: (@next_up_library ? "「#{@next_up_library.game.game_title}」から「#{library.game.game_title}」に変更しますか?" : nil) } }
+
+    div.col-lg-6
+      div.card.text-white.border-0.h-100
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-lightbulb-fill.me-2
+            | 逆レコメンド
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
+          - @most_unplayed_game_genres.each do |genre|
+            div.p-3.rounded.stat-tile
+              - example_game = @genre_example_games[genre[0]]
+              - if example_game
+                = link_to game_path(example_game) do
+                  = image_tag steam_banner_image(example_game), class: 'w-100 rounded mb-2', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.small.text-muted-steam
+                i.bi.bi-graph-up-arrow.me-1
+                | 最も詰んでいるゲーム数の多いジャンル
+              div.fs-5.fw-bold.mb-1 = "#{genre[0]}(#{genre[1]}個)"
+              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer", class: 'link-steam-accent small'
+          - @least_unplayed_game_genres.each do |genre|
+            div.p-3.rounded.stat-tile
+              - example_game = @genre_example_games[genre[0]]
+              - if example_game
+                = link_to game_path(example_game) do
+                  = image_tag steam_banner_image(example_game), class: 'w-100 rounded mb-2', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div.small.text-muted-steam
+                i.bi.bi-graph-down-arrow.me-1
+                | 最も詰んでいるゲーム数の少ないジャンル
+              div.fs-5.fw-bold.mb-1 = "#{genre[0]}(#{genre[1]}個)"
+              = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer", class: 'link-steam-accent small'
+
+  div.row.g-5.mb-5
+    div.col-lg-6
+      div.card.text-white.border-0.h-100
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-hourglass-split.me-2
+            | 積みゲーリスト
+        div.d-flex.justify-content-between.px-3.card-header-color
+          span.col-6 ゲームタイトル
+          span.col-5 プレイ時間
+          span.col-3 クリア
+        div.card-body.card-body-color
+          - if @no_backlog
+            p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
           - else
-            span 未プレイ
+            = form_with url: update_cleared_games_statistic_path, method: :patch do |f|
+              ol.w-100.px-3
+                - @unplayed_games.each do |library|
+                  li.d-flex.justify-content-between
+                    span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
+                    span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
+                    span.col-6 = check_box_tag "cleared_game_ids[]", library.id
+              = f.submit "更新する"
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 逆レコメンド
-  div.card-body.card-body-color.d-flex
-    - @most_unplayed_game_genres.each do |genre|
-      p.me-4 一番詰んでるゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
-      p.me-4
-        = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
-    - @least_unplayed_game_genres.each do |genre|
-      p.me-4 一番詰んでないゲームジャンルは#{genre[0]}で、#{genre[1]}個積んでるよ～
-      p.me-4
-        = link_to "#{genre[0]}ゲームを探す", steam_genre_name_search(genre[0]), target: :_blank, rel: "noopener noreferrer"
+    div.col-lg-6
+      div.card.text-white.border-0.h-100
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-award-fill.me-2
+            | 一度積んでからクリアしたゲーム一覧
+        div.card-body.card-body-color
+          ol.w-100.px-3
+            - @cleared_after_unplayed_games.each do |library|
+              li.d-flex.justify-content-between
+                span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
+                span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
+                span.col-6 = "#{(library.cleared_date - library.unplayed_date).to_i}日"
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    span.p-1 積みゲーリスト
-  div.d-flex.justify-content-between.px-3.card-header-color
-    span.col-6 ゲームタイトル
-    span.col-5 プレイ時間
-    span.col-3 クリア
-  div.card-body.card-body-color.d-flex
-    = form_with url: update_cleared_games_statistic_path, method: :patch do |f|
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-bar-chart-line-fill.me-2
+        | コスパランキング
+    div.card-body.card-body-color
       ol.w-100.px-3
-        - @unplayed_games.each do |library|
+        - @best_cost_performance_games.each do |library|
           li.d-flex.justify-content-between
-            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
+            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
+            span.col-6 = "¥#{library.game.price}"
             span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-            span.col-6 = check_box_tag "cleared_game_ids[]", library.id
-      = f.submit "更新する"
-
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 一度積んでからクリアしたゲーム一覧
-  div.card-body.card-body-color.d-flex
-    ol.w-100.px-3
-      - @cleared_after_unplayed_games.each do |library|
-        li.d-flex.justify-content-between
-          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
-          span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-          span.col-6 = "#{(library.cleared_date - library.unplayed_date).to_i}日"
-
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 コスパランキング
-  div.card-body.card-body-color.d-flex
-    ol.w-100.px-3
-      - @best_cost_performance_games.each do |library|
-        li.d-flex.justify-content-between
-          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
-          span.col-6 = "¥#{library.game.price}"
-          span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-          span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
-      - @worst_cost_performance_games.each do |library|
-        li.d-flex.justify-content-between
-          span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'text-white'
-          span.col-6 = "¥#{library.game.price}"
-          span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-          span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
-      = link_to '詳細へ', cost_performance_detailed_ranking_statistic_path, class: 'btn btn-secondary text-white'
+            span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
+        - @worst_cost_performance_games.each do |library|
+          li.d-flex.justify-content-between
+            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
+            span.col-6 = "¥#{library.game.price}"
+            span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
+            span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
+        = link_to '詳細へ', cost_performance_detailed_ranking_statistic_path, class: 'btn btn-secondary text-white'

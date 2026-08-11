@@ -1,15 +1,20 @@
-div.container style="margin-top: 10rem;"
-    h1.text-center.pt-3.pb-3 積みゲー総額を見てみよう！
+div.container style="margin-top: 4rem;"
+    h1.text-center.pt-3.pb-1 積みゲー総額を見てみよう！
 
-    div.text-center.pb-4
-        =  button_to 'Steamアカウントでログイン', user_steam_omniauth_authorize_path, method: :post, class: "btn btn-color text-white", data: { turbo: false }
+    p.text-center.pb-3 Steamアカウントでログインするだけで、あなたの積みゲーを自動で可視化します。
 
-    h2.text-center.pb-3 積みゲー金額ランキング
+    div.text-center.pb-5
+        =  button_to 'Steamアカウントでログイン', user_steam_omniauth_authorize_path, method: :post, class: "btn btn-steam-signin", data: { turbo: false }
 
-    div.d-flex.justify-content-center.pb-5
-        ol
-            - @unplayed_price_and_count_ranking_users.each do |user_price_count|
-                li = "¥#{user_price_count[1]} (#{user_price_count[2]}本)"
+    div.card.text-white.w-75.border-0.mx-auto.mb-5
+        div.card-header.card-header-color.pb-0
+            p.p-1
+                i.bi.bi-trophy-fill.me-2
+                | 積みゲー金額ランキング
+        div.card-body.card-body-color
+            ol.w-100.px-3.mb-0
+                - @unplayed_price_and_count_ranking_users.each do |user_price_count|
+                    li = "¥#{user_price_count[1]} (#{user_price_count[2]}本)"
 
     div.card.text-white.w-75.border-0.mx-auto.mb-5
         div.card-header.card-header-color.pb-0
@@ -19,17 +24,17 @@ div.container style="margin-top: 10rem;"
         div.card-body.card-body-color
             p.mb-4 積み算は、Steamの積みゲー（未プレイ・未クリアのゲーム）を楽しく消化するためのWebサービスです。
             div.d-flex.gap-3.flex-wrap.justify-content-center
-                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                div.p-3.rounded.text-center style="background-color: #2a475e; flex: 1 1 220px;"
                     p.mb-2
                         i.bi.bi-bar-chart-fill.me-2
                         strong 積みゲー可視化
                     p.small.mb-0 Steamの積みゲーを総額・積み率・推移グラフで把握できます。
-                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                div.p-3.rounded.text-center style="background-color: #2a475e; flex: 1 1 220px;"
                     p.mb-2
                         i.bi.bi-people-fill.me-2
                         strong 他ユーザーとの比較
                     p.small.mb-0 自分の積みゲー状況を、他のユーザーの平均と比較できます。
-                div.p-3.rounded.text-center style="background-color: #434950; flex: 1 1 220px;"
+                div.p-3.rounded.text-center style="background-color: #2a475e; flex: 1 1 220px;"
                     p.mb-2
                         i.bi.bi-chat-heart-fill.me-2
                         strong キャラと一緒に
@@ -44,6 +49,9 @@ div.container style="margin-top: 10rem;"
             details.mb-3
                 summary.fw-bold ログイン情報は安全ですか？
                 p.small.mt-2.mb-0 ログインにはSteam公式のOpenID認証を使用しており、パスワードなどの認証情報は一切保存していません。
+            details.mb-3
+                summary.fw-bold ログインしてもゲームが同期されません
+                p.small.mt-2.mb-0 Steamのプロフィール設定で「ゲームの詳細」のプライバシー設定が非公開になっていると、ゲームの所有情報・プレイ時間を取得できません。Steamコミュニティのプライバシー設定から「公開」に変更してから、再度お試しください。
             details.mb-3
                 summary.fw-bold 積みゲー総額が表示されないのはなぜですか？
                 p.small.mt-2.mb-0 初回ログイン時は価格取得まで時間がかかる場合がございます。反映まで少し待ってから再読み込みしてみてください。

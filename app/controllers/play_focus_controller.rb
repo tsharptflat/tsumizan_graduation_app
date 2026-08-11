@@ -10,10 +10,15 @@ class PlayFocusController < ApplicationController
     @available_libraries = @available_libraries.where('games.game_title ILIKE ?', "%#{params[:q]}%") if params[:q].present?
     @available_libraries = @available_libraries.cleared if @cleared_filter == 'cleared'
     @available_libraries = @available_libraries.not_cleared if @cleared_filter == 'uncleared'
+    @available_libraries = @available_libraries.page(params[:page])
   end
 
   def set_slot
     library = current_user.user_game_libraries.find(params[:library_id])
+
+    if params[:slot] == 'next_up'
+      current_user.user_game_libraries.next_up.where.not(id: library.id).update_all(play_focus: :unfocused)
+    end
 
     if library.update(play_focus: params[:slot])
       redirect_to play_focus_path, notice: '設定しました。'

@@ -16,14 +16,16 @@ export default class extends Controller {
             data: this.pricesValue,
             borderColor: "#325C80",
             backgroundColor: "#325C80",
-            yAxisID: "y"
+            yAxisID: "y",
+            spanGaps: true
           },
           {
             label: "積み率(%)",
             data: this.ratesValue,
             borderColor: "#D6D9DC",
             backgroundColor: "#D6D9DC",
-            yAxisID: "y1"
+            yAxisID: "y1",
+            spanGaps: true
           }
         ]
       },

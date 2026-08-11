@@ -1,6 +1,8 @@
 span#total_price
-    - if UserGameLibrary.any_library_game_prices_nil?(user)
+    - if user.user_game_libraries.empty?
+        span.fs-3 積みゲーが同期されていません。ライブラリにゲームが存在すること、Steamのプロフィール設定で「ゲームの詳細」が公開になっているかをご確認ください。
+    - elsif UserGameLibrary.any_library_game_prices_nil?(user)
         span.fs-3 計算中…
         span.loader
     - else
-        = number_to_currency(total_price, precision: 0, unit: '¥')
+        = number_to_currency(total_price, precision: 0, unit: '¥', format: '%u%n')
