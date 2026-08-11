@@ -65,12 +65,19 @@ div.mx-auto.mt-5 style="max-width: 960px;"
             div.p-3.rounded.stat-tile
               = link_to game_path(library.game) do
                 = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
-              div
-                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
-                - if library.last_played_at
-                  div.text-muted-steam.small = "最終プレイ：#{library.last_played_at&.strftime('%Y年%m月%d日')}"
+              div.d-flex.justify-content-between.align-items-end
+                div
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                  - if library.last_played_at
+                    div.text-muted-steam.small = "最終プレイ：#{library.last_played_at&.strftime('%Y年%m月%d日')}"
+                  - else
+                    div.text-muted-steam.small 最終プレイ：未プレイ
+                - if library.next_up?
+                  div.d-flex.align-items-center.gap-2
+                    span.small.text-muted-steam 設定中
+                    = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
                 - else
-                  div.text-muted-steam.small 最終プレイ：未プレイ
+                  = button_to "次にプレイに設定", set_slot_play_focus_path(library_id: library.id, slot: 'next_up'), method: :patch, class: "btn btn-color text-white btn-sm", form: { data: { turbo_confirm: (@next_up_library ? "「#{@next_up_library.game.game_title}」から「#{library.game.game_title}」に変更しますか?" : nil) } }
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
