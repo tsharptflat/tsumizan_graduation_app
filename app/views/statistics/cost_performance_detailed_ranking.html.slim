@@ -1,11 +1,30 @@
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 コスパランキング
-  div.card-body.card-body-color.d-flex
-    ol.w-100.px-3
-      - @all_cost_performance_games.each do |library|
-        li.d-flex.justify-content-between
-          span.col-6 = library.game.game_title
-          span.col-6 = "¥#{library.game.price}"
-          span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-          span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
+div.card.text-white.border-0.mx-auto.mt-5.mb-5.w-75
+  div.card-header.card-header-color.py-3
+    div.d-flex.justify-content-between.align-items-center
+      p.p-1.fs-4.mb-0
+        i.bi.bi-bar-chart-line-fill.me-2
+        | コスパランキング
+      = link_to '統計ページに戻る', statistic_path, class: 'link-steam-accent'
+    p.text-muted-steam.small.px-1.mb-0 各ゲーム下の数値は価格とプレイ時間をもとに算出したコスパ指数です
+
+  div.card-body.card-body-color
+    ol.list-unstyled.px-3.mb-0
+      - @all_cost_performance_games.each_with_index do |library, index|
+        - rank = @all_cost_performance_games.offset_value + index + 1
+        li.cost-performance-row class=("rank-#{rank}" if rank <= 3)
+          div.d-flex.align-items-start.gap-3
+            div.cost-performance-rank
+              - if rank <= 3
+                = rank_crown(rank)
+              span.rank-number = rank
+            div.flex-grow-1
+              div.d-flex.align-items-center.gap-2
+                = link_to game_path(library.game), style: 'width: 80px; flex-shrink: 0;' do
+                  = image_tag steam_thumbnail_image(library.game), class: 'img-fluid rounded', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+                div
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent small d-block fw-bold'
+                  div.text-muted-steam.small = "¥#{library.game.price} ／ #{(library.minutes_played/60.0).round(1)}時間"
+              div.cost-performance-bar-track.mt-2
+                div.cost-performance-bar-fill style="width: #{[(library.cost_performance_score / @max_cost_performance_score * 100), 100].min}%;"
+                  span.cost-performance-bar-label = library.cost_performance_score
+    = paginate @all_cost_performance_games

@@ -59,6 +59,10 @@ class UserGameLibrary < ApplicationRecord
     }
   end
 
+  def cost_performance_score
+    ((minutes_played + 1).to_f / game.price * 1000).round(2)
+  end
+
   def self.total_price(user)
     user.user_game_libraries.unplayed.joins(:game).sum('games.price')
   end
