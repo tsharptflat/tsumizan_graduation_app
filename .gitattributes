@@ -7,3 +7,9 @@ db/schema.rb linguist-generated
 vendor/* linguist-vendored
 config/credentials/*.yml.enc diff=rails_credentials
 config/credentials.yml.enc diff=rails_credentials
+
+# bin/* scripts start with a shebang line and must be checked out with LF
+# line endings regardless of the local core.autocrlf setting, otherwise
+# Windows checkouts break them (e.g. "#!/usr/bin/env sh\r" is not a valid
+# interpreter path).
+bin/* text eol=lf
