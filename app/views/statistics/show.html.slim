@@ -61,11 +61,18 @@ div.mx-auto.mt-5 style="max-width: 960px;"
         div.card-body.card-body-color.d-flex.flex-column.gap-3
           - @recommended_games.each do |library|
             div.p-3.rounded.stat-tile.d-flex.justify-content-between.align-items-center
-              = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fs-5 fw-bold'
-              - if library.last_played_at
-                span.text-muted-steam = library.last_played_at&.strftime('%Y年%m月%d日')
+              div
+                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fs-5 fw-bold'
+                - if library.last_played_at
+                  div.text-muted-steam = library.last_played_at&.strftime('%Y年%m月%d日')
+                - else
+                  div.text-muted-steam 未プレイ
+              - if library.next_up?
+                div.d-flex.align-items-center.gap-2
+                  span.small.text-muted-steam 設定中
+                  = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
               - else
-                span.text-muted-steam 未プレイ
+                = button_to "次にプレイに設定", set_slot_play_focus_path(library_id: library.id, slot: 'next_up'), method: :patch, class: "btn btn-color text-white btn-sm", form: { data: { turbo_confirm: (@next_up_library ? "「#{@next_up_library.game.game_title}」から「#{library.game.game_title}」に変更しますか?" : nil) } }
 
     div.col-lg-6
       div.card.text-white.border-0.h-100

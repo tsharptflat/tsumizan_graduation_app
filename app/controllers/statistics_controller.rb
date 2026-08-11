@@ -10,6 +10,7 @@ class StatisticsController < ApplicationController
     @total_games_count = current_user.user_game_libraries.count
     @unplayed_rate = UserGameLibrary.unplayed_rate(current_user)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
+    @next_up_library = current_user.user_game_libraries.next_up.first
     @cleared_after_unplayed_games = current_user.user_game_libraries.cleared_after_unplayed.includes(:game)
 
     @cleared_game_count_rate = UserGameLibrary.cleared_game_count_rate(current_user)
