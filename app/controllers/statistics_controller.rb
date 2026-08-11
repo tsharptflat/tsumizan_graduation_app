@@ -7,6 +7,7 @@ class StatisticsController < ApplicationController
     @user = current_user
     @total_price = UserGameLibrary.total_price(current_user)
     @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)# .limit(UserGameLibrary::TSUMIGE_LIST_LIMIT)
+    @no_backlog = @unplayed_games.empty?
     @total_games_count = current_user.user_game_libraries.count
     @unplayed_rate = UserGameLibrary.unplayed_rate(current_user)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
@@ -19,6 +20,9 @@ class StatisticsController < ApplicationController
     min_count = game_genres.map{ |x| x[1] }.min
     @most_unplayed_game_genres = game_genres.select{ |x| x[1] == max_count }
     @least_unplayed_game_genres = game_genres.select{ |x| x[1] == min_count }
+    @genre_example_games = (@most_unplayed_game_genres + @least_unplayed_game_genres).each_with_object({}) do |(genre_name, _count), hash|
+      hash[genre_name] = current_user.user_game_libraries.unplayed.joins(game: :game_genre_types).find_by(game_genre_types: { name: genre_name })&.game
+    end
 
     cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
     @best_cost_performance_games = cost_performance_ranking[:best]
