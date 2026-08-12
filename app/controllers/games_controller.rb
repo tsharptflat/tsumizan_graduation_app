@@ -13,11 +13,11 @@ class GamesController < ApplicationController
         when "price_desc"
             @q.result(distinct: true).order(price: :desc).page(params[:page])
         when "possessed_count"
-            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by { |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         when "unplayed_rate"
-            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }).page(params[:page])
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by { |game| -(@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) }).page(params[:page])
         else
-            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by{ |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
+            Kaminari.paginate_array(@q.result(distinct: true).all.sort_by { |game| -(@all_games_count.fetch(game.id, 0)) }).page(params[:page])
         end
     end
 
@@ -37,5 +37,21 @@ class GamesController < ApplicationController
         @average_unplayed_time = UserGameLibrary.game_statistics_average_unplayed_time(@game)
 
         @current_user_game = @user.user_game_libraries.find_by(game_id: @game.id)
+    end
+
+    def update_cleared_game
+        library = current_user.user_game_libraries.find_by!(game_id: params[:id])
+        library.update!(cleared_date: Time.current)
+        redirect_to game_path(params[:id]), notice: 'クリア済みにしました。'
+    rescue
+        redirect_to game_path(params[:id]), alert: '更新に失敗しました。'
+    end
+
+    def revert_cleared_game
+        library = current_user.user_game_libraries.find_by!(game_id: params[:id])
+        library.update!(cleared_date: nil)
+        redirect_to game_path(params[:id]), notice: '未クリアに戻しました。'
+    rescue
+        redirect_to game_path(params[:id]), alert: '更新に失敗しました。'
     end
 end

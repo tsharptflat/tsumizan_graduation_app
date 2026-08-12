@@ -11,7 +11,8 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
           li
             = link_to '積みゲー総額', user_path, class: 'dropdown-item'
             = link_to '積みゲー統計', statistic_path, class: 'dropdown-item'
-            = link_to 'ゲーム一覧', games_path, class: 'dropdown-item'
+            = link_to 'あなたの積みゲー一覧', backlog_path, class: 'dropdown-item'
+            = link_to 'みんなのゲーム一覧', games_path, class: 'dropdown-item'
             = link_to 'プレイ状況', play_focus_path, class: 'dropdown-item'
 
       div.dropdown.pe-3

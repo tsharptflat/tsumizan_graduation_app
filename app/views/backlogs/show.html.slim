@@ -1,0 +1,40 @@
+div.card.text-white.border-0.mx-auto.mt-5.card-body-color style="max-width: 720px;"
+  div.card-header.card-header-color.py-3
+    p.p-1.fs-4.mb-0
+      i.bi.bi-hourglass-split.me-2
+      | あなたの積みゲー一覧
+    - current_sort = params[:sort].presence
+    div.d-flex.gap-3.mt-2
+      - [['名前順', 'name'], ['価格の安い順', 'price_asc'], ['価格の高い順', 'price_desc']].each do |label, key|
+        = link_to label, backlog_path(sort: key), class: key == current_sort ? 'text-white fw-bold' : 'link-steam-accent'
+  div.card-body.card-body-color
+    - if @no_backlog
+      p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
+    - else
+      div.px-3
+        div.py-1.rounded.stat-tile.d-flex.text-center
+          span.fw-bold style="flex: 1 1 0;" ゲーム
+          span.fw-bold style="flex: 1 1 0;" プレイ時間
+          span.fw-bold style="flex: 1 1 0;" 価格
+          span.fw-bold style="flex: 1 1 0;" クリア
+      ol.list-unstyled.w-100.px-3
+        - @unplayed_games.each do |library|
+          li.mt-3
+            div.d-flex.align-items-center
+              div.text-center style="flex: 1 1 0;"
+                = link_to game_path(library.game) do
+                  = image_tag steam_banner_image(library.game), class: 'rounded', style: 'width: 200px; height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              span.text-center style="flex: 1 1 0;" = "#{(library.minutes_played/60.0).round(1)}時間"
+              span.text-center style="flex: 1 1 0;" = "¥#{library.game.price}"
+              span.text-center style="flex: 1 1 0;"
+                - if library.cleared_date
+                  = button_to '未クリアに戻す', revert_cleared_game_backlog_path(library_id: library.id), method: :patch, class: 'btn btn-color text-white btn-sm'
+                - else
+                  = button_to 'クリア済みにする', update_cleared_game_backlog_path(library_id: library.id), method: :patch, class: 'btn btn-color text-white btn-sm', form: { data: { turbo_confirm: "「#{library.game.game_title}」をクリア済みにしますか?" } }
+            div.d-flex
+              div.text-center style="flex: 1 1 0;"
+                div.d-inline-block.text-start style="width: 200px;"
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent small d-block mt-1'
+              span style="flex: 1 1 0;"
+              span style="flex: 1 1 0;"
+              span style="flex: 1 1 0;"
