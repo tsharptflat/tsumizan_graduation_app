@@ -8,6 +8,13 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5
     p.me-4 価格: #{number_to_currency(@game.price, precision: 0, unit: '¥')}
     p.me-4
       = link_to 'Steamストアページへ', steam_store_link(@game), target: :_blank, rel: 'noopener noreferrer', class: 'btn btn-secondary text-white'
+    - if @current_user_game
+      p.me-4
+        - if @current_user_game.cleared_date
+          span.badge.bg-success.me-2 クリア済み
+          = button_to '未クリアに戻す', revert_cleared_game_game_path(@game), method: :patch, class: 'btn btn-secondary text-white'
+        - else
+          = button_to 'クリア済みにする', update_cleared_game_game_path(@game), method: :patch, class: 'btn-steam-primary'
 
 div.card.text-white.w-50.border-0.mx-auto.mt-5
   div.card-header.card-header-color.pb-0

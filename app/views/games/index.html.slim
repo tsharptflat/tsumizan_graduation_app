@@ -1,23 +1,28 @@
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 ゲーム一覧
-  div.d-flex.gap-3.px-3.pb-2.card-header-color
-    = link_to '名前順', games_path(sort: 'name'), class: 'link-steam-accent'
-    = link_to '価格の安い順', games_path(sort: 'price_asc'), class: 'link-steam-accent'
-    = link_to '価格の高い順', games_path(sort: 'price_desc'), class: 'link-steam-accent'
-    = link_to '積み率順', games_path(sort: 'unplayed_rate'), class: 'link-steam-accent'
-    = link_to '所持者数順', games_path(sort: 'possessed_count'), class: 'link-steam-accent'
-  div.d-flex.justify-content-between.px-3.card-header-color
-    span.col-3 ゲームタイトル
-    span.col-2 所持者数
-    span.col-2 積み率
-    span.col-5 サムネ
+div.card.text-white.w-50.border-0.mx-auto.mt-5.card-body-color
+  div.card-header.card-header-color.py-3
+    p.p-1.fs-4.mb-0
+      i.bi.bi-people-fill.me-2
+      | みんなのゲーム一覧
+    - current_sort = params[:sort].presence || 'possessed_count'
+    div.d-flex.gap-3.mt-2
+      - [['名前順', 'name'], ['価格の安い順', 'price_asc'], ['価格の高い順', 'price_desc'], ['積み率順', 'unplayed_rate'], ['所持者数順', 'possessed_count']].each do |label, key|
+        = link_to label, games_path(sort: key), class: key == current_sort ? 'text-white fw-bold' : 'link-steam-accent'
   div.card-body.card-body-color
+    div.px-3
+      div.py-1.rounded.stat-tile.d-flex.text-center
+        span.fw-bold style="flex: 1 1 0;" ゲーム
+        span.fw-bold style="flex: 1 1 0;" 所持者数
+        span.fw-bold style="flex: 1 1 0;" 価格
+        span.fw-bold style="flex: 1 1 0;" 積み率
     ol.w-100.px-3
       - @games.each do |game|
-        li.d-flex.justify-content-between.align-items-center.mt-3
-          span.col-3 = link_to game.game_title, game_path(game), class: 'link-steam-accent'
-          span.col-2 = "#{@all_games_count.fetch(game.id, 0)}人"
-          span.col-2 = "#{((@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) * 100).round(1)}%"
-          span.col-5 = image_tag steam_thumbnail_image(game), class: 'img-fluid', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+        li.d-flex.align-items-center.mt-3
+          div.text-center style="flex: 1 1 0;"
+            div.d-inline-block.text-start style="width: 200px;"
+              = link_to game_path(game) do
+                = image_tag steam_banner_image(game), class: 'rounded mb-1', style: 'width: 200px; height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              = link_to game.game_title, game_path(game), class: 'link-steam-accent small d-block'
+          span.text-center style="flex: 1 1 0;" = "#{@all_games_count.fetch(game.id, 0)}人"
+          span.text-center style="flex: 1 1 0;" = "¥#{game.price}"
+          span.text-center style="flex: 1 1 0;" = "#{((@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) * 100).round(1)}%"
     = paginate @games

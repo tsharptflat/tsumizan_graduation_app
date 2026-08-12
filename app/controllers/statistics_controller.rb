@@ -6,8 +6,9 @@ class StatisticsController < ApplicationController
   def show
     @user = current_user
     @total_price = UserGameLibrary.total_price(current_user)
-    @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)# .limit(UserGameLibrary::TSUMIGE_LIST_LIMIT)
+    @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)
     @no_backlog = @unplayed_games.empty?
+    @tsumige_list = @unplayed_games.joins(:game).order('games.price DESC').limit(UserGameLibrary::TSUMIGE_LIST_LIMIT)
     @total_games_count = current_user.user_game_libraries.count
     @unplayed_rate = UserGameLibrary.unplayed_rate(current_user)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
@@ -17,10 +18,10 @@ class StatisticsController < ApplicationController
     @cleared_game_count_rate = UserGameLibrary.cleared_game_count_rate(current_user)
 
     game_genres = UserGameLibrary.unplayed_game_genres(current_user)
-    max_count = game_genres.map{ |x| x[1] }.max
-    min_count = game_genres.map{ |x| x[1] }.min
-    @most_unplayed_game_genres = game_genres.select{ |x| x[1] == max_count }
-    @least_unplayed_game_genres = game_genres.select{ |x| x[1] == min_count }
+    max_count = game_genres.map { |x| x[1] }.max
+    min_count = game_genres.map { |x| x[1] }.min
+    @most_unplayed_game_genres = game_genres.select { |x| x[1] == max_count }
+    @least_unplayed_game_genres = game_genres.select { |x| x[1] == min_count }
     @genre_example_games = (@most_unplayed_game_genres + @least_unplayed_game_genres).each_with_object({}) do |(genre_name, _count), hash|
       hash[genre_name] = current_user.user_game_libraries.unplayed.joins(game: :game_genre_types).find_by(game_genre_types: { name: genre_name })&.game
     end
@@ -44,36 +45,16 @@ class StatisticsController < ApplicationController
     @all_cost_performance_games = cost_performance_ranking[:all]
   end
 
-  def update_cleared_games
-    @user_game_library = current_user.user_game_libraries
-
-    if params[:cleared_game_ids].nil? #チェックなしの場合はreturnでメソッドを強制終了
-      redirect_to statistic_path, alert: 'クリア済みゲームが選択されていません。'
-      return
-    end
-
-    params[:cleared_game_ids].each do |id|
-      @user_game_library.find(id).update!(cleared_date: Time.current)
-    end
-
-    Task.check_and_update_progress!(current_user)
-
-    redirect_to statistic_path, notice: 'クリア済みゲームを更新しました。'
-
-  rescue #update!で例外エラーが発生したときの処理 beginが省略されている rescue単体にendは不要
-    redirect_to statistic_path, alert: 'クリア済みゲームの更新に失敗しました。'
-  end
-
   private
 
   def chart_series(snapshots, start_date, end_date)
-    return [snapshots.pluck(:recorded_on), snapshots.pluck(:total_price), snapshots.pluck(:unplayed_rate)] unless start_date
+    return [ snapshots.pluck(:recorded_on), snapshots.pluck(:total_price), snapshots.pluck(:unplayed_rate) ] unless start_date
 
     snapshots_by_date = snapshots.index_by(&:recorded_on)
     dates = (start_date..end_date).to_a
     prices = dates.map { |date| snapshots_by_date[date]&.total_price }
     rates = dates.map { |date| snapshots_by_date[date]&.unplayed_rate }
-    [dates, prices, rates]
+    [ dates, prices, rates ]
   end
 
   def chart_range_period(range, offset)
@@ -81,19 +62,19 @@ class StatisticsController < ApplicationController
     case range
     when 'week'
       start_date = today.beginning_of_week - offset.weeks
-      [start_date, start_date.end_of_week]
+      [ start_date, start_date.end_of_week ]
     when 'month'
       start_date = today.beginning_of_month - offset.months
-      [start_date, start_date.end_of_month]
+      [ start_date, start_date.end_of_month ]
     when 'half_year'
       current_half_start = today.month <= 6 ? today.beginning_of_year : today.beginning_of_year + 6.months
       start_date = current_half_start - (offset * 6).months
-      [start_date, start_date + 6.months - 1.day]
+      [ start_date, start_date + 6.months - 1.day ]
     when 'year'
       start_date = today.beginning_of_year - offset.years
-      [start_date, start_date.end_of_year]
+      [ start_date, start_date.end_of_year ]
     else
-      [nil, nil]
+      [ nil, nil ]
     end
   end
 
@@ -102,7 +83,7 @@ class StatisticsController < ApplicationController
 
     (0...CHART_RANGE_OFFSET_OPTIONS_COUNT).map do |offset|
       start_date, end_date = chart_range_period(range, offset)
-      [chart_range_period_label(range, start_date, end_date), offset]
+      [ chart_range_period_label(range, start_date, end_date), offset ]
     end
   end
 

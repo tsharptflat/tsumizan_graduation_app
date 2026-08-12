@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   require "sidekiq/web" # require the web UI
   mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
-  
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
@@ -30,12 +30,22 @@ Rails.application.routes.draw do
     collection do
       get :search_suggestions
     end
+    member do
+      patch :update_cleared_game
+      patch :revert_cleared_game
+    end
   end
 
   resource :statistic, only: %i[show] do
     member do
-      patch 'update_cleared_games'
       get 'cost_performance_detailed_ranking'
+    end
+  end
+
+  resource :backlog, only: %i[show] do
+    member do
+      patch 'update_cleared_game'
+      patch 'revert_cleared_game'
     end
   end
 
@@ -72,7 +82,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :contacts, only: [:new, :create] do
+  resources :contacts, only: [ :new, :create ] do
     collection do
       post 'confirm'
     end
