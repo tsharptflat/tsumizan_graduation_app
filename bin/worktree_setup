@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# Run once, from inside a freshly created git worktree, before the first
+# `docker compose up`.
+#
+# Docker Compose namespaces named volumes (bundle_data, node_modules, ...)
+# by the current directory name, so every new worktree gets brand-new,
+# empty volumes. Those volumes are first populated by the image's root
+# user, but the app containers run as uid 1000 (see `user: "1000:1000"`
+# in compose.yml), so without this the very first boot fails with
+# `Bundler::PermissionError` / `EACCES` writing into them.
+set -e
+
+chmod +x bin/*
+
+docker compose run --rm --no-deps -u root web chown -R 1000:1000 /usr/local/bundle
+docker compose run --rm --no-deps -u root web chown -R 1000:1000 /myapp/node_modules
+docker compose run --rm --no-deps web yarn install
+
+echo "done. you can now run: docker compose up"
