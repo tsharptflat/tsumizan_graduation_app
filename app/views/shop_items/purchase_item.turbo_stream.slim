@@ -1,7 +1,11 @@
-= turbo_stream.replace 'user_wallet_point' do
-  span#user_wallet_point.text-white = "#{current_user.user_wallet.reload.point}P"
+- if @purchase_success
+  = turbo_stream.replace 'user_wallet_point' do
+    span#user_wallet_point = "#{current_user.user_wallet.reload.point}P"
 
-= turbo_stream.replace 'purchase_toast' do 
+= turbo_stream.replace 'purchase_toast' do
   div.toast.fade.position-absolute.top-100.start-50.translate-middle-x.mt-2 id="purchase_toast" data-controller="toast" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="true" data-bs-delay="8000"
     div.toast-body
-      = "#{@shop_item.item.name}を#{@count}個購入しました"
+      - if @purchase_success
+        = "#{@shop_item.item.name}を#{@count}個購入しました"
+      - else
+        = "ポイントが不足しているため購入できませんでした"

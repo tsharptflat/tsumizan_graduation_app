@@ -295,10 +295,6 @@ nav.pagination {
     background-color: #4A4A4A;
 }
 
-.shop-item-owned {
-    background-color: #4A4A4A;
-}
-
 #purchase_toast .toast-body {
     color: #1B2838;
 }
@@ -339,6 +335,11 @@ nav.pagination {
 .gift-item-panel {
   background-color: #67707B; // 話すボタン(.btn-color)と同じ色。色数を増やさないための流用
   max-height: 260px;
+  overflow-y: auto;
+}
+
+.shop-item-list {
+  max-height: 320px; // 1行約64px x 5件分。それ以上はスクロール
   overflow-y: auto;
 }
 

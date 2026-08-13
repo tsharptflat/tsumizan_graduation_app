@@ -10,6 +10,9 @@ application.register("gift-modal", GiftModalController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import PointCalculatorController from "./point_calculator_controller"
+application.register("point-calculator", PointCalculatorController)
+
 import SearchController from "./search_controller"
 application.register("search", SearchController)
 

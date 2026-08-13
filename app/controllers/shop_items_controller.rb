@@ -9,6 +9,6 @@ class ShopItemsController < ApplicationController
     def purchase_item
         @shop_item = ShopItem.find(params[:id])
         @count = @shop_item.item_type == 'GiftItem' ? params[:count].to_i : 1
-        ShopItem.purchase_item_process(current_user, @shop_item, @count)
+        @purchase_success = ShopItem.purchase_item_process(current_user, @shop_item, @count)
     end
 end
