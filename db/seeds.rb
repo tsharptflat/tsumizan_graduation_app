@@ -98,6 +98,10 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_com
   ct.character_expression_id = expression_happy.id
 end
 
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '今日もたくさん積みゲーと向き合っていて偉いですね、その調子で少しずつ消化していきましょう！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
 ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとう！') do |ct|
   ct.character_expression_id = expression_happy.id
 end

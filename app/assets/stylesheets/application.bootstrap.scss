@@ -320,19 +320,63 @@ nav.pagination {
 
 .speech-bubble {
   position: relative;
-  background: #131C27;
+  background: linear-gradient(135deg, #4a5568, #5c6678); // 好感度カード(.stat-tile)と同じ色
   border-radius: 10px;
-  padding: 10px;
+  width: 100%;
+  height: 76px; // 好感度カードの高さに合わせて固定（テキスト量に関わらず変わらない）
+  display: flex;
+  align-items: center;
+  // 三角(::after)がクリップされないよう、overflowは中身の.speech-bubble-content側にのみかける
 }
 
-// 吹き出しの三角部分
+.speech-bubble-content {
+  width: 100%;
+  max-height: 100%;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+// 吹き出しの三角部分（左上・左向き）
 .speech-bubble::after {
   content: '';
   position: absolute;
-  bottom: -18px;  // 三角の位置
-  left: 20px;
+  top: 20px;
+  left: -18px;
   border: 10px solid transparent;
-  border-top-color: #131C27;
+  border-right-color: #4a5568; // 吹き出し本体のグラデーション開始色（左上）に合わせる
+}
+
+.friendship-heart {
+  position: relative;
+  flex-shrink: 0;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: #e9cbd3;
+}
+
+.friendship-heart-level {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-5%); // ハート中央より下にずれるので少し上へ
+  color: #a34a4a;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.friendship-bar-track {
+  height: 14px;
+  border-radius: 999px;
+  background-color: #2A3F5A;
+  overflow: hidden;
+}
+
+.friendship-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a4d007, #6dab13);
 }
 
 /* HTML: <div class="loader"></div> */

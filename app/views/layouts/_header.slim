@@ -19,7 +19,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
         button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
         ul.dropdown-menu
           li
-            = link_to '育成', '#', class: 'dropdown-item'
+            = link_to '育成', user_character_path(@default_user_character), class: 'dropdown-item'
             = link_to 'マイレージ交換', shop_items_path, class: 'dropdown-item'
             = link_to 'マイレージ確認', tasks_path, class: 'dropdown-item'
 

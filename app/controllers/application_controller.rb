@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :set_search
   before_action :save_user_statistic_snapshot, if: :user_signed_in?
   before_action :set_now_playing_libraries, if: :user_signed_in?
+  before_action :set_default_user_character, if: :user_signed_in?
 
   def after_sign_in_path_for(resource)
     loading_user_game_libraries_path
@@ -30,6 +31,10 @@ class ApplicationController < ActionController::Base
 
   def set_now_playing_libraries
     @now_playing_libraries = current_user.user_game_libraries.now_playing.includes(:game)
+  end
+
+  def set_default_user_character
+    @default_user_character = UserCharacter.find_or_create_default_character(current_user)
   end
 
 end
