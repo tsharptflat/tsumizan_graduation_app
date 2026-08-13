@@ -69,7 +69,7 @@ Rails.application.routes.draw do
     member do
       get 'communicate'
     end
-    resources :gift_items, only: %i[index show] do
+    resources :gift_items, only: [] do
       collection do
         patch 'present_gift'
       end

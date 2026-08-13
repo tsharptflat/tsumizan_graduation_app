@@ -1,6 +1,10 @@
 = turbo_stream.replace 'dom_id' do
   div#dom_id
-    p #{@character_text.text}
+    div.speech-bubble
+      div.speech-bubble-content
+        p.mb-0 #{@character_text.text}
 
-= turbo_stream.replace "gift_item_#{@current_user_gift_item.id}" do 
-    span = "#{@current_user_gift_item.gift_item.name}（所持数：#{@current_user_gift_item.quantity}）"
+= turbo_stream.replace "gift_item_#{@current_user_gift_item.id}" do
+  div id="gift_item_#{@current_user_gift_item.id}" data-bs-toggle="tooltip" title="#{@current_user_gift_item.gift_item.description} +#{@current_user_gift_item.gift_item.friendship_point}p" data-controller="tooltip"
+    div.text-white = @current_user_gift_item.gift_item.name
+    div.small style="color: rgba(255, 255, 255, 0.75);" = "所持数：#{@current_user_gift_item.quantity}"
