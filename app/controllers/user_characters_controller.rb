@@ -14,7 +14,7 @@ class UserCharactersController < ApplicationController
     private
 
     def set_user_gift_items
-        @user_gift_items = current_user.user_gift_items
+        @user_gift_items = current_user.user_gift_items.where('quantity > 0')
     end
 
     def set_character_texts

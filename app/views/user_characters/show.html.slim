@@ -13,7 +13,10 @@ div.mx-auto.mt-5 style="max-width: 720px;"
           div.collapse id="gift_item_panel"
             div.gift-item-panel.rounded.p-3
               - if @user_gift_items.empty?
-                p.text-center.text-muted-steam.mb-0 まだプレゼントを持っていません。マイレージショップやタスク報酬で手に入れましょう！
+                p.text-center.mb-0 style="color: rgba(255, 255, 255, 0.75);"
+                  | まだプレゼントを持っていません。
+                  br
+                  | マイレージショップやタスク報酬で手に入れましょう！
               - else
                 div
                   - @user_gift_items.each do |user_gift_item|
