@@ -2,7 +2,7 @@
   - if @suggestions.present?
     div.bg-dark.rounded.border-top.border-secondary
       - @suggestions.each do |game|
-        - unplayed_rate = (@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f * 100).round(1)
+        - unplayed_rate = UserGameLibrary.unplayed_rate_for(game, @all_games_count, @all_unplayed_games_count)
         = link_to game_path(game), data: { turbo_frame: "_top" }, class: "search-suggestion-item d-flex align-items-center text-white text-decoration-none p-2 border-bottom border-secondary" do
           = image_tag steam_thumbnail_image(game), class: 'me-3', style: 'width: 92px; height: 35px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
           div

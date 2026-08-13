@@ -24,5 +24,5 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5.card-body-color
               = link_to game.game_title, game_path(game), class: 'link-steam-accent small d-block'
           span.text-center style="flex: 1 1 0;" = "#{@all_games_count.fetch(game.id, 0)}人"
           span.text-center style="flex: 1 1 0;" = "¥#{game.price}"
-          span.text-center style="flex: 1 1 0;" = "#{((@all_unplayed_games_count.fetch(game.id, 0).to_f / @all_games_count.fetch(game.id, 0).to_f) * 100).round(1)}%"
+          span.text-center style="flex: 1 1 0;" = "#{UserGameLibrary.unplayed_rate_for(game, @all_games_count, @all_unplayed_games_count)}%"
     = paginate @games

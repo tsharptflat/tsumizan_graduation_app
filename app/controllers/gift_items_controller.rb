@@ -5,7 +5,7 @@ class GiftItemsController < ApplicationController
         gift_item = GiftItem.find(params[:gift_item_id])
         count = params[:count].to_i
         GiftItem.present_gift_process(current_user, @user_character, gift_item, count)
-        @current_user_gift_item = current_user.user_gift_items.find_by(gift_item_id: gift_item.id)
+        @current_user_gift_item = current_user.user_gift_items.find_by(gift_item_id: gift_item.id) || current_user.user_gift_items.build(gift_item: gift_item, quantity: 0)
     end
 
     private

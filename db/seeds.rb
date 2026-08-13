@@ -163,6 +163,18 @@ gift_item3 = GiftItem.find_or_create_by!(name: 'test_item3') do |gi|
   gi.description = 'テスト用のギフトアイテム3です'
 end
 
+gift_item4 = GiftItem.find_or_create_by!(name: 'test_item4') do |gi|
+  gi.friendship_point = 40
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト4'
+  gi.description = 'テスト用のギフトアイテム4です'
+end
+
+gift_item5 = GiftItem.find_or_create_by!(name: 'test_item5') do |gi|
+  gi.friendship_point = 50
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト5'
+  gi.description = 'テスト用のギフトアイテム5です'
+end
+
 # 衣装アイテム
 outfit_item1 = OutfitItem.find_or_create_by!(name: 'testoutfit') do |oi|
   oi.description = 'テスト用のアウトフィットです'
@@ -180,6 +192,14 @@ end
 
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item3.id) do |si|
   si.price = 300.0
+end
+
+ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item4.id) do |si|
+  si.price = 400.0
+end
+
+ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item5.id) do |si|
+  si.price = 500.0
 end
 
 ShopItem.find_or_create_by!(item_type: 'OutfitItem', item_id: outfit_item1.id) do |si|

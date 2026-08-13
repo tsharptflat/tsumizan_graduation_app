@@ -107,6 +107,10 @@ class UserGameLibrary < ApplicationRecord
     UserGameLibrary.unplayed.group(:game_id).count
   end
 
+  def self.unplayed_rate_for(game, all_games_count, all_unplayed_games_count)
+    (all_unplayed_games_count.fetch(game.id, 0).to_f / all_games_count.fetch(game.id, 0).to_f * 100).round(1)
+  end
+
   
 #ゲームごとの詳細画面に使用
   def self.game_statistics_count(game)
