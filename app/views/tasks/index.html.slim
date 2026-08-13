@@ -1,31 +1,52 @@
-div.container
-  div.d-flex.justify-content-between.align-items-center
-    h1 タスク
-    span.text-white マイレージポイント：#{@user_wallet.point}
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.d-flex.justify-content-between.align-items-center.mb-3
+    = link_to '< 戻る', user_path(current_user), class: 'btn btn-secondary text-white rounded-pill px-4'
+    span.text-white
+      i.bi.bi-p-circle-fill.me-1
+      | #{@user_wallet.point}P
 
-  div.row.row-cols-2.g-4.mt-2
-    div.col
-      = link_to task_path('tsumige'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
-        | 積みゲー消化
-        - if @tsumige_count.to_i > 0
-          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @tsumige_count
-    div.col
-      = link_to task_path('trophies'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
-        | トロフィー獲得数
-        - if @trophies_count.to_i > 0
-          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @trophies_count
-    div.col
-      = link_to task_path('playtime'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
-        | プレイ時間？
-        - if @playtime_count.to_i > 0
-          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @playtime_count
-    div.col
-      = link_to task_path('friendship_level'), class: "btn btn-secondary text-white w-100 py-4 rounded-4 position-relative" do
-        | キャラ好感度
-        - if @friendship_count.to_i > 0
-          span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @friendship_count
-  div.d-flex.justify-content-center.mt-4
-    = button_to obtain_all_rewards_tasks_path, method: :patch, class: "btn btn-secondary text-white w-30 py-4 rounded-4 position-relative" do
-      | 一括受取
-      - if @obtainable_user_tasks_total_count.to_i > 0
-        span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @obtainable_user_tasks_total_count
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-list-check.me-2
+        | マイレージ確認
+
+    div.card-body.card-body-color
+      div.row.g-3
+        div.col-lg-4
+          div.nav.flex-column.nav-pills.gap-2 id="task-genre-tabs" role="tablist" aria-orientation="vertical"
+            - TasksController::GENRES.each_with_index do |(genre, label), i|
+              button.nav-link.task-genre-tab.text-white.text-start.position-relative class=(i.zero? ? 'active' : '') id="task-genre-tab-#{genre}" data-bs-toggle="pill" data-bs-target="#task-genre-pane-#{genre}" type="button" role="tab" aria-controls="task-genre-pane-#{genre}" aria-selected=(i.zero? ? 'true' : 'false')
+                = label
+                - if @obtainable_counts_by_genre[genre].to_i > 0
+                  span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @obtainable_counts_by_genre[genre]
+
+        div.col-lg-8
+          div.tab-content
+            - TasksController::GENRES.each_with_index do |(genre, label), i|
+              div.tab-pane.fade class=(i.zero? ? 'show active' : '') id="task-genre-pane-#{genre}" role="tabpanel" aria-labelledby="task-genre-tab-#{genre}"
+                div.task-list
+                  - (@tasks_by_genre[genre] || []).each do |task|
+                    - user_task = @user_tasks_by_task_id[task.id]
+                    - row_class = task_row_class(user_task)
+                    - reward = task.task_rewards.first
+                    - if row_class == 'task-row-claimable'
+                      div.divider-row.rounded class=row_class style="padding: 0;"
+                        = button_to obtain_reward_task_path(task), method: :patch, class: "search-suggestion-item d-flex align-items-center gap-3 border-0 text-start w-100 text-white px-2 py-3 rounded" do
+                          span.flex-grow-1 = task.name
+                          div.d-flex.align-items-center.gap-2
+                            = render 'reward_display', reward: reward
+                          = render 'task_status_icon', row_class: row_class
+                    - else
+                      div.divider-row.rounded.px-2.d-flex.align-items-center.gap-3 class="#{row_class} #{'text-muted-steam' if row_class == 'task-row-claimed'}"
+                        span.flex-grow-1 = task.name
+                        div.d-flex.align-items-center.gap-2
+                          = render 'reward_display', reward: reward
+                        = render 'task_status_icon', row_class: row_class
+
+          div.task-list-footer-spacer.mt-3
+            div.d-flex.justify-content-end
+              = button_to obtain_all_rewards_tasks_path, method: :patch, class: 'btn btn-steam-signin position-relative' do
+                | 一括受取
+                - if @obtainable_user_tasks_total_count.to_i > 0
+                  span.position-absolute.top-0.start-100.translate-middle.badge.rounded-pill.bg-danger = @obtainable_user_tasks_total_count

@@ -120,6 +120,20 @@ end
   end
 end
 
+# タスク(未達成表示確認用：積みゲー消化)
+[50, 100].each do |n|
+  task = Task.find_or_create_by!(name: "積みゲーを#{n}本消化する", task_genre: :tsumige) do |t|
+    t.description = "積みゲーを#{n}本クリアする(未達成表示確認用)"
+  end
+  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+    tc.condition_type = :tsumige
+    tc.required_count = n
+  end
+  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+    tr.point = 100
+  end
+end
+
 # タスク(プレイ時間)
 task = Task.find_or_create_by!(name: '合計プレイ時間600分を達成する', task_genre: :playtime) do |t|
   t.description = '積みゲーを含む全ゲームの合計プレイ時間が600分を超える'
@@ -204,6 +218,34 @@ end
 
 ShopItem.find_or_create_by!(item_type: 'OutfitItem', item_id: outfit_item1.id) do |si|
   si.price = 50.0
+end
+
+# タスク(報酬アイコン確認用：ギフトアイテム報酬)
+task = Task.find_or_create_by!(name: '積みゲーを1本消化する(ギフト報酬テスト)', task_genre: :tsumige) do |t|
+  t.description = '報酬確認用のテストタスクです'
+end
+TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+  tc.condition_type = :tsumige
+  tc.required_count = 1
+end
+TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+  tr.item_type = 'GiftItem'
+  tr.item_id = gift_item1.id
+  tr.quantity = 1
+end
+
+# タスク(報酬アイコン確認用：衣装アイテム報酬)
+task = Task.find_or_create_by!(name: '積みゲーを1本消化する(衣装報酬テスト)', task_genre: :tsumige) do |t|
+  t.description = '報酬確認用のテストタスクです'
+end
+TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+  tc.condition_type = :tsumige
+  tc.required_count = 1
+end
+TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+  tr.item_type = 'OutfitItem'
+  tr.item_id = outfit_item1.id
+  tr.quantity = 1
 end
 
 =begin

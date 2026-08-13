@@ -59,7 +59,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :tasks, only: %i[index show] do
+  resources :tasks, only: %i[index] do
+    member do
+      patch 'obtain_reward'
+    end
     collection do
       patch 'obtain_all_rewards'
     end

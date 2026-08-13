@@ -14,4 +14,15 @@ class UserTask < ApplicationRecord
             user_task.save!
         end
     end
+
+    def self.obtain_reward(user, task)
+        user_task = user.user_tasks.obtainable.find_by(task: task)
+        return false unless user_task
+
+        task.task_rewards.each do |task_reward|
+            task_reward.give_rewards(user)
+        end
+        user_task.update!(accepted_reward_at: Time.current)
+        true
+    end
 end

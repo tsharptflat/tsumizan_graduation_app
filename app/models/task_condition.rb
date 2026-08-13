@@ -1,7 +1,7 @@
 class TaskCondition < ApplicationRecord
     belongs_to :task
 
-    enum condition_type: {tsumige: 0, playtime: 1, trophies: 2, friendship_level: 3}
+    enum condition_type: {tsumige: 0, playtime: 1, friendship_level: 3}
 
     def current_value(user)
       case condition_type
