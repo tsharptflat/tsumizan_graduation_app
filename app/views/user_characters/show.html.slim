@@ -47,8 +47,8 @@ div.mx-auto.mt-5 style="max-width: 720px;"
                                 label.form-label 個数
                                 = f.number_field :count, value: 1, min: 1, max: user_gift_item.quantity, class: 'form-control search-input'
                               div.d-flex.justify-content-end.gap-2
-                                button.btn.btn-secondary.text-white type="button" data-bs-dismiss="modal" やめておく
-                                = f.submit 'プレゼントする', class: 'btn btn-color text-white'
+                                button.btn.btn-secondary.text-white type="button" data-bs-dismiss="modal" style="width: 130px;" やめておく
+                                = f.submit 'プレゼントする', class: 'btn btn-steam-signin', style: 'width: 130px; white-space: nowrap; text-align: center; padding-left: 0; padding-right: 0;'
 
           div#dom_id
             div.speech-bubble
