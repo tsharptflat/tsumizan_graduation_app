@@ -1,66 +1,110 @@
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 = @game.game_title
-  div.card-body.card-body-color
-    div.text-center.mb-3
-      = image_tag steam_banner_image(@game), class: 'img-fluid rounded'
-    p.me-4 ジャンル: #{@game.game_genre_types.map(&:name).join('/')}
-    p.me-4 価格: #{number_to_currency(@game.price, precision: 0, unit: '¥')}
-    p.me-4
-      = link_to 'Steamストアページへ', steam_store_link(@game), target: :_blank, rel: 'noopener noreferrer', class: 'btn btn-secondary text-white'
-    - if @current_user_game
-      p.me-4
-        - if @current_user_game.cleared_date
-          span.badge.bg-success.me-2 クリア済み
-          = button_to '未クリアに戻す', revert_cleared_game_game_path(@game), method: :patch, class: 'btn btn-secondary text-white'
-        - else
-          = button_to 'クリア済みにする', update_cleared_game_game_path(@game), method: :patch, class: 'btn-steam-primary'
+div.mx-auto.mt-5 style="max-width: 960px;"
+  div.row.g-5
+    div.col-lg-6
+      div.card.text-white.border-0.h-100
+        div.card-header.card-header-color.py-3
+          p.p-1.fs-4.mb-0
+            i.bi.bi-controller.me-2
+            = @game.game_title
+        div.card-body.card-body-color.d-flex.flex-column.h-100
+          div.text-center.mb-4
+            = image_tag steam_banner_image(@game), class: 'img-fluid rounded'
+          div.d-flex.justify-content-between.align-items-end.me-4
+            div
+              div.small.text-muted-steam ジャンル
+              div.fw-bold = @game.game_genre_types.map(&:name).join('/')
+            div
+              div.small.text-muted-steam 価格
+              div.fw-bold = number_to_currency(@game.price, precision: 0, unit: '¥', format: '%u%n')
+            div.text-end
+              - if @current_user_game
+                - if @current_user_game.cleared_date
+                  div.d-flex.align-items-center.gap-2
+                    span.badge.bg-success クリア済み
+                    = button_to '未クリアに戻す', revert_cleared_game_game_path(@game), method: :patch, class: 'btn btn-color text-white btn-sm'
+                - else
+                  = button_to 'クリア済みにする', update_cleared_game_game_path(@game), method: :patch, class: 'btn btn-color text-white btn-sm'
+              - else
+                div.fw-bold 未所持
+          div.mt-auto.pt-3
+            iframe src="https://store.steampowered.com/widget/#{@game.steam_app_id}/" width="100%" height="190" frameborder="0"
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 みんなの積み状況
-  div.card-body.card-body-color.d-flex
-    p.me-4 所持者数: #{@possessed_user_count}人
-    p.me-4 積み率: #{@unplayed_percentage.round(1)}%
-    p.me-4 クリア率: #{@cleared_percentage.round(1)}%
+    div.col-lg-6
+      div.d-flex.flex-column.gap-5.h-100
+        div.card.text-white.border-0.flex-fill
+          div.card-header.card-header-color.py-3
+            p.p-1.fs-4.mb-0
+              i.bi.bi-people-fill.me-2
+              | みんなの積み状況
+          div.card-body.card-body-color.d-flex.flex-wrap.gap-3
+            div.text-center.p-3.rounded.stat-tile
+              div.small.text-muted-steam
+                i.bi.bi-people-fill.me-1
+                | 所持者数
+              div.fs-4.fw-bold = "#{@possessed_user_count}人"
+            div.text-center.p-3.rounded.stat-tile
+              div.small.text-muted-steam
+                i.bi.bi-pie-chart-fill.me-1
+                | 積み率
+              div.fs-4.fw-bold = "#{@unplayed_percentage.round(1)}%"
+            div.text-center.p-3.rounded.stat-tile
+              div.small.text-muted-steam
+                i.bi.bi-check2-circle.me-1
+                | クリア率
+              div.fs-4.fw-bold = "#{@cleared_percentage.round(1)}%"
 
-div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 平均 と #{@user.name} さんの比較
-  div.d-flex.justify-content-between.px-3.card-header-color
-    span.col-4
-    span.col-4 みんなの平均
-    span.col-4 #{@user.name}
-  div.card-body.card-body-color.d-flex
-    ol.w-100.px-3
-      li.d-flex.justify-content-between
-        span.col-4 プレイ時間
-        span.col-4 = "#{(@average_playtime / 60.0).round(1)}時間"
-        span.col-4
-          - if @current_user_game
-            = "#{(@current_user_game.minutes_played / 60.0).round(1)}時間"
-          - else
-            | 未所持
-      li.d-flex.justify-content-between
-        span.col-4 積んでからの期間
-        span.col-4 = "#{@average_unplayed_time.round(1)}日"
-        span.col-4
-          - if @current_user_game && @current_user_game.unplayed_date
-            = "#{(Date.current - @current_user_game.unplayed_date).to_i}日"
-          - elsif @current_user_game
-            | 積んでいません
-          - else
-            | 未所持
-      li.d-flex.justify-content-between
-        span.col-4 クリア状況
-        span.col-4 = "#{@cleared_percentage.round(1)}%の人がクリア済み"
-        span.col-4
-          - if @current_user_game.nil?
-            | 未所持
-          - elsif @current_user_game.cleared_date
-            | クリア済み
-          - else
-            | 未クリア
-
-div.w-50.mx-auto.mt-5.mb-5.text-center
-  iframe src="https://store.steampowered.com/widget/#{@game.steam_app_id}/" width="100%" height="190" frameborder="0"
+        div.card.text-white.border-0.flex-fill
+          div.card-header.card-header-color.py-3
+            p.p-1.fs-4.mb-0
+              i.bi.bi-arrow-left-right.me-2
+              | みんなの平均 と #{@user.name} さんの比較
+          div.card-body.card-body-color.d-flex.flex-column.gap-3
+            div.p-3.rounded.stat-tile
+              div.small.text-muted-steam.mb-1.text-center
+                i.bi.bi-stopwatch.me-1
+                | プレイ時間
+              div.d-flex.justify-content-between
+                div.text-center.flex-fill
+                  div.text-muted-steam.small みんなの平均
+                  div.fs-5.fw-bold = "#{(@average_playtime / 60.0).round(1)}時間"
+                div.text-center.flex-fill
+                  div.text-muted-steam.small #{@user.name}
+                  div.fs-5.fw-bold
+                    - if @current_user_game
+                      = "#{(@current_user_game.minutes_played / 60.0).round(1)}時間"
+                    - else
+                      | 未所持
+            div.p-3.rounded.stat-tile
+              div.small.text-muted-steam.mb-1.text-center
+                i.bi.bi-hourglass-split.me-1
+                | 積んでからの期間
+              div.d-flex.justify-content-between
+                div.text-center.flex-fill
+                  div.text-muted-steam.small みんなの平均
+                  div.fs-5.fw-bold = "#{@average_unplayed_time.round(1)}日"
+                div.text-center.flex-fill
+                  div.text-muted-steam.small #{@user.name}
+                  div.fs-5.fw-bold
+                    - if @current_user_game && @current_user_game.unplayed_date
+                      = "#{(Date.current - @current_user_game.unplayed_date).to_i}日"
+                    - elsif @current_user_game
+                      | 積んでいません
+                    - else
+                      | 未所持
+            div.p-3.rounded.stat-tile
+              div.small.text-muted-steam.mb-1.text-center
+                i.bi.bi-check2-circle.me-1
+                | クリア状況
+              div.d-flex.justify-content-between
+                div.text-center.flex-fill
+                  div.text-muted-steam.small みんなの平均
+                  div.fs-5.fw-bold = "#{@cleared_percentage.round(1)}%クリア済み"
+                div.text-center.flex-fill
+                  div.text-muted-steam.small #{@user.name}
+                  div.fs-5.fw-bold
+                    - if @current_user_game.nil?
+                      | 未所持
+                    - elsif @current_user_game.cleared_date
+                      | クリア済み
+                    - else
+                      | 未クリア
