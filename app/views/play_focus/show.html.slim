@@ -1,47 +1,71 @@
 div.card.text-white.w-50.border-0.mx-auto.mt-5
-  div.card-header.card-header-color.pb-0
-    p.p-1 プレイ状況
+  div.card-header.card-header-color.py-3
+    p.p-1.fs-4.mb-0
+      i.bi.bi-controller.me-2
+      | プレイ状況
 
   div.card-body.card-body-color
-    h6.text-white 今プレイ中のゲーム
-    div.d-flex.flex-column.gap-2.mb-4
+    h5.text-white
+      i.bi.bi-play-fill.me-2
+      | 今プレイ中のゲーム
+    div.d-flex.flex-column.mb-4
       - (1..UserGameLibrary::NOW_PLAYING_LIMIT).each do |i|
         - library = @now_playing_libraries[i - 1]
-        div.border.border-secondary.rounded.p-2
+        div.divider-row
           - if library
-            div.d-flex.align-items-center.justify-content-between
-              div.d-flex.align-items-center
-                = image_tag steam_thumbnail_image(library.game), class: 'me-3', style: 'width: 92px; height: 35px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+            div.d-flex.align-items-start.justify-content-between
+              div.d-flex.align-items-start.gap-3
+                div style="width: 200px;"
+                  = link_to game_path(library.game) do
+                    = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-1', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+                  = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
                 div
-                  div = library.game.game_title
-                  div.small = "プレイ時間: #{(library.minutes_played / 60.0).round(1)}時間"
-                  div.small = "価格: ¥#{library.game.price}"
-                  - if library.cleared_date
-                    div.small クリア済み
-                  - else
-                    div.small 未クリア
-                  - if library.unplayed_date && library.cleared_date.nil?
-                    div.small = "積み時間: #{(Date.current - library.unplayed_date).to_i}日"
-              div.d-flex.flex-column.gap-1
+                  div.d-flex.flex-column.justify-content-between style="height: 80px;"
+                    div
+                      - if library.cleared_date
+                        span.badge.status-badge.bg-success クリア済み
+                      - else
+                        span.badge.status-badge.badge-unclear 未クリア
+                    div.d-flex.gap-4
+                      div
+                        div.small.text-muted-steam プレイ時間
+                        div.fw-bold = "#{(library.minutes_played / 60.0).round(1)}時間"
+                      div
+                        div.small.text-muted-steam 価格
+                        div.fw-bold = "¥#{library.game.price}"
+                      - if library.unplayed_date && library.cleared_date.nil?
+                        div
+                          div.small.text-muted-steam 積み時間
+                          div.fw-bold = "#{(Date.current - library.unplayed_date).to_i}日"
+              div.d-flex.flex-column.justify-content-center.gap-1 style="width: 140px; height: 80px;"
+                = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm w-100"
                 - if library.cleared_date
-                  = button_to "未クリアに戻す", revert_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-color text-white btn-sm"
+                  = button_to "未クリアに戻す", revert_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-color text-white btn-sm w-100"
                 - else
-                  = button_to "クリアにする", update_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-color text-white btn-sm"
-                = button_to "取り下げる", clear_slot_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
+                  = button_to "クリアにする", update_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-color text-white btn-sm w-100"
           - else
             = link_to "ゲームを選択", picker_play_focus_path(slot: 'now_playing'), class: "btn btn-color text-white"
 
-    h6.text-white 次にプレイするゲーム
-    div.border.border-secondary.rounded.p-2
+    h5.text-white
+      i.bi.bi-skip-forward-fill.me-2
+      | 次にプレイするゲーム
+    div.divider-row
       - if @next_up_library
-        div.d-flex.align-items-center.justify-content-between
-          div.d-flex.align-items-center
-            = image_tag steam_thumbnail_image(@next_up_library.game), class: 'me-3', style: 'width: 92px; height: 35px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
-            div
-              div = @next_up_library.game.game_title
-              div.small = "プレイ時間: #{(@next_up_library.minutes_played / 60.0).round(1)}時間"
-              div.small = "価格: ¥#{@next_up_library.game.price}"
-          div.d-flex.flex-column.gap-1
-            = button_to "取り下げる", clear_slot_play_focus_path(library_id: @next_up_library.id), method: :patch, class: "btn btn-secondary text-white btn-sm"
+        div.d-flex.align-items-start.justify-content-between
+          div.d-flex.align-items-start.gap-3
+            div style="width: 200px;"
+              = link_to game_path(@next_up_library.game) do
+                = image_tag steam_banner_image(@next_up_library.game), class: 'w-100 rounded mb-1', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              = link_to @next_up_library.game.game_title, game_path(@next_up_library.game), class: 'link-steam-accent fw-bold'
+            div.d-flex.flex-column.justify-content-end style="height: 80px;"
+              div.d-flex.gap-4
+                div
+                  div.small.text-muted-steam プレイ時間
+                  div.fw-bold = "#{(@next_up_library.minutes_played / 60.0).round(1)}時間"
+                div
+                  div.small.text-muted-steam 価格
+                  div.fw-bold = "¥#{@next_up_library.game.price}"
+          div.d-flex.flex-column.justify-content-center.gap-1 style="width: 140px; height: 80px;"
+            = button_to "取り下げる", clear_slot_play_focus_path(library_id: @next_up_library.id), method: :patch, class: "btn btn-secondary text-white btn-sm w-100"
       - else
         = link_to "ゲームを選択", picker_play_focus_path(slot: 'next_up'), class: "btn btn-color text-white"
