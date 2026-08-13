@@ -8,12 +8,11 @@ class StatisticsController < ApplicationController
     @total_price = UserGameLibrary.total_price(current_user)
     @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)
     @no_backlog = @unplayed_games.empty?
-    @tsumige_list = @unplayed_games.joins(:game).order('games.price DESC').limit(UserGameLibrary::TSUMIGE_LIST_LIMIT)
+    @tsumige_list = @unplayed_games.joins(:game).order('games.price DESC').limit(3)
     @total_games_count = current_user.user_game_libraries.count
     @unplayed_rate = UserGameLibrary.unplayed_rate(current_user)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3
     @next_up_library = current_user.user_game_libraries.next_up.first
-    @cleared_after_unplayed_games = current_user.user_game_libraries.cleared_after_unplayed.includes(:game)
 
     @cleared_game_count_rate = UserGameLibrary.cleared_game_count_rate(current_user)
 
@@ -26,9 +25,7 @@ class StatisticsController < ApplicationController
       hash[genre_name] = current_user.user_game_libraries.unplayed.joins(game: :game_genre_types).find_by(game_genre_types: { name: genre_name })&.game
     end
 
-    cost_performance_ranking = UserGameLibrary.cost_performance_ranking(current_user)
-    @best_cost_performance_games = cost_performance_ranking[:best]
-    @worst_cost_performance_games = cost_performance_ranking[:worst]
+    @best_cost_performance_games = UserGameLibrary.cost_performance_ranking(current_user)[:best]
 
     @chart_range = CHART_RANGES.include?(params[:chart_range]) ? params[:chart_range] : DEFAULT_CHART_RANGE
     @chart_range_offset = @chart_range == 'all' ? 0 : params[:chart_range_offset].to_i.clamp(0, CHART_RANGE_OFFSET_OPTIONS_COUNT - 1)

@@ -118,51 +118,30 @@ div.mx-auto.mt-5 style="max-width: 960px;"
           p.p-1.fs-4.mb-0
             i.bi.bi-hourglass-split.me-2
             | 積みゲーリスト
-        div.d-flex.justify-content-between.px-3.card-header-color
-          span.col-6 ゲームタイトル
-          span.col-6 プレイ時間
-        div.card-body.card-body-color.d-flex.flex-column
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
           - if @no_backlog
             p.text-center.text-muted-steam.mb-0 積みゲーがありません！素晴らしいゲームライブラリです！
-          - else
-            ol.w-100.px-3
-              - @tsumige_list.each do |library|
-                li.d-flex.justify-content-between
-                  span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-                  span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-            = link_to '積みゲー一覧を見る', backlog_path, class: 'btn-steam-primary align-self-start mt-2'
+          - @tsumige_list.each do |library|
+            div.p-3.rounded.stat-tile
+              = link_to game_path(library.game) do
+                = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div
+                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                div.text-muted-steam.small = "プレイ時間：#{(library.minutes_played/60.0).round(1)}時間"
+          = link_to '詳細へ', backlog_path, class: 'btn btn-secondary text-white align-self-end'
 
     div.col-lg-6
       div.card.text-white.border-0.h-100
         div.card-header.card-header-color.py-3
           p.p-1.fs-4.mb-0
-            i.bi.bi-award-fill.me-2
-            | 一度積んでからクリアしたゲーム一覧
-        div.card-body.card-body-color
-          ol.w-100.px-3
-            - @cleared_after_unplayed_games.each do |library|
-              li.d-flex.justify-content-between
-                span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-                span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-                span.col-6 = "#{(library.cleared_date - library.unplayed_date).to_i}日"
-
-  div.card.text-white.border-0.mb-5
-    div.card-header.card-header-color.py-3
-      p.p-1.fs-4.mb-0
-        i.bi.bi-bar-chart-line-fill.me-2
-        | コスパランキング
-    div.card-body.card-body-color
-      ol.w-100.px-3
-        - @best_cost_performance_games.each do |library|
-          li.d-flex.justify-content-between
-            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-            span.col-6 = "¥#{library.game.price}"
-            span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-            span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
-        - @worst_cost_performance_games.each do |library|
-          li.d-flex.justify-content-between
-            span.col-6 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent'
-            span.col-6 = "¥#{library.game.price}"
-            span.col-6 = "#{(library.minutes_played/60.0).round(1)}時間"
-            span.col-6 = "#{(((library.minutes_played + 1).to_f / library.game.price)*1000).round(2)}"
-        = link_to '詳細へ', cost_performance_detailed_ranking_statistic_path, class: 'btn btn-secondary text-white'
+            i.bi.bi-bar-chart-line-fill.me-2
+            | コスパランキング
+        div.card-body.card-body-color.d-flex.flex-column.gap-3
+          - @best_cost_performance_games.each do |library|
+            div.p-3.rounded.stat-tile
+              = link_to game_path(library.game) do
+                = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+              div
+                = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
+                div.text-muted-steam.small = "¥#{library.game.price} ／ #{(library.minutes_played/60.0).round(1)}時間 ／ コスパ指数: #{library.cost_performance_score}"
+          = link_to '詳細へ', cost_performance_detailed_ranking_statistic_path, class: 'btn btn-secondary text-white align-self-end'
