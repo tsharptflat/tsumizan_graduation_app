@@ -7,6 +7,7 @@ class UserCharacter < ApplicationRecord
   validates :friendship_point, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   FRIENDSHIP_LEVEL_THRESHOLDS = { 1 => 0, 2 => 50, 3 => 100 }.freeze
+  FRIENDSHIP_POINT_MAX = FRIENDSHIP_LEVEL_THRESHOLDS.values.max
 
   def self.find_or_create_default_character(user)
     find_or_create_by!(user_id: user.id, character_type_id: CharacterType.find_by(name: 'いらすと子').id) do |uc|
@@ -16,5 +17,9 @@ class UserCharacter < ApplicationRecord
 
   def current_friendship_level
     FRIENDSHIP_LEVEL_THRESHOLDS.select {|level, required_point| required_point <= friendship_point }.keys.max
+  end
+
+  def friendship_point_progress_percent
+    [(friendship_point.to_f / FRIENDSHIP_POINT_MAX * 100), 100].min
   end
 end

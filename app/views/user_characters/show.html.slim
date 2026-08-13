@@ -1,13 +1,40 @@
-div.container.text-center
-  h1.text-white = @user_character.name
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-person-hearts.me-2
+        | #{@user_character.character_type.name}
 
-  div.mx-auto
-    = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 300)
+    div.card-body.card-body-color
+      div.d-flex.align-items-end.gap-3.mb-3
+        = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 260)
+        div#dom_id.flex-grow-1.align-self-end
+          div.speech-bubble
+            div.speech-bubble-content
+              p.mb-0 #{@character_text.text}
 
-  div#dom_id
-    p.text-white #{@character_text.text}
+      div.row.g-3.align-items-stretch
+        div.col-lg-7
+          div.h-100.p-3.rounded.stat-tile
+            div.d-flex.align-items-end.gap-3
+              div.friendship-heart
+                i.bi.bi-heart-fill
+                span.friendship-heart-level = @user_character.current_friendship_level
+              div.flex-grow-1
+                div.d-flex.justify-content-between.small.text-white.mb-1
+                  span 好感度
+                  span = "#{@user_character.friendship_point}/#{UserCharacter::FRIENDSHIP_POINT_MAX}"
+                div.friendship-bar-track
+                  div.friendship-bar-fill style="width: #{@user_character.friendship_point_progress_percent}%"
 
-  div.d-flex.justify-content-center.gap-3.mt-4
-    = link_to 'プレゼントを渡す', user_character_gift_items_path(@user_character), class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
-    = link_to '話す', communicate_user_character_path, data: { turbo_stream: true }, class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
-    = link_to '衣装を変更する', '#', class: 'btn btn-secondary text-white rounded-4 px-4 py-3'
+        div.col-lg-5.d-flex.gap-3
+          = link_to communicate_user_character_path, data: { turbo_stream: true }, class: 'btn btn-color text-white rounded-4 flex-grow-1 h-100 d-flex align-items-center justify-content-center' do
+            i.bi.bi-chat-dots-fill.me-2
+            | 話す
+          div.d-flex.flex-column.gap-3.flex-grow-1
+            = link_to user_character_gift_items_path(@user_character), class: 'btn btn-color text-white rounded-4 flex-grow-1 d-flex align-items-center justify-content-center' do
+              i.bi.bi-gift-fill.me-2
+              | プレゼントを渡す
+            button.btn.btn-secondary.text-white.rounded-4.flex-grow-1.d-flex.align-items-center.justify-content-center type="button" disabled=true title="近日公開予定"
+              i.bi.bi-palette-fill.me-2
+              | 衣装を変更する
