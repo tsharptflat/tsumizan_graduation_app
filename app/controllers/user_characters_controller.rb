@@ -1,5 +1,6 @@
 class UserCharactersController < ApplicationController
     before_action :set_character_texts, only: [:show, :communicate]
+    before_action :set_user_gift_items, only: [:show]
 
     def index
     end
@@ -11,6 +12,10 @@ class UserCharactersController < ApplicationController
     end
 
     private
+
+    def set_user_gift_items
+        @user_gift_items = current_user.user_gift_items
+    end
 
     def set_character_texts
         @page = 'user_characters_show'

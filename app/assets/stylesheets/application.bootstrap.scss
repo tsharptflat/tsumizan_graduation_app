@@ -336,6 +336,12 @@ nav.pagination {
   overflow-y: auto;
 }
 
+.gift-item-panel {
+  background-color: #67707B; // 話すボタン(.btn-color)と同じ色。色数を増やさないための流用
+  max-height: 260px;
+  overflow-y: auto;
+}
+
 // 吹き出しの三角部分（左上・左向き）
 .speech-bubble::after {
   content: '';

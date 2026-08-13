@@ -1,14 +1,6 @@
 class GiftItemsController < ApplicationController
     before_action :set_user_character
 
-    def index
-        @user_gift_items = current_user.user_gift_items
-    end
-
-    def show
-        @user_gift_item = current_user.user_gift_items.find(params[:id])
-    end
-
     def present_gift
         gift_item = GiftItem.find(params[:gift_item_id])
         count = params[:count].to_i
