@@ -107,6 +107,77 @@ nav {
   }
 }
 
+// プレイ状況・ゲーム選択画面の行(バナー+詳細 / ボタン列)の共通レイアウト。
+// PC/スマホで「バナー・バッジ・タイトル・統計」の配置自体が変わるため、
+// CSS Gridのgrid-template-areasをブレークポイントごとに切り替える方式にする
+.play-row-banner-img {
+  height: 80px;
+  object-fit: cover;
+}
+
+.play-row-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-areas:
+    "img badge"
+    "img stats"
+    "title .";
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+  flex: 1 1 auto;
+}
+
+.play-row-grid-img {
+  grid-area: img;
+}
+
+.play-row-grid-badge {
+  grid-area: badge;
+  align-self: start;
+}
+
+.play-row-grid-title {
+  grid-area: title;
+}
+
+.play-row-grid-stats {
+  grid-area: stats;
+  align-self: start;
+}
+
+.play-row-actions {
+  width: 140px;
+  height: 80px;
+}
+
+// スマホ幅では「バナー(縦2段分)|バッジ→タイトル」を上段、統計を1段全幅、
+// ボタン列は行全体の右下に絶対配置して統計の右側に寄せる
+@media (max-width: 767.98px) {
+  .play-row {
+    position: relative;
+    row-gap: 1rem;
+  }
+
+  .play-row-grid {
+    grid-template-columns: 140px 1fr;
+    grid-template-areas:
+      "img badge"
+      "img title"
+      "stats stats";
+    row-gap: 0.5rem;
+  }
+
+  .play-row-actions {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+  }
+}
+
 footer {
   background-color: #171D25;
 }
@@ -124,7 +195,7 @@ body {
 
 .status-badge {
   display: inline-block;
-  width: 5.5em;
+  width: 6em;
   text-align: center;
 }
 
