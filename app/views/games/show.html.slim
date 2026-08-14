@@ -9,7 +9,7 @@ div.mx-auto.mt-5 style="max-width: 960px;"
         div.card-body.card-body-color.d-flex.flex-column.h-100
           div.text-center.mb-4
             = image_tag steam_banner_image(@game), class: 'img-fluid rounded'
-          div.d-flex.justify-content-between.align-items-end.me-4
+          div.d-flex.flex-wrap.gap-3.justify-content-between.align-items-end.me-4
             div
               div.small.text-muted-steam ジャンル
               div.fw-bold = @game.game_genre_types.map(&:name).join('/')
