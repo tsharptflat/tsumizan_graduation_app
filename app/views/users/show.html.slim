@@ -11,5 +11,5 @@ div.text-white.py-5.mt-5.position-relative style="background-color: #16202d;"
             = link_to "https://twitter.com/share?url=#{user_share_url(id: current_user.id)}&text=総積み金額は#{@total_price}円！", class: "btn-steam-share" do
                 i class="fa-brands fa-x-twitter"
 
-    div style="position: absolute; right: 5rem; top: 50%; transform: translateY(-50%);"
+    div.character-overlay-position
         = render "user_characters/character_display", character_text: @character_text, character_expression: @character_expression
