@@ -49,7 +49,7 @@ Devise handles sessions; `omniauth-steam` handles the actual Steam OpenID login 
 ### Mileage / missions feature (in progress)
 A gamification layer being added on top of the core backlog tracker, so users earn points/items for backlog-clearing behavior. Table relationships:
 
-- `Task` (a mission, `task_genre` enum: `tsumige`/`playtime`/`trophies`/`friendship_level`) has many `TaskCondition` (completion requirements: `condition_type` + `required_count`) and `TaskReward` (payout).
+- `Task` (a mission, `task_genre` enum: `tsumige`/`playtime`/`friendship_level`) has many `TaskCondition` (completion requirements: `condition_type` + `required_count`) and `TaskReward` (payout).
 - `TaskReward` and `ShopItem` both `belongs_to :item, polymorphic: true` — `item` is either a `GiftItem` or an `OutfitItem`. This lets both mission rewards and shop purchases reference the same reward-item tables without duplicating them per item type.
 - `UserTask`, `UserGiftItem`, `UserOutfitItem` are the join tables recording what a given user has completed/owns; `User#tasks`, `#gift_items`, `#outfit_items` are `has_many :through` these joins — **the join-table `has_many` itself must also be declared on `User` for `through:` to resolve** (this is the gap currently being fixed).
 - `UserWallet` (`belongs_to :user`, one per user) holds the spendable `point` balance used to "buy" `ShopItem`s.

@@ -1,0 +1,9 @@
+- if reward.point.present?
+  i.bi.bi-p-circle-fill.me-1
+  = "#{reward.point}P"
+- elsif reward.item_type == 'GiftItem'
+  i.bi.bi-gift-fill.me-1
+  = reward.item.name
+- elsif reward.item_type == 'OutfitItem'
+  i.bi.bi-palette-fill.me-1
+  = reward.item.name

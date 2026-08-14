@@ -213,7 +213,7 @@ body {
 }
 
 .task-row-pending {
-    background-color: #325C80;
+    background-color: #67707B;
 }
 
 .search-suggestion-item {
@@ -287,8 +287,28 @@ nav.pagination {
     }
 }
 
+.nav-pills .nav-link.task-genre-tab {
+    background-color: #67707B;
+    border: none;
+
+    &.active {
+        background-color: #8f98a0;
+        color: #16202d;
+    }
+}
+
 .task-row-claimable {
-    background-color: #326E4F;
+    background-color: #1e3a5f;
+    color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+
+    &:first-child {
+        border-top: none;
+    }
+
+    .search-suggestion-item:hover {
+        background-color: #2e4a70;
+    }
 }
 
 .task-row-claimed {
@@ -341,6 +361,20 @@ nav.pagination {
 .shop-item-list {
   max-height: 320px; // 1行約64px x 5件分。それ以上はスクロール
   overflow-y: auto;
+}
+
+.task-list {
+  max-height: 320px; // 1行約64px x 5件分。それ以上はスクロール
+  overflow-y: auto;
+  scrollbar-gutter: stable; // スクロールバー分の余白を常に確保（件数に関わらず右端の位置を固定するため）
+}
+
+// 一括受取ボタンの行を.task-listと同じスクロールバー分の余白にして右端を揃える
+.task-list-footer-spacer {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  max-height: 70px;
+  padding-top: 10px; // ボタン右上にはみ出すバッジがoverflow-yでクリップされないよう余白を確保
 }
 
 // 吹き出しの三角部分（左上・左向き）

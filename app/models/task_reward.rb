@@ -6,12 +6,13 @@ class TaskReward < ApplicationRecord
 
     def give_rewards(user)
         if point.present?
-            user.user_wallet.increment!(:point, point)
+            wallet = user.user_wallet
+            wallet.update!(point: wallet.point + point)
         elsif item_type == 'GiftItem'
             user_gift_item = user.user_gift_items.find_or_create_by!(gift_item_id: item_id) do |ugi|
                 ugi.quantity = 0
             end
-            user_gift_item.increment!(:quantity, quantity)
+            user_gift_item.update!(quantity: user_gift_item.quantity + quantity)
         elsif item_type == 'OutfitItem'
             user.user_outfit_items.find_or_create_by!(outfit_item_id: item_id)
         end

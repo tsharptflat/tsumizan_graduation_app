@@ -1,0 +1,12 @@
+- if row_class == 'task-row-claimable'
+  - icon = 'bi-arrow-down-circle-fill'
+  - icon_color = '#6dab13'
+- elsif row_class == 'task-row-claimed'
+  - icon = 'bi-check-circle-fill'
+  - icon_color = '#8f98a0'
+- else
+  - icon = 'bi-list-task'
+  - icon_color = '#fff'
+
+div.d-flex.align-items-center.ps-2 style="border-left: 1px solid rgba(255, 255, 255, 0.25); flex-shrink: 0;"
+  i class="bi #{icon}" style="font-size: 1.2rem; color: #{icon_color};"
