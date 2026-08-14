@@ -349,26 +349,6 @@ nav.pagination {
   }
 }
 
-.character-overlay-position {
-  position: absolute;
-  right: 5rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-// スマホ幅では巨大な総額表示とキャラクターが重なるため、縦積みレイアウトに切り替える
-@media (max-width: 767.98px) {
-  .price-display {
-    font-size: 3rem;
-  }
-
-  .character-overlay-position {
-    position: static;
-    transform: none;
-    margin-top: 2rem;
-  }
-}
-
 .character-size{
   width: 250px;
   height: 250px;
