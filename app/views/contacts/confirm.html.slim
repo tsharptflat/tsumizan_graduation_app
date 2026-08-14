@@ -1,22 +1,29 @@
-div.container
-  h1.text-white 入力内容の確認
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-envelope-check.me-2
+        | 入力内容の確認
 
-  div.text-white.mb-4
-    dl
-      dt お名前
-      dd = @contact.name
+    div.card-body.card-body-color
+      div.mb-4
+        div.mb-3
+          div.small.text-muted-steam お名前
+          div = @contact.name
 
-      dt メールアドレス
-      dd = @contact.email
+        div.mb-3
+          div.small.text-muted-steam メールアドレス
+          div = @contact.email
 
-      dt お問い合わせ内容
-      dd = simple_format(@contact.content)
+        div.mb-3
+          div.small.text-muted-steam お問い合わせ内容
+          div = simple_format(@contact.content)
 
-  = form_with model: @contact, url: contacts_path, method: :post, data: { turbo: false } do |f|
-    = f.hidden_field :name
-    = f.hidden_field :email
-    = f.hidden_field :content
+      = form_with model: @contact, url: contacts_path, method: :post, data: { turbo: false } do |f|
+        = f.hidden_field :name
+        = f.hidden_field :email
+        = f.hidden_field :content
 
-    div.d-flex.gap-2
-      = link_to '修正する', new_contact_path, class: 'btn btn-secondary text-white'
-      = f.submit '送信する', class: 'btn btn-primary'
+        div.d-flex.justify-content-end.align-items-stretch.gap-2
+          = f.button '修正する', type: 'submit', formaction: new_contact_path, formmethod: :get, class: 'btn btn-secondary text-white d-flex align-items-center justify-content-center'
+          = f.submit '送信する', class: 'btn btn-steam-signin'
