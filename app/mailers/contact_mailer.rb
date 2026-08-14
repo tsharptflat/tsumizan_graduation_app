@@ -1,5 +1,5 @@
 class ContactMailer < ApplicationMailer
-  default from: "積み算 <hogehoge@example.com>"
+  default from: "積み算 <#{ENV['ACTION_MAILER_USER']}>"
 
   def contact_mail(contact)
     @contact = contact
