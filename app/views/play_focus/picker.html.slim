@@ -1,10 +1,10 @@
-div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-search-url-value=picker_play_focus_path(slot: @slot, cleared: @cleared_filter) data-search-clear-on-empty-value="false"
+div.card.text-white.border-0.mx-auto.mt-5 style="max-width: 720px;" data-controller="search" data-search-url-value=picker_play_focus_path(slot: @slot, cleared: @cleared_filter) data-search-clear-on-empty-value="false"
   div.card-header.card-header-color.py-3
     p.p-1.fs-4.mb-0
       i.bi.bi-controller.me-2
       | ゲームを選択
-    div.d-flex.align-items-center.justify-content-between.mt-2
-      div.d-flex.gap-3
+    div.d-flex.flex-wrap.align-items-center.justify-content-between.gap-2.mt-2
+      div.d-flex.flex-wrap.gap-3
         = link_to 'すべて', picker_play_focus_path(slot: @slot, q: params[:q]), class: @cleared_filter.blank? ? 'text-white fw-bold' : 'link-steam-accent'
         = link_to '積みゲー', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'unplayed'), class: @cleared_filter == 'unplayed' ? 'text-white fw-bold' : 'link-steam-accent'
         = link_to '未クリア', picker_play_focus_path(slot: @slot, q: params[:q], cleared: 'uncleared'), class: @cleared_filter == 'uncleared' ? 'text-white fw-bold' : 'link-steam-accent'
@@ -21,18 +21,19 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-sea
       ul.list-unstyled.w-100.px-3
         - @available_libraries.each do |library|
           li.divider-row
-            div.d-flex.align-items-start.justify-content-between
+            div.d-flex.align-items-start.justify-content-between.play-row
               = button_to set_slot_play_focus_path(library_id: library.id, slot: @slot), method: :patch, form: { data: { turbo_frame: "_top" } }, class: "search-suggestion-item d-flex align-items-start text-white text-decoration-none p-2 border-0 text-start flex-grow-1" do
-                div.d-flex.align-items-start.gap-3
-                  div style="width: 200px;"
-                    = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-1', style: 'height: 80px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+                div.play-row-grid
+                  div.play-row-grid-img
+                    = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-1 play-row-banner-img', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
+                  div.play-row-grid-badge
+                    - if library.cleared_date
+                      span.badge.status-badge.bg-success クリア済み
+                    - else
+                      span.badge.status-badge.badge-unclear 未クリア
+                  div.play-row-grid-title
                     div.fw-bold = library.game.game_title
-                  div.d-flex.flex-column.justify-content-between style="height: 80px;"
-                    div
-                      - if library.cleared_date
-                        span.badge.status-badge.bg-success クリア済み
-                      - else
-                        span.badge.status-badge.badge-unclear 未クリア
+                  div.play-row-grid-stats
                     div.d-flex.gap-4
                       div
                         div.small.text-muted-steam プレイ時間
@@ -44,7 +45,7 @@ div.card.text-white.w-50.border-0.mx-auto.mt-5 data-controller="search" data-sea
                         div
                           div.small.text-muted-steam 積み時間
                           div.fw-bold = "#{(Date.current - library.unplayed_date).to_i}日"
-              div.d-flex.flex-column.justify-content-center.gap-1 style="width: 140px; height: 80px;"
+              div.d-flex.flex-column.justify-content-center.gap-1.play-row-actions
                 - if library.cleared_date
                   = button_to "未クリアに戻す", revert_cleared_games_play_focus_path(library_id: library.id), method: :patch, class: "btn btn-secondary text-white btn-sm w-100"
                 - else

@@ -10,7 +10,7 @@ div.card.text-white.border-0.mx-auto.mt-5.card-body-color style="max-width: 720p
   div.card-body.card-body-color
     ol.list-unstyled.w-100.px-3
       - @games.each do |game|
-        li.game-list-item
+        li.game-list-item.divider-row
           div.d-flex.align-items-center.game-row.game-row-data
             div.game-row-info
               = link_to game_path(game) do
