@@ -80,17 +80,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'graduation-app-kjas.onrender.com' }
 
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 465,
-    domain: 'gmail.com',
-    user_name: ENV['ACTION_MAILER_USER'],
-    password: ENV['ACTION_MAILER_PASSWORD'],
-    authentication: 'plain',
-    ssl: true,
-    open_timeout: 15,
-    read_timeout: 15
+  config.action_mailer.delivery_method = :sendgrid_api
+  config.action_mailer.sendgrid_api_settings = {
+    api_key: ENV['SENDGRID_API_KEY']
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
