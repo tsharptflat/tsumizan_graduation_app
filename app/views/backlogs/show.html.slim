@@ -21,9 +21,13 @@ div.card.text-white.border-0.mx-auto.mt-5.card-body-color style="max-width: 720p
                 div.d-inline-block.text-start.game-row-title-wrap
                   = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent small d-block mt-1'
               div.game-row-stats
-                span.game-row-stat.text-muted-steam = "#{(library.minutes_played/60.0).round(1)}時間"
-                span.game-row-stat.text-muted-steam = "¥#{library.game.price}"
-                span.game-row-stat
+                div.game-row-stat
+                  div.small.text-muted-steam プレイ時間
+                  div.fw-bold = "#{(library.minutes_played/60.0).round(1)}時間"
+                div.game-row-stat
+                  div.small.text-muted-steam 価格
+                  div.fw-bold = "¥#{library.game.price}"
+                div.game-row-stat
                   - if library.cleared_date
                     = button_to '未クリアに戻す', revert_cleared_game_backlog_path(library_id: library.id), method: :patch, class: 'btn btn-color text-white btn-sm'
                   - else
