@@ -5,6 +5,34 @@ nav {
   background-color: #171D25;
 }
 
+// ヘッダー: デスクトップでの並び順(タイトル→プルダウン群→検索)をorderで固定
+.header-title {
+  order: 1;
+}
+
+.header-dropdowns {
+  order: 2;
+}
+
+.header-search {
+  order: 3;
+}
+
+// スマホ幅ではタイトルと検索を同じ行に、プルダウン群は次の行で横スクロールに切り替える
+@media (max-width: 991.98px) {
+  .header-search {
+    order: 2;
+  }
+
+  .header-dropdowns {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+    margin-left: 0 !important;
+    padding-bottom: 0.5rem;
+  }
+}
+
 footer {
   background-color: #171D25;
 }
@@ -320,9 +348,10 @@ nav.pagination {
 }
 
 .price-display {
-  font-size: 10rem;
+  font-size: clamp(3rem, 22vw, 10rem); // 画面幅に比例させつつ、デスクトップ(10rem)を上限に維持
   line-height: 1;
   text-shadow: 5px 5px 0 rgba(255, 255, 255, 0.2);
+  padding: 0 1rem; // 桁数が増えても画面端に接しないよう左右に余白を確保
 }
 
 .character-fixed {
@@ -338,10 +367,6 @@ nav.pagination {
 
 // スマホ幅では巨大な総額表示とキャラクターが重なるため、縦積みレイアウトに切り替える
 @media (max-width: 767.98px) {
-  .price-display {
-    font-size: 3rem;
-  }
-
   .character-overlay-position {
     position: static;
     transform: none;
@@ -405,6 +430,14 @@ nav.pagination {
   left: -18px;
   border: 10px solid transparent;
   border-right-color: #4a5568; // 吹き出し本体のグラデーション開始色（左上）に合わせる
+}
+
+// キャラクターの下に配置する吹き出し（.speech-bubble-below修飾）: 三角を上辺・上向きに変更
+.speech-bubble-below::after {
+  top: -18px;
+  left: 25%;
+  border-right-color: transparent;
+  border-bottom-color: #4a5568;
 }
 
 .friendship-heart {

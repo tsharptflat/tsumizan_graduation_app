@@ -1,12 +1,19 @@
-nav.navbar.navbar-expand-lg.ps-3.fixed-top
+nav.navbar.navbar-expand-lg.ps-3.fixed-top.header-nav
   -if user_signed_in?
-    h1 = link_to '積み算', user_path, class: 'text-white text-decoration-none'
+    h1.header-title = link_to '積み算', user_path, class: 'text-white text-decoration-none'
   - else
-    h1 = link_to '積み算', root_path, class: 'text-white text-decoration-none'
+    h1.header-title = link_to '積み算', root_path, class: 'text-white text-decoration-none'
   - if user_signed_in?
-    div.ms-auto.d-flex
+    div.header-search.position-relative data-controller="search" data-search-url-value=search_suggestions_games_path
+      = search_form_for @q, html: { class: "d-flex align-items-center" } do |f|
+        = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input form-control rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
+        = f.button type: "submit", class: "btn btn-steam-search" do
+          i.bi.bi-search
+      = turbo_frame_tag "search_suggestions", data: { search_target: "frame" }, class: "position-absolute top-100 end-0 mt-1", style: "z-index: 1050; width: 350px;"
+
+    div.header-dropdowns.ms-auto.d-flex
       div.dropdown.pe-3
-        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲー分析
+        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy": "fixed", "modifiers": [{"name": "applyStyles", "enabled": true}, {"name": "preventOverflow", "options": {"boundary": "clippingParents"}}, {"name": "offset", "options": {"offset": [0, 2]}}]}' aria-expanded="false" 積みゲー分析
         ul.dropdown-menu
           li
             = link_to '積みゲー総額', user_path, class: 'dropdown-item'
@@ -16,7 +23,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to 'プレイ状況', play_focus_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
-        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" aria-expanded="false" 積みゲーマイレージ
+        button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy": "fixed", "modifiers": [{"name": "applyStyles", "enabled": true}, {"name": "preventOverflow", "options": {"boundary": "clippingParents"}}, {"name": "offset", "options": {"offset": [0, 2]}}]}' aria-expanded="false" 積みゲーマイレージ
         ul.dropdown-menu
           li
             = link_to '育成', user_character_path(@default_user_character), class: 'dropdown-item'
@@ -24,7 +31,7 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
             = link_to 'マイレージ確認', tasks_path, class: 'dropdown-item'
 
       div.dropdown.pe-3
-        button.nav-tab-toggle.dropdown-toggle type="button" data-bs-toggle="dropdown" aria-expanded="false" #{current_user.name}
+        button.nav-tab-toggle.dropdown-toggle type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy": "fixed", "modifiers": [{"name": "applyStyles", "enabled": true}, {"name": "preventOverflow", "options": {"boundary": "clippingParents"}}, {"name": "offset", "options": {"offset": [0, 2]}}]}' aria-expanded="false" #{current_user.name}
         ul.dropdown-menu
           li
             - if @now_playing_libraries.present?
@@ -34,10 +41,3 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top
               = link_to '今プレイ中のゲーム: 未設定', play_focus_path, class: 'dropdown-item'
             = link_to 'ログアウト', destroy_user_session_path, class: 'dropdown-item', data: {turbo_method: :delete}
             = link_to 'アカウント削除', user_path , class: 'dropdown-item', data: {turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }
-
-      div.position-relative data-controller="search" data-search-url-value=search_suggestions_games_path
-        = search_form_for @q, html: { class: "d-flex align-items-center" } do |f|
-          = f.search_field :game_title_cont, data: { action: "input->search#search focus->search#search" }, class: "search-input form-control rounded me-2", placeholder: "ゲームを検索", autocomplete: "off"
-          = f.button type: "submit", class: "btn btn-steam-search" do
-            i.bi.bi-search
-        = turbo_frame_tag "search_suggestions", data: { search_target: "frame" }, class: "position-absolute top-100 end-0 mt-1", style: "z-index: 1050; width: 350px;"
