@@ -81,9 +81,6 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'graduation-app-kjas.onrender.com' }
 
   config.action_mailer.delivery_method = :sendgrid_api
-  config.action_mailer.sendgrid_api_settings = {
-    api_key: ENV['SENDGRID_API_KEY']
-  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
