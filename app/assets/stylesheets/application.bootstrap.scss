@@ -33,6 +33,80 @@ nav {
   }
 }
 
+// ゲーム一覧行(バナー+タイトル / プレイ時間 / 価格 / ボタン)の共通レイアウト。
+// 積みゲー一覧・みんなのゲーム一覧・プレイ状況など複数ページで使い回す想定
+.game-list-item {
+  margin-top: 2rem;
+}
+
+.game-row {
+  gap: 0.5rem;
+}
+
+.game-row-info {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+.game-row-stat {
+  flex: 1 1 0;
+  text-align: center;
+}
+
+.game-row-banner {
+  width: 200px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.game-row-title-wrap {
+  width: 200px;
+}
+
+// ゲームごとのデータ行(見出し行は対象外)で、プレイ時間/価格/ボタンをひとまとまりにするラッパー
+.game-row-stats {
+  display: contents;
+}
+
+// スマホ幅ではバナー+タイトルを上段、プレイ時間/価格/ボタンを下段に縦積みにする(見出し行は対象外)
+@media (max-width: 767.98px) {
+  .game-row {
+    flex-wrap: wrap;
+  }
+
+  .game-row-data .game-row-info {
+    flex-basis: 100%;
+    text-align: left;
+  }
+
+  .game-row-banner {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 200 / 80;
+  }
+
+  .game-row-title-wrap {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  // プレイ時間/価格/ボタンをバナーと同じ幅(max-width: 400px)にまとめ、
+  // 両端揃え(space-between)にすることでボタンの右端をバナーの右端に揃える
+  .game-row-data .game-row-stats {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .game-row-data .game-row-stat {
+    flex: 0 0 auto;
+    text-align: left;
+  }
+}
+
 footer {
   background-color: #171D25;
 }
