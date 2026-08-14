@@ -2,15 +2,14 @@ class SendgridDeliveryMethod
   include HTTParty
   base_uri 'https://api.sendgrid.com/v3'
 
-  def initialize(settings)
-    @settings = settings
+  def initialize(settings = {})
   end
 
   def deliver!(mail)
     response = self.class.post(
       '/mail/send',
       headers: {
-        'Authorization' => "Bearer #{@settings[:api_key]}",
+        'Authorization' => "Bearer #{ENV['SENDGRID_API_KEY']}",
         'Content-Type' => 'application/json'
       },
       body: build_payload(mail).to_json
