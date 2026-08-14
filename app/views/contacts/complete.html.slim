@@ -1,6 +1,10 @@
-div.container.text-center
-  h1.text-white お問い合わせありがとうございました
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-check-circle.me-2
+        | お問い合わせありがとうございました
 
-  p.text-white 内容を確認の上、ご連絡させていただく場合がございます。
-
-  = link_to 'トップページへ戻る', root_path, class: 'btn btn-secondary text-white rounded-pill px-4'
+    div.card-body.card-body-color.text-center
+      p.mb-4 内容を確認の上、ご連絡させていただく場合がございます。
+      = link_to 'トップページへ戻る', root_path, class: 'btn btn-secondary text-white rounded-pill px-4'

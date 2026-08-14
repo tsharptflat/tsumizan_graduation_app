@@ -1,23 +1,32 @@
-div.container
-  h1.text-white お問い合わせ
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.mb-3
+    = link_to '< 戻る', root_path, class: 'btn btn-secondary text-white rounded-pill px-4'
 
-  = form_with model: @contact, url: confirm_contacts_path, method: :post, data: { turbo: false } do |f|
-    - if @contact.errors.any?
-      div.alert.alert-danger
-        ul.mb-0
-          - @contact.errors.full_messages.each do |message|
-            li = message
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-envelope.me-2
+        | お問い合わせ
 
-    div.mb-3
-      = f.label :name, 'お名前', class: 'form-label'
-      = f.text_field :name, class: 'form-control'
+    div.card-body.card-body-color
+      = form_with model: @contact, url: confirm_contacts_path, method: :post, data: { turbo: false } do |f|
+        - if @contact.errors.any?
+          div.alert.alert-danger
+            ul.mb-0
+              - @contact.errors.full_messages.each do |message|
+                li = message
 
-    div.mb-3
-      = f.label :email, 'メールアドレス', class: 'form-label'
-      = f.email_field :email, class: 'form-control'
+        div.mb-3
+          = f.label :name, 'お名前', class: 'form-label'
+          = f.text_field :name, class: 'form-control search-input'
 
-    div.mb-3
-      = f.label :content, 'お問い合わせ内容', class: 'form-label'
-      = f.text_area :content, rows: 6, class: 'form-control'
+        div.mb-3
+          = f.label :email, 'メールアドレス', class: 'form-label'
+          = f.email_field :email, class: 'form-control search-input'
 
-    = f.submit '確認画面へ', class: 'btn btn-primary'
+        div.mb-3
+          = f.label :content, 'お問い合わせ内容', class: 'form-label'
+          = f.text_area :content, rows: 6, class: 'form-control search-input'
+
+        div.d-flex.justify-content-end
+          = f.submit '確認画面へ', class: 'btn btn-steam-signin'

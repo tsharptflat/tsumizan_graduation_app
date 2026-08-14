@@ -1,6 +1,6 @@
 class ContactsController < ApplicationController
     def new
-        @contact = Contact.new
+        @contact = Contact.new(params.fetch(:contact, {}).permit(:name, :email, :content))
     end
 
     def confirm
