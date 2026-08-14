@@ -4,7 +4,7 @@ class Task < ApplicationRecord
     has_many :task_rewards, dependent: :destroy
     has_one :task_condition, dependent: :destroy
 
-    enum task_genre: {tsumige: 0, playtime: 1, friendship_level: 3}
+    enum task_genre: {tsumige: 0, playtime: 1, friendship_level: 2}
 
     def self.check_and_update_progress!(user)
       find_each do |task|
