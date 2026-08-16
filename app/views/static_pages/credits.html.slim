@@ -1,0 +1,21 @@
+div.mx-auto.mt-5 style="max-width: 720px;"
+  div.mb-3
+    = link_to '< 戻る', root_path, class: 'btn btn-secondary text-white rounded-pill px-4'
+
+  div.card.text-white.border-0.mb-5
+    div.card-header.card-header-color.py-3
+      p.p-1.fs-4.mb-0
+        i.bi.bi-image.me-2
+        | クレジット表記
+
+    div.card-body.card-body-color
+      p
+        | 本サービス「積み算」では、以下のフリーイラスト素材サイト様の画像を利用させていただいております。
+
+      ul
+        li
+          = link_to 'ツカッテ 様', 'https://tsukatte.com/', target: '_blank', rel: 'noopener', class: 'link-steam-accent'
+        li
+          = link_to 'ILLUST NAVI 様', 'https://illust-navi.com/', target: '_blank', rel: 'noopener', class: 'link-steam-accent'
+        li
+          = link_to 'イラストアタム 様', 'https://illust.atam-academy.com/', target: '_blank', rel: 'noopener', class: 'link-steam-accent'
