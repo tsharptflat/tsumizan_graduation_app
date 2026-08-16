@@ -107,8 +107,8 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gif
 end
 
 # タスク(積みゲー消化)
-(1..7).each do |n|
-  task = Task.find_or_create_by!(name: "積みゲーを#{n}本消化する", task_genre: :tsumige) do |t|
+(1..100).each do |n|
+  task = Task.find_or_create_by!(name: "ゲームを#{n}本クリアする", task_genre: :tsumige) do |t|
     t.description = "積みゲーを#{n}本クリアする"
   end
   TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
@@ -116,34 +116,22 @@ end
     tc.required_count = n
   end
   TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 100
-  end
-end
-
-# タスク(未達成表示確認用：積みゲー消化)
-[50, 100].each do |n|
-  task = Task.find_or_create_by!(name: "積みゲーを#{n}本消化する", task_genre: :tsumige) do |t|
-    t.description = "積みゲーを#{n}本クリアする(未達成表示確認用)"
-  end
-  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-    tc.condition_type = :tsumige
-    tc.required_count = n
-  end
-  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 100
+    tr.point = (n % 10).zero? ? 50 : 10
   end
 end
 
 # タスク(プレイ時間)
-task = Task.find_or_create_by!(name: '合計プレイ時間600分を達成する', task_genre: :playtime) do |t|
-  t.description = '積みゲーを含む全ゲームの合計プレイ時間が600分を超える'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :playtime
-  tc.required_count = 600
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.point = 100
+(10_000..1_000_000).step(10_000).each do |n|
+  task = Task.find_or_create_by!(name: "合計プレイ時間#{n}分を達成する", task_genre: :playtime) do |t|
+    t.description = "積みゲーを含む全ゲームの合計プレイ時間が#{n}分を超える"
+  end
+  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+    tc.condition_type = :playtime
+    tc.required_count = n
+  end
+  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+    tr.point = 5
+  end
 end
 
 # タスク(キャラクター好感度)
