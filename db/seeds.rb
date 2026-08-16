@@ -1,7 +1,6 @@
 # character_type
-character_type = CharacterType.find_or_create_by!(name: 'いらすと子') do |ct|
-  ct.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
-end
+character_type = CharacterType.find_or_initialize_by(name: 'いらすと子')
+character_type.update!(image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786890350/character01_smile_jqqj8t.png')
 
 # 状況ごとのconditions
 ## 総額
@@ -87,26 +86,23 @@ condition_gift_show_lv3.save!
 condition_gift_show_lv4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 4)
 condition_gift_show_lv4.save!
 
-# 表情差分
-expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
-  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_1_smile_ujoauq.png'
-end
+# 表情差分(表情差分が未完成のため、いったん全て同じ画像に統一)
+character_image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786890350/character01_smile_jqqj8t.png'
 
-expression_happy = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'happy') do |ce|
-  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman1_4_laugh_nkgkla.png'
-end
+expression_neutral = CharacterExpression.find_or_initialize_by(character_type_id: character_type.id, emotion_type: 'neutral')
+expression_neutral.update!(image_path: character_image_path)
 
-expression_surprised = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'surprised') do |ce|
-  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086276/business_woman2_3_surprise_ss4wsg.png'
-end
+expression_happy = CharacterExpression.find_or_initialize_by(character_type_id: character_type.id, emotion_type: 'happy')
+expression_happy.update!(image_path: character_image_path)
 
-expression_disappointed = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'disappointed') do |ce|
-  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086276/business_woman2_4_think_cqlpap.png'
-end
+expression_surprised = CharacterExpression.find_or_initialize_by(character_type_id: character_type.id, emotion_type: 'surprised')
+expression_surprised.update!(image_path: character_image_path)
 
-expression_shock = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'shock') do |ce|
-  ce.image_path = 'https://res.cloudinary.com/dvswzgioa/image/upload/q_auto/f_auto/v1777086275/business_woman2_2_shock_nmiaai.png'
-end
+expression_disappointed = CharacterExpression.find_or_initialize_by(character_type_id: character_type.id, emotion_type: 'disappointed')
+expression_disappointed.update!(image_path: character_image_path)
+
+expression_shock = CharacterExpression.find_or_initialize_by(character_type_id: character_type.id, emotion_type: 'shock')
+expression_shock.update!(image_path: character_image_path)
 
 # テキスト
 ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_show_min.id, character_expression_id: expression_happy.id) do |ct|
