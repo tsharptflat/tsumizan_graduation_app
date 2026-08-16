@@ -107,6 +107,7 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gif
 end
 
 # タスク(積みゲー消化)
+tsumige_first_five_points = { 1 => 200, 2 => 250, 3 => 300, 4 => 350, 5 => 400 }
 (1..100).each do |n|
   task = Task.find_or_create_by!(name: "ゲームを#{n}本クリアする", task_genre: :tsumige) do |t|
     t.description = "積みゲーを#{n}本クリアする"
@@ -115,9 +116,8 @@ end
     tc.condition_type = :tsumige
     tc.required_count = n
   end
-  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = (n % 10).zero? ? 50 : 10
-  end
+  point = tsumige_first_five_points[n] || ((n % 10).zero? ? 300 : (n % 5).zero? ? 250 : 200)
+  TaskReward.find_or_initialize_by(task_id: task.id).update!(point: point)
 end
 
 # タスク(プレイ時間)
