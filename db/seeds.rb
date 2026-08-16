@@ -318,19 +318,6 @@ ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item3.id) do |s
   si.price = 450.0
 end
 
-# タスク(報酬アイコン確認用：ギフトアイテム報酬)
-task = Task.find_or_create_by!(name: '積みゲーを1本消化する(ギフト報酬テスト)', task_genre: :tsumige) do |t|
-  t.description = '報酬確認用のテストタスクです'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :tsumige
-  tc.required_count = 1
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.item_type = 'GiftItem'
-  tr.item_id = gift_item1.id
-  tr.quantity = 1
-end
 
 =begin
 #ユーザー指定
