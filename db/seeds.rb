@@ -135,15 +135,17 @@ end
 end
 
 # タスク(キャラクター好感度)
-task = Task.find_or_create_by!(name: 'キャラクターとの好感度100を達成する', task_genre: :friendship_level) do |t|
-  t.description = 'キャラクターとの好感度が100を超える'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :friendship_level
-  tc.required_count = 100
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.point = 100
+UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_point|
+  task = Task.find_or_create_by!(name: "キャラクターとの好感度レベル#{level}に到達する", task_genre: :friendship_level) do |t|
+    t.description = "キャラクターとの好感度がレベル#{level}に到達する"
+  end
+  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+    tc.condition_type = :friendship_level
+    tc.required_count = required_point
+  end
+  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+    tr.point = 5
+  end
 end
 
 # ギフトアイテム
