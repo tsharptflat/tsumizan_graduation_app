@@ -24,13 +24,68 @@ condition_show_max.update!(friendship_level: 1)
 condition_show_loading = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show_loading', min_price: 0, max_price: 999999999)
 condition_show_loading.update!(friendship_level: 1)
 
-## キャラ詳細ページ用
-condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 999999999)
-condition_communicate_show.update!(friendship_level: 1)
+## キャラ詳細ページ用(汎用、積みゲー0の時は専用セリフのみにするためmin_price:1から。レベルが上がるごとにセリフのバリエーションが増える)
+condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 1)
+condition_communicate_show.save!
 
-## ギフトページ用
-condition_gift_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999)
-condition_gift_show.update!(friendship_level: 1)
+condition_communicate_show_lv2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 2)
+condition_communicate_show_lv2.save!
+
+condition_communicate_show_lv3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 3)
+condition_communicate_show_lv3.save!
+
+condition_communicate_show_lv4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 4)
+condition_communicate_show_lv4.save!
+
+condition_communicate_show_lv5 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 5)
+condition_communicate_show_lv5.save!
+
+## キャラ詳細ページ用(金額帯別)
+condition_communicate_zero = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 0)
+condition_communicate_zero.update!(friendship_level: 1)
+
+condition_communicate_tier1 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 3000)
+condition_communicate_tier1.update!(friendship_level: 1)
+
+condition_communicate_tier2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 3001, max_price: 5000)
+condition_communicate_tier2.update!(friendship_level: 1)
+
+condition_communicate_tier3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 5001, max_price: 10000)
+condition_communicate_tier3.update!(friendship_level: 1)
+
+condition_communicate_tier4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 10001, max_price: 20000)
+condition_communicate_tier4.update!(friendship_level: 1)
+
+condition_communicate_tier5 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 20001, max_price: 30000)
+condition_communicate_tier5.update!(friendship_level: 1)
+
+condition_communicate_tier6 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 30001, max_price: 40000)
+condition_communicate_tier6.update!(friendship_level: 1)
+
+condition_communicate_tier7 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 40001, max_price: 50000)
+condition_communicate_tier7.update!(friendship_level: 1)
+
+condition_communicate_tier8 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 50001, max_price: 75000)
+condition_communicate_tier8.update!(friendship_level: 1)
+
+condition_communicate_tier9 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 75001, max_price: 100000)
+condition_communicate_tier9.update!(friendship_level: 1)
+
+condition_communicate_tier10 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 100001, max_price: nil)
+condition_communicate_tier10.update!(friendship_level: 1)
+
+## ギフトページ用(レベルが上がるごとにセリフのバリエーションが増える)
+condition_gift_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 1)
+condition_gift_show.save!
+
+condition_gift_show_lv2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 2)
+condition_gift_show_lv2.save!
+
+condition_gift_show_lv3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 3)
+condition_gift_show_lv3.save!
+
+condition_gift_show_lv4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 4)
+condition_gift_show_lv4.save!
 
 # 表情差分
 expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
@@ -78,122 +133,178 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_sho
   ct.text = '少しドキドキしますね…！'
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちわんわん！') do |ct|
+# キャラ詳細ページ(汎用、Lv1)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '今日はどの積みゲーをプレイしていきますか？') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちジョン！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '他の人と比べてみることで初めて見えることもあったりしますよね。') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+# キャラ詳細ページ(汎用、Lv2)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv2.id, text: '今日も積みゲーに向き合っていて素晴らしいですね！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちリチャード！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv2.id, text: '思い切ってはじめからリスタートしてみるとするするっと進められちゃうこともありますよ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちアニス！') do |ct|
+# キャラ詳細ページ(汎用、Lv3)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv3.id, text: '疲れているときは無理せずに休んでくださいね…？') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv3.id, text: '積みゲー推移グラフを見てみると、モチベーションに繋がるかもしれませんよ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちファブル！') do |ct|
+# キャラ詳細ページ(汎用、Lv4)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv4.id, text: '積みゲーの中にあなたのための1本が眠っているかも！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '今日もたくさん積みゲーと向き合っていて偉いですね、その調子で少しずつ消化していきましょう！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv4.id, text: '積みゲーが少なくなっていくと、新作ゲームもきっとより楽しめますよっ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとう！') do |ct|
+# キャラ詳細ページ(汎用、LvMAX)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv5.id, text: 'たまにはセールも覗いてみちゃうのはどうですか？') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv5.id, text: '楽しんでプレイするのが一番、ですねっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+# キャラ詳細ページ(金額帯別)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_zero.id, text: '積みゲー0なんてすばらしいですよ！よく頑張りましたね！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier1.id, text: '残りの積みゲーも少なくなってきましたね、あと少しですよっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier2.id, text: 'いい調子ですね、このまま積みゲー0を目指していきましょう！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier3.id, text: '残りの積みゲーも、楽しんでプレイしていきましょうねっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier4.id, text: '少し積みゲーが増えてきてるみたいですね…！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier5.id, text: '積みゲープレイのなかなか時間を取るのも難しいですよね…！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier6.id, text: 'ライブラリを見てみると新たな発見があるかもですね！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier7.id, text: '結構な積み総額ですね…つ、次はどのゲームをプレイしましょうか！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier8.id, text: '一緒に頑張って積みゲー0を目指していきましょう！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier9.id, text: '長い道のりになりそうですが一つずつプレイしていきましょう！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier10.id, text: 'なかなかの積み具合ですね…気長にいきましょう！') do |ct|
+  ct.character_expression_id = expression_shock.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとうございます、嬉しいですっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv2.id, text: 'いいんですかいただいちゃって！ありがとうございますっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv3.id, text: 'いつもありがとうございますっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv4.id, text: '私もお返しできるよう、これからもサポートしていきますね！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
 # タスク(積みゲー消化)
-(1..7).each do |n|
-  task = Task.find_or_create_by!(name: "積みゲーを#{n}本消化する", task_genre: :tsumige) do |t|
+tsumige_first_five_points = { 1 => 200, 2 => 250, 3 => 300, 4 => 350, 5 => 400 }
+(1..100).each do |n|
+  task = Task.find_or_create_by!(name: "ゲームを#{n}本クリアする", task_genre: :tsumige) do |t|
     t.description = "積みゲーを#{n}本クリアする"
   end
   TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
     tc.condition_type = :tsumige
     tc.required_count = n
   end
-  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 100
-  end
-end
-
-# タスク(未達成表示確認用：積みゲー消化)
-[50, 100].each do |n|
-  task = Task.find_or_create_by!(name: "積みゲーを#{n}本消化する", task_genre: :tsumige) do |t|
-    t.description = "積みゲーを#{n}本クリアする(未達成表示確認用)"
-  end
-  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-    tc.condition_type = :tsumige
-    tc.required_count = n
-  end
-  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 100
-  end
+  point = tsumige_first_five_points[n] || ((n % 10).zero? ? 300 : (n % 5).zero? ? 250 : 200)
+  TaskReward.find_or_initialize_by(task_id: task.id).update!(point: point)
 end
 
 # タスク(プレイ時間)
-task = Task.find_or_create_by!(name: '合計プレイ時間600分を達成する', task_genre: :playtime) do |t|
-  t.description = '積みゲーを含む全ゲームの合計プレイ時間が600分を超える'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :playtime
-  tc.required_count = 600
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.point = 100
+playtime_tiers = { 100 => 5, 500 => 5, 1_000 => 5, 5_000 => 5, 10_000 => 10 }
+(20_000..1_000_000).step(10_000).each { |n| playtime_tiers[n] = 5 }
+
+playtime_tiers.each do |n, point|
+  task = Task.find_or_create_by!(name: "合計プレイ時間#{n}分を達成する", task_genre: :playtime) do |t|
+    t.description = "積みゲーを含む全ゲームの合計プレイ時間が#{n}分を超える"
+  end
+  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+    tc.condition_type = :playtime
+    tc.required_count = n
+  end
+  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+    tr.point = point
+  end
 end
 
 # タスク(キャラクター好感度)
-task = Task.find_or_create_by!(name: 'キャラクターとの好感度100を達成する', task_genre: :friendship_level) do |t|
-  t.description = 'キャラクターとの好感度が100を超える'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :friendship_level
-  tc.required_count = 100
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.point = 100
+UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_point|
+  task = Task.find_or_create_by!(name: "キャラクターとの好感度レベル#{level}に到達する", task_genre: :friendship_level) do |t|
+    t.description = "キャラクターとの好感度がレベル#{level}に到達する"
+  end
+  TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
+    tc.condition_type = :friendship_level
+    tc.required_count = required_point
+  end
+  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
+    tr.point = 5
+  end
 end
 
 # ギフトアイテム
-gift_item1 = GiftItem.find_or_create_by!(name: 'test_item') do |gi|
-  gi.friendship_point = 10
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト'
-  gi.description = 'テスト用のギフトアイテムです'
-end
+gift_item1 = GiftItem.find_or_initialize_by(name: 'イチゴのショートケーキ')
+gift_item1.update!(
+  friendship_point: 10,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/00147strawberry-shortcake_sr4mq7.png',
+  description: "プレゼント用アイテム。\n謹厳実直なパティシエによる至福の一品。"
+)
 
-gift_item2 = GiftItem.find_or_create_by!(name: 'test_item2') do |gi|
-  gi.friendship_point = 20
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト2'
-  gi.description = 'テスト用のギフトアイテム2です'
-end
+gift_item2 = GiftItem.find_or_initialize_by(name: '可愛いクマのぬいぐるみ')
+gift_item2.update!(
+  friendship_point: 30,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/stuffed-bear_brown_heart_tymegv.png',
+  description: "プレゼント用アイテム。\n密かなブームを起こしているぬいぐるみ。いつだって君の味方。"
+)
 
-gift_item3 = GiftItem.find_or_create_by!(name: 'test_item3') do |gi|
-  gi.friendship_point = 30
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト3'
-  gi.description = 'テスト用のギフトアイテム3です'
-end
-
-gift_item4 = GiftItem.find_or_create_by!(name: 'test_item4') do |gi|
-  gi.friendship_point = 40
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト4'
-  gi.description = 'テスト用のギフトアイテム4です'
-end
-
-gift_item5 = GiftItem.find_or_create_by!(name: 'test_item5') do |gi|
-  gi.friendship_point = 50
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト5'
-  gi.description = 'テスト用のギフトアイテム5です'
-end
-
-# 衣装アイテム
-outfit_item1 = OutfitItem.find_or_create_by!(name: 'testoutfit') do |oi|
-  oi.description = 'テスト用のアウトフィットです'
-  oi.image_path = 'https://placehold.jp/150x150.png'
-end
+gift_item3 = GiftItem.find_or_initialize_by(name: '手紙')
+gift_item3.update!(
+  friendship_point: 50,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/%E6%89%8B%E7%B4%99-%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88-%E3%81%8B%E3%82%8F%E3%81%84%E3%81%84_x1pjrh.png',
+  description: "プレゼント用アイテム。\n素直に気持ちを伝えるには手紙が一番。"
+)
 
 # ショップ商品
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item1.id) do |si|
@@ -201,23 +312,11 @@ ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item1.id) do |s
 end
 
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item2.id) do |si|
-  si.price = 200.0
+  si.price = 280.0
 end
 
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item3.id) do |si|
-  si.price = 300.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item4.id) do |si|
-  si.price = 400.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item5.id) do |si|
-  si.price = 500.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'OutfitItem', item_id: outfit_item1.id) do |si|
-  si.price = 50.0
+  si.price = 450.0
 end
 
 # タスク(報酬アイコン確認用：ギフトアイテム報酬)
@@ -231,20 +330,6 @@ end
 TaskReward.find_or_create_by!(task_id: task.id) do |tr|
   tr.item_type = 'GiftItem'
   tr.item_id = gift_item1.id
-  tr.quantity = 1
-end
-
-# タスク(報酬アイコン確認用：衣装アイテム報酬)
-task = Task.find_or_create_by!(name: '積みゲーを1本消化する(衣装報酬テスト)', task_genre: :tsumige) do |t|
-  t.description = '報酬確認用のテストタスクです'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :tsumige
-  tc.required_count = 1
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.item_type = 'OutfitItem'
-  tr.item_id = outfit_item1.id
   tr.quantity = 1
 end
 

@@ -12,6 +12,12 @@ nav.navbar.navbar-expand-lg.ps-3.fixed-top.header-nav
       = turbo_frame_tag "search_suggestions", data: { search_target: "frame" }, class: "position-absolute top-100 end-0 mt-1", style: "z-index: 1050; width: 350px;"
 
     div.header-dropdowns.ms-auto.d-flex
+      - unless current_page?(user_path)
+        div.pe-3.d-flex.align-items-center.flex-shrink-0
+          span.header-total-price.me-3.text-nowrap
+            | 積みゲー総額
+            span.fw-bold.fs-6.ms-1 = render 'user_game_libraries/total_price', total_price: UserGameLibrary.total_price(current_user), user: current_user
+
       div.dropdown.pe-3
         button.nav-tab-toggle.dropdown-toggle.me-3 type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy": "fixed", "modifiers": [{"name": "applyStyles", "enabled": true}, {"name": "preventOverflow", "options": {"boundary": "clippingParents"}}, {"name": "offset", "options": {"offset": [0, 2]}}]}' aria-expanded="false" 積みゲー分析
         ul.dropdown-menu

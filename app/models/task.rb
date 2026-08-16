@@ -1,5 +1,5 @@
 class Task < ApplicationRecord
-    has_many :user_tasks
+    has_many :user_tasks, dependent: :destroy
     has_many :users, through: :user_tasks
     has_many :task_rewards, dependent: :destroy
     has_one :task_condition, dependent: :destroy

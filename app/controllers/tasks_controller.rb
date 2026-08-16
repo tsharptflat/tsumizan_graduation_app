@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   GENRES = [
     ['tsumige', '積みゲー消化'],
-    ['playtime', 'プレイ時間？'],
+    ['playtime', '合計プレイ時間'],
     ['friendship_level', 'キャラ好感度']
   ].freeze
 
