@@ -65,7 +65,10 @@ div.mx-auto.mt-5 style="max-width: 720px;"
               div.flex-grow-1
                 div.d-flex.justify-content-between.small.text-white.mb-2
                   span 好感度
-                  span = "#{@user_character.friendship_point}/#{UserCharacter::FRIENDSHIP_POINT_MAX}"
+                  - if @user_character.max_friendship_level?
+                    span MAX
+                  - else
+                    span = "#{@user_character.friendship_point_within_current_level}/#{@user_character.friendship_point_required_for_current_level}"
                 div.friendship-bar-track
                   div.friendship-bar-fill style="width: #{@user_character.friendship_point_progress_percent}%"
 
