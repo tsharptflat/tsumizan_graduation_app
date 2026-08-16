@@ -21,10 +21,11 @@ class ApplicationController < ActionController::Base
   end
 
   def save_user_statistic_snapshot
-    return if session[:snapshot_recorded_on] == Date.current.to_s
+    key = "#{current_user.id}:#{Date.current}"
+    return if session[:snapshot_recorded_on] == key
 
     UserStatisticSnapshot.record_for(current_user)
-    session[:snapshot_recorded_on] = Date.current.to_s
+    session[:snapshot_recorded_on] = key
   rescue => e
     Rails.logger.error(e.message)
   end
