@@ -121,7 +121,10 @@ end
 end
 
 # タスク(プレイ時間)
-(10_000..1_000_000).step(10_000).each do |n|
+playtime_tiers = { 100 => 5, 500 => 5, 1_000 => 5, 5_000 => 5, 10_000 => 10 }
+(20_000..1_000_000).step(10_000).each { |n| playtime_tiers[n] = 5 }
+
+playtime_tiers.each do |n, point|
   task = Task.find_or_create_by!(name: "合計プレイ時間#{n}分を達成する", task_genre: :playtime) do |t|
     t.description = "積みゲーを含む全ゲームの合計プレイ時間が#{n}分を超える"
   end
@@ -130,7 +133,7 @@ end
     tc.required_count = n
   end
   TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 5
+    tr.point = point
   end
 end
 
@@ -149,40 +152,22 @@ UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_po
 end
 
 # ギフトアイテム
-gift_item1 = GiftItem.find_or_create_by!(name: 'test_item') do |gi|
+gift_item1 = GiftItem.find_or_create_by!(name: 'ケーキ') do |gi|
   gi.friendship_point = 10
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト'
-  gi.description = 'テスト用のギフトアイテムです'
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ケーキ'
+  gi.description = 'ケーキ'
 end
 
-gift_item2 = GiftItem.find_or_create_by!(name: 'test_item2') do |gi|
-  gi.friendship_point = 20
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト2'
-  gi.description = 'テスト用のギフトアイテム2です'
-end
-
-gift_item3 = GiftItem.find_or_create_by!(name: 'test_item3') do |gi|
+gift_item2 = GiftItem.find_or_create_by!(name: 'ぬいぐるみ') do |gi|
   gi.friendship_point = 30
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト3'
-  gi.description = 'テスト用のギフトアイテム3です'
+  gi.image_path = 'https://placehold.jp/300x300.png?text=ぬいぐるみ'
+  gi.description = 'ぬいぐるみ'
 end
 
-gift_item4 = GiftItem.find_or_create_by!(name: 'test_item4') do |gi|
-  gi.friendship_point = 40
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト4'
-  gi.description = 'テスト用のギフトアイテム4です'
-end
-
-gift_item5 = GiftItem.find_or_create_by!(name: 'test_item5') do |gi|
+gift_item3 = GiftItem.find_or_create_by!(name: '手紙') do |gi|
   gi.friendship_point = 50
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ギフト5'
-  gi.description = 'テスト用のギフトアイテム5です'
-end
-
-# 衣装アイテム
-outfit_item1 = OutfitItem.find_or_create_by!(name: 'testoutfit') do |oi|
-  oi.description = 'テスト用のアウトフィットです'
-  oi.image_path = 'https://placehold.jp/150x150.png'
+  gi.image_path = 'https://placehold.jp/300x300.png?text=手紙'
+  gi.description = '手紙'
 end
 
 # ショップ商品
@@ -191,23 +176,11 @@ ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item1.id) do |s
 end
 
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item2.id) do |si|
-  si.price = 200.0
+  si.price = 280.0
 end
 
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item3.id) do |si|
-  si.price = 300.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item4.id) do |si|
-  si.price = 400.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item5.id) do |si|
-  si.price = 500.0
-end
-
-ShopItem.find_or_create_by!(item_type: 'OutfitItem', item_id: outfit_item1.id) do |si|
-  si.price = 50.0
+  si.price = 450.0
 end
 
 # タスク(報酬アイコン確認用：ギフトアイテム報酬)
@@ -221,20 +194,6 @@ end
 TaskReward.find_or_create_by!(task_id: task.id) do |tr|
   tr.item_type = 'GiftItem'
   tr.item_id = gift_item1.id
-  tr.quantity = 1
-end
-
-# タスク(報酬アイコン確認用：衣装アイテム報酬)
-task = Task.find_or_create_by!(name: '積みゲーを1本消化する(衣装報酬テスト)', task_genre: :tsumige) do |t|
-  t.description = '報酬確認用のテストタスクです'
-end
-TaskCondition.find_or_create_by!(task_id: task.id) do |tc|
-  tc.condition_type = :tsumige
-  tc.required_count = 1
-end
-TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-  tr.item_type = 'OutfitItem'
-  tr.item_id = outfit_item1.id
   tr.quantity = 1
 end
 
