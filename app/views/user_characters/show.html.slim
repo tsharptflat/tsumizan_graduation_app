@@ -22,8 +22,8 @@ div.mx-auto.mt-5 style="max-width: 720px;"
                   - @user_gift_items.each do |user_gift_item|
                     div.divider-row.d-flex.justify-content-between.align-items-center.px-2 data-bs-toggle="modal" data-bs-target="#gift_modal_#{user_gift_item.id}" style="cursor: pointer;"
                       div.d-flex.align-items-center.gap-3
-                        = image_tag user_gift_item.gift_item.image_path, alt: user_gift_item.gift_item.name, width: 48, height: 48, class: 'rounded', style: 'object-fit: cover;'
-                        div id="gift_item_#{user_gift_item.id}" data-bs-toggle="tooltip" title="#{user_gift_item.gift_item.description} +#{user_gift_item.gift_item.friendship_point}p" data-controller="tooltip"
+                        = image_tag user_gift_item.gift_item.image_path, alt: user_gift_item.gift_item.name, width: 48, height: 48, class: 'rounded', style: 'object-fit: contain;'
+                        div id="gift_item_#{user_gift_item.id}" data-bs-toggle="tooltip" title="+#{user_gift_item.gift_item.friendship_point}p" data-controller="tooltip"
                           div.text-white = user_gift_item.gift_item.name
                           div.small style="color: rgba(255, 255, 255, 0.75);" = "所持数：#{user_gift_item.quantity}"
                       i.bi.bi-chevron-right.text-muted-steam
@@ -37,7 +37,7 @@ div.mx-auto.mt-5 style="max-width: 720px;"
                               div.small.text-muted-steam = "所持数：#{user_gift_item.quantity}"
                             button.btn-close.btn-close-white type="button" data-bs-dismiss="modal" aria-label="Close"
                           div.modal-body
-                            p.text-white.mb-1 = user_gift_item.gift_item.description
+                            p.text-white.mb-1 style="white-space: pre-line;" = user_gift_item.gift_item.description
                             p.small.text-muted-steam.mb-3
                               i.bi.bi-heart-fill.me-1
                               | +#{user_gift_item.gift_item.friendship_point}ポイント

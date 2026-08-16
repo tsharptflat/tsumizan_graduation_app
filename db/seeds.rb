@@ -285,23 +285,26 @@ UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_po
 end
 
 # ギフトアイテム
-gift_item1 = GiftItem.find_or_create_by!(name: 'ケーキ') do |gi|
-  gi.friendship_point = 10
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ケーキ'
-  gi.description = 'ケーキ'
-end
+gift_item1 = GiftItem.find_or_initialize_by(name: 'イチゴのショートケーキ')
+gift_item1.update!(
+  friendship_point: 10,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/00147strawberry-shortcake_sr4mq7.png',
+  description: "プレゼント用アイテム。\n謹厳実直なパティシエによる至福の一品。"
+)
 
-gift_item2 = GiftItem.find_or_create_by!(name: 'ぬいぐるみ') do |gi|
-  gi.friendship_point = 30
-  gi.image_path = 'https://placehold.jp/300x300.png?text=ぬいぐるみ'
-  gi.description = 'ぬいぐるみ'
-end
+gift_item2 = GiftItem.find_or_initialize_by(name: '可愛いクマのぬいぐるみ')
+gift_item2.update!(
+  friendship_point: 30,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/stuffed-bear_brown_heart_tymegv.png',
+  description: "プレゼント用アイテム。\n密かなブームを起こしているぬいぐるみ。いつだって君の味方。"
+)
 
-gift_item3 = GiftItem.find_or_create_by!(name: '手紙') do |gi|
-  gi.friendship_point = 50
-  gi.image_path = 'https://placehold.jp/300x300.png?text=手紙'
-  gi.description = '手紙'
-end
+gift_item3 = GiftItem.find_or_initialize_by(name: '手紙')
+gift_item3.update!(
+  friendship_point: 50,
+  image_path: 'https://res.cloudinary.com/dvswzgioa/image/upload/v1786865844/%E6%89%8B%E7%B4%99-%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88-%E3%81%8B%E3%82%8F%E3%81%84%E3%81%84_x1pjrh.png',
+  description: "プレゼント用アイテム。\n素直に気持ちを伝えるには手紙が一番。"
+)
 
 # ショップ商品
 ShopItem.find_or_create_by!(item_type: 'GiftItem', item_id: gift_item1.id) do |si|

@@ -15,9 +15,8 @@ div.mx-auto.mt-5 style="max-width: 720px;" data-controller="shop-preview"
       div.row.g-4
         div.col-lg-5
           - first_item = @shop_items.first&.item
-          div.p-3.rounded.stat-tile.position-relative
-            = image_tag(first_item&.image_path, data: { shop_preview_target: 'image' }, alt: 'アイテム画像', class: 'w-100 rounded mb-2', style: 'height: 200px; object-fit: cover;')
-            p.text-white.small.mb-0 data-shop-preview-target="description" = first_item&.description
+          div.h-100.p-3.rounded.stat-tile.position-relative.d-flex.flex-column.justify-content-center
+            = image_tag(first_item&.image_path, data: { shop_preview_target: 'image' }, alt: 'アイテム画像', class: 'w-100 rounded mb-2', style: 'height: 200px; object-fit: contain;')
             div.toast.fade.position-absolute.top-100.start-50.translate-middle-x.mt-2 id="purchase_toast" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000"
               div.toast-body
 
@@ -29,13 +28,13 @@ div.mx-auto.mt-5 style="max-width: 720px;" data-controller="shop-preview"
                 div.divider-row.d-flex.justify-content-between.align-items-center
                   div
                     div.text-muted-steam = shop_item.item.name
-                    div.small.text-muted-steam = shop_item.item.description
+                    div.small.text-muted-steam style="white-space: pre-line;" = shop_item.item.description
                   span.badge.status-badge.bg-success 所持済み
               - else
-                div.divider-row.search-suggestion-item.rounded.px-2.d-flex.justify-content-between.align-items-center data-action="mouseover->shop-preview#show" data-bs-toggle="modal" data-bs-target="#shop_item_modal_#{shop_item.id}" data-shop-preview-image-param="#{shop_item.item.image_path}" data-shop-preview-description-param="#{shop_item.item.description}" style="cursor: pointer;"
+                div.divider-row.search-suggestion-item.rounded.px-2.d-flex.justify-content-between.align-items-center data-action="mouseover->shop-preview#show" data-bs-toggle="modal" data-bs-target="#shop_item_modal_#{shop_item.id}" data-shop-preview-image-param="#{shop_item.item.image_path}" style="cursor: pointer;"
                   div
                     div.text-white = shop_item.item.name
-                    div.small.text-muted-steam = shop_item.item.description
+                    div.small.text-muted-steam style="white-space: pre-line;" = shop_item.item.description
                   span.link-steam-accent = "#{shop_item.price.to_i}P"
 
                 - affordable_count = shop_item.affordable_count_for(current_user)
