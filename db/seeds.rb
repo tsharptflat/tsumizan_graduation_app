@@ -24,13 +24,68 @@ condition_show_max.update!(friendship_level: 1)
 condition_show_loading = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'users_show_loading', min_price: 0, max_price: 999999999)
 condition_show_loading.update!(friendship_level: 1)
 
-## キャラ詳細ページ用
-condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 999999999)
-condition_communicate_show.update!(friendship_level: 1)
+## キャラ詳細ページ用(汎用、積みゲー0の時は専用セリフのみにするためmin_price:1から。レベルが上がるごとにセリフのバリエーションが増える)
+condition_communicate_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 1)
+condition_communicate_show.save!
 
-## ギフトページ用
-condition_gift_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999)
-condition_gift_show.update!(friendship_level: 1)
+condition_communicate_show_lv2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 2)
+condition_communicate_show_lv2.save!
+
+condition_communicate_show_lv3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 3)
+condition_communicate_show_lv3.save!
+
+condition_communicate_show_lv4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 4)
+condition_communicate_show_lv4.save!
+
+condition_communicate_show_lv5 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 999999999, friendship_level: 5)
+condition_communicate_show_lv5.save!
+
+## キャラ詳細ページ用(金額帯別)
+condition_communicate_zero = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 0, max_price: 0)
+condition_communicate_zero.update!(friendship_level: 1)
+
+condition_communicate_tier1 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 1, max_price: 3000)
+condition_communicate_tier1.update!(friendship_level: 1)
+
+condition_communicate_tier2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 3001, max_price: 5000)
+condition_communicate_tier2.update!(friendship_level: 1)
+
+condition_communicate_tier3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 5001, max_price: 10000)
+condition_communicate_tier3.update!(friendship_level: 1)
+
+condition_communicate_tier4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 10001, max_price: 20000)
+condition_communicate_tier4.update!(friendship_level: 1)
+
+condition_communicate_tier5 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 20001, max_price: 30000)
+condition_communicate_tier5.update!(friendship_level: 1)
+
+condition_communicate_tier6 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 30001, max_price: 40000)
+condition_communicate_tier6.update!(friendship_level: 1)
+
+condition_communicate_tier7 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 40001, max_price: 50000)
+condition_communicate_tier7.update!(friendship_level: 1)
+
+condition_communicate_tier8 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 50001, max_price: 75000)
+condition_communicate_tier8.update!(friendship_level: 1)
+
+condition_communicate_tier9 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 75001, max_price: 100000)
+condition_communicate_tier9.update!(friendship_level: 1)
+
+condition_communicate_tier10 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_show', min_price: 100001, max_price: nil)
+condition_communicate_tier10.update!(friendship_level: 1)
+
+## ギフトページ用(レベルが上がるごとにセリフのバリエーションが増える)
+condition_gift_show = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 1)
+condition_gift_show.save!
+
+condition_gift_show_lv2 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 2)
+condition_gift_show_lv2.save!
+
+condition_gift_show_lv3 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 3)
+condition_gift_show_lv3.save!
+
+condition_gift_show_lv4 = CharacterTextCondition.find_or_initialize_by(character_type_id: character_type.id, page: 'user_characters_gift_show', min_price: 0, max_price: 999999999, friendship_level: 4)
+condition_gift_show_lv4.save!
 
 # 表情差分
 expression_neutral = CharacterExpression.find_or_create_by!(character_type_id: character_type.id, emotion_type: 'neutral') do |ce|
@@ -78,31 +133,109 @@ ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_sho
   ct.text = '少しドキドキしますね…！'
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちわんわん！') do |ct|
+# キャラ詳細ページ(汎用、Lv1)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '今日はどの積みゲーをプレイしていきますか？') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちジョン！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '他の人と比べてみることで初めて見えることもあったりしますよね。') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+# キャラ詳細ページ(汎用、Lv2)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv2.id, text: '今日も積みゲーに向き合っていて素晴らしいですね！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちリチャード！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv2.id, text: '思い切ってはじめからリスタートしてみるとするするっと進められちゃうこともありますよ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちアニス！') do |ct|
+# キャラ詳細ページ(汎用、Lv3)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv3.id, text: '疲れているときは無理せずに休んでくださいね…？') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv3.id, text: '積みゲー推移グラフを見てみると、モチベーションに繋がるかもしれませんよ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: 'こんにちファブル！') do |ct|
+# キャラ詳細ページ(汎用、Lv4)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv4.id, text: '積みゲーの中にあなたのための1本が眠っているかも！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show.id, text: '今日もたくさん積みゲーと向き合っていて偉いですね、その調子で少しずつ消化していきましょう！') do |ct|
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv4.id, text: '積みゲーが少なくなっていくと、新作ゲームもきっとより楽しめますよっ！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
-ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとう！') do |ct|
+# キャラ詳細ページ(汎用、LvMAX)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv5.id, text: 'たまにはセールも覗いてみちゃうのはどうですか？') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_show_lv5.id, text: '楽しんでプレイするのが一番、ですねっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+# キャラ詳細ページ(金額帯別)
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_zero.id, text: '積みゲー0なんてすばらしいですよ！よく頑張りましたね！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier1.id, text: '残りの積みゲーも少なくなってきましたね、あと少しですよっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier2.id, text: 'いい調子ですね、このまま積みゲー0を目指していきましょう！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier3.id, text: '残りの積みゲーも、楽しんでプレイしていきましょうねっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier4.id, text: '少し積みゲーが増えてきてるみたいですね…！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier5.id, text: '積みゲープレイのなかなか時間を取るのも難しいですよね…！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier6.id, text: 'ライブラリを見てみると新たな発見があるかもですね！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier7.id, text: '結構な積み総額ですね…つ、次はどのゲームをプレイしましょうか！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier8.id, text: '一緒に頑張って積みゲー0を目指していきましょう！') do |ct|
+  ct.character_expression_id = expression_neutral.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier9.id, text: '長い道のりになりそうですが一つずつプレイしていきましょう！') do |ct|
+  ct.character_expression_id = expression_disappointed.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_communicate_tier10.id, text: 'なかなかの積み具合ですね…気長にいきましょう！') do |ct|
+  ct.character_expression_id = expression_shock.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show.id, text: 'ありがとうございます、嬉しいですっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv2.id, text: 'いいんですかいただいちゃって！ありがとうございますっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv3.id, text: 'いつもありがとうございますっ！') do |ct|
+  ct.character_expression_id = expression_happy.id
+end
+
+ct = CharacterText.find_or_create_by!(character_text_condition_id: condition_gift_show_lv4.id, text: '私もお返しできるよう、これからもサポートしていきますね！') do |ct|
   ct.character_expression_id = expression_happy.id
 end
 
