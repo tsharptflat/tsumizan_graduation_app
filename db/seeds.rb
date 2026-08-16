@@ -270,7 +270,8 @@ playtime_tiers.each do |n, point|
   end
 end
 
-# タスク(キャラクター好感度)
+# タスク(キャラクター好感度、レベル1は初回ですでに到達済みのため除外)
+friendship_task_points = { 2 => 20, 3 => 30, 4 => 40, 5 => 50 }
 UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_point|
   task = Task.find_or_create_by!(name: "キャラクターとの好感度レベル#{level}に到達する", task_genre: :friendship_level) do |t|
     t.description = "キャラクターとの好感度がレベル#{level}に到達する"
@@ -279,9 +280,7 @@ UserCharacter::FRIENDSHIP_LEVEL_THRESHOLDS.except(1).each do |level, required_po
     tc.condition_type = :friendship_level
     tc.required_count = required_point
   end
-  TaskReward.find_or_create_by!(task_id: task.id) do |tr|
-    tr.point = 5
-  end
+  TaskReward.find_or_initialize_by(task_id: task.id).update!(point: friendship_task_points[level])
 end
 
 # ギフトアイテム

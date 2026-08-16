@@ -11,7 +11,7 @@ class UserCharacter < ApplicationRecord
 
   def self.find_or_create_default_character(user)
     find_or_create_by!(user_id: user.id, character_type_id: CharacterType.find_by(name: 'いらすと子').id) do |uc|
-      uc.name = '仮'
+      uc.name = 'サポートちゃん'
     end
   end
 
