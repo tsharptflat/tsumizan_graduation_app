@@ -6,10 +6,10 @@ div.mx-auto.mt-5 style="max-width: 720px;"
         | #{@user_character.character_type.name}
 
     div.card-body.card-body-color.p-4
-      div.d-flex.align-items-end.gap-4.mb-4
-        = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 260)
+      div.d-flex.align-items-end.gap-4.mb-4.character-page-header
+        = image_tag(@user_character.character_type.image_path, alt: @user_character.name, width: 260, class: 'character-page-avatar')
 
-        div.flex-grow-1.d-flex.flex-column.gap-3
+        div.flex-grow-1.d-flex.flex-column.gap-3.character-page-content
           div.collapse id="gift_item_panel"
             div.gift-item-panel.rounded.p-3
               - if @user_gift_items.empty?

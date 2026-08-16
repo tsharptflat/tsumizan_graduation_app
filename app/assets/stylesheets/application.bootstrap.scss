@@ -178,6 +178,33 @@ nav {
   }
 }
 
+// 育成画面: キャラクター画像(260px固定)+ 右側コンテンツの横並び。
+// スマホ幅では画像を縮小しつつ、セリフの長さに関わらず常にキャラの下に
+// コンテンツが来るよう縦積みに固定する
+@media (max-width: 767.98px) {
+  .character-page-header {
+    flex-direction: column !important;
+  }
+
+  .character-page-avatar {
+    width: 160px !important;
+    align-self: center;
+  }
+
+  .character-page-content {
+    width: 100% !important;
+  }
+
+  // 吹き出しの三角をキャラの真下に来る前提で上辺・左寄りに変更
+  // (このページ専用。他ページの.speech-bubbleには影響しない)
+  .character-page-header .speech-bubble::after {
+    top: -18px;
+    left: 20px;
+    border-right-color: transparent;
+    border-bottom-color: #4a5568;
+  }
+}
+
 footer {
   background-color: #171D25;
 }
