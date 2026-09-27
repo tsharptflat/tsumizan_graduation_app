@@ -10,8 +10,12 @@ class SteamApiService
       filters: 'basic,price_overview,genres'
     })
 
-    data = response.parsed_response.dig(steam_app_id.to_s, 'data')
+    # レスポンスの最上位キーは、リクエストしたappidと一致しないことがある
+    # (Steam側でそのゲームの正式なappidが後から変わった場合など)。
+    # 1つのappidにつき1件しか返ってこないので、キーが何であれ最初の要素をそのまま使う。
+    data = response.parsed_response.values.first&.dig('data')
     return {price: nil, genres: nil, name: nil} unless data.is_a?(Hash)
-    {price: data.dig('price_overview', 'final')&./(100.0), genres: data.dig('genres'), name: data['name']}
+    # セール適用後の価格(final)ではなく、本来の資産価値を示すため定価(initial)を使う
+    {price: data.dig('price_overview', 'initial')&./(100.0), genres: data.dig('genres'), name: data['name']}
   end
 end
