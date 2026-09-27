@@ -16,7 +16,10 @@ div.mx-auto.mt-5 style="max-width: 720px;"
                 p.text-center.mb-0 style="color: rgba(255, 255, 255, 0.75);"
                   | まだプレゼントを持っていません。
                   br
-                  | マイレージショップやタスク報酬で手に入れましょう！
+                  = link_to 'マイレージショップ', shop_items_path, class: 'link-steam-accent'
+                  |  や
+                  = link_to 'タスク報酬', tasks_path, class: 'link-steam-accent'
+                  | で手に入れましょう！
               - else
                 div
                   - @user_gift_items.each do |user_gift_item|
