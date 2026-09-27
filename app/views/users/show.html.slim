@@ -8,7 +8,7 @@ div.text-white.py-5.mt-5.position-relative style="background-color: #16202d;"
 
         div.d-flex.justify-content-center.align-items-center.gap-3 style="margin-top: 5rem;"
             = button_to "積みゲー統計へ", statistic_path, method: :get, class: "btn btn-steam-primary"
-            = link_to "https://twitter.com/share?url=#{user_share_url(id: current_user.id)}&text=総積み金額は#{@total_price}円！", class: "btn-steam-share" do
+            = link_to "https://twitter.com/share?url=#{user_share_url(id: current_user.id)}&text=総積み金額は#{@total_price}円！", class: "btn-steam-share", target: "_blank", rel: "noopener" do
                 i class="fa-brands fa-x-twitter"
 
     div.character-overlay-position
