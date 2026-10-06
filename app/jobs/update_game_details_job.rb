@@ -1,5 +1,17 @@
-class UpdateGameDetailsJob < ApplicationJob
-  queue_as :default
+# sidekiq-throttledはActiveJobに対応していないため、このジョブのみSidekiq::Jobで定義している
+class UpdateGameDetailsJob
+  include Sidekiq::Job
+  include Sidekiq::Throttled::Job
+
+  sidekiq_options queue: :default
+
+  # 非公式のSteam Store APIは5分で約200回を超えると429が返るとされるため、
+  # 余裕を持たせてアプリ全体(全ワーカー共通)で2秒に1回までに制限する。
+  # 制限にかかったジョブはキューに戻され、枠が空き次第実行される。
+  # (requeue: :scheduleはSidekiqの予約ジョブ確認間隔に左右され、実測で約5秒間隔まで遅くなったため不採用)
+  sidekiq_throttle(
+    threshold: { limit: 1, period: 2.seconds }
+  )
 
   # 価格・タイトル・ジャンルは同じ/appdetailsのレスポンスに含まれるため、
   # 1回のAPI呼び出しでまとめて保存する(非公式APIへのリクエスト数を抑えるため)

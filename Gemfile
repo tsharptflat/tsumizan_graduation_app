@@ -55,6 +55,7 @@ gem 'rexml'
 gem 'httparty'
 
 gem 'sidekiq'
+gem 'sidekiq-throttled'
 
 gem 'letter_opener_web'
 
