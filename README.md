@@ -246,26 +246,36 @@
 
 ## 10. 技術スタック（手段としての技術）
 
-### 10-1. 使用予定の技術
+### 10-1. 使用技術
 
 - フレームワーク：Ruby on Rails
-- DB：PostgreSQL
+- DB：PostgreSQL（ホスティング：Neon）
 - デプロイ先：Render
-- 使用予定ライブラリ（Gem）：
-  - rspec-rails
-  - factory_bot_rails
-  - rubocop
-  - pry-rails
-  - rails-i18n
-  - bullet
-  - annotate
-  - slim
-  - devise
-  - cloudinary
-  - omniauth-steam
-  - omniauth-rails_csrf_protection
-  - rexml
-  - httparty
+- 使用ライブラリ（Gem）：
+  - sidekiq / redis：非同期ジョブ処理（Steam Store APIからの価格・ジャンル取得等）
+  - turbo-rails / stimulus-rails：Hotwire、リアルタイム画面更新
+  - devise / omniauth-steam / omniauth-rails_csrf_protection：Steam OpenID認証
+  - slim-rails：テンプレートエンジン
+  - bootstrap：CSSフレームワーク
+  - cloudinary：画像配信
+  - ransack：検索機能
+  - kaminari：ページネーション
+  - ruby-vips：OGP画像生成
+  - meta-tags：OGP/SEOメタタグ
+  - rexml / httparty：Steam Web API・Steam Store APIとの通信
+  - rspec-rails / factory_bot_rails：テスト
+  - rubocop-rails-omakase：Lint
+  - brakeman：セキュリティスキャン
+  - bullet：N+1クエリ検出
+  - annotate：モデルへのスキーマ情報自動追記
+  - pry-rails：開発時のデバッグ
+
+- 使用ライブラリ（JavaScript）：
+  - @hotwired/turbo-rails / @hotwired/stimulus：Hotwire
+  - chart.js：積みゲー推移グラフ
+  - bootstrap / bootstrap-icons
+  - esbuild：JSバンドル
+  - sass / postcss：CSSビルド
 
 - OpenID
 - Steamworks WebAPI
