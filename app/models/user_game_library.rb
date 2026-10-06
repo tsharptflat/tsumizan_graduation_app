@@ -43,8 +43,7 @@ class UserGameLibrary < ApplicationRecord
       end
       library.save!
     end
-    UpdateGamePriceJob.perform_later(user.id, game.steam_app_id) if game.price.nil?
-    UpdateGameGenreJob.perform_later(game.steam_app_id) if game.game_genres.empty?
+    UpdateGameDetailsJob.perform_later(user.id, game.steam_app_id) if game.price.nil? || game.game_genres.empty?
   rescue => e
     Rails.logger.error(e.message)
     return
