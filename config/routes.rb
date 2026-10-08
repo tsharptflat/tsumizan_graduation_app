@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  require "sidekiq/web" # require the web UI
-  mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
-
+  # 管理者の区別が無く、本番で公開すると誰でもジョブの閲覧・削除ができてしまうため開発環境のみに限定する
+  # (本番のジョブの失敗はRenderのログで確認する)
   if Rails.env.development?
+    require "sidekiq/web" # require the web UI
+    mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
