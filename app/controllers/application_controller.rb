@@ -23,6 +23,9 @@ class ApplicationController < ActionController::Base
   def save_user_statistic_snapshot
     key = "#{current_user.id}:#{Date.current}"
     return if session[:snapshot_recorded_on] == key
+    # 価格の取得中に記録すると、未取得分が抜けた不完全な総額がその日の値として残り、
+    # 1日1回のため後から上書きされない。取得が終わってから(次のリクエスト以降で)記録する
+    return if UserGameLibrary.any_library_game_prices_pending?(current_user)
 
     UserStatisticSnapshot.record_for(current_user)
     session[:snapshot_recorded_on] = key
