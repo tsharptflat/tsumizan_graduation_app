@@ -32,7 +32,7 @@ div.card.text-white.border-0.mx-auto.mt-5 style="max-width: 720px;"
                       div.fw-bold = "#{(library.minutes_played / 60.0).round(1)}時間"
                     div
                       div.small.text-muted-steam 価格
-                      div.fw-bold = "¥#{library.game.price}"
+                      div.fw-bold = game_price_label(library.game)
                     - if library.unplayed_date && library.cleared_date.nil?
                       div
                         div.small.text-muted-steam 積み時間
@@ -67,7 +67,7 @@ div.card.text-white.border-0.mx-auto.mt-5 style="max-width: 720px;"
                   div.fw-bold = "#{(@next_up_library.minutes_played / 60.0).round(1)}時間"
                 div
                   div.small.text-muted-steam 価格
-                  div.fw-bold = "¥#{@next_up_library.game.price}"
+                  div.fw-bold = game_price_label(@next_up_library.game)
           div.d-flex.flex-column.justify-content-center.gap-1.play-row-actions
             = button_to clear_slot_play_focus_path(library_id: @next_up_library.id), method: :patch, class: "btn btn-secondary text-white btn-sm w-100" do
               span.d-none.d-md-inline 取り下げる

@@ -7,7 +7,7 @@ class BacklogsController < ApplicationController
     when 'price_asc'
       unplayed_games.order('games.price asc')
     when 'price_desc'
-      unplayed_games.order('games.price desc')
+      unplayed_games.order('games.price desc nulls last')
     else
       unplayed_games
     end
