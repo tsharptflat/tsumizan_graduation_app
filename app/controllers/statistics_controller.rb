@@ -8,7 +8,7 @@ class StatisticsController < ApplicationController
     @total_price = UserGameLibrary.total_price(current_user)
     @unplayed_games = current_user.user_game_libraries.unplayed.includes(:game)
     @no_backlog = @unplayed_games.empty?
-    @tsumige_list = @unplayed_games.joins(:game).order('games.price DESC').limit(3)
+    @tsumige_list = @unplayed_games.joins(:game).order('games.price DESC NULLS LAST').limit(3)
     @total_games_count = current_user.user_game_libraries.count
     @unplayed_rate = UserGameLibrary.unplayed_rate(current_user)
     @recommended_games = current_user.user_game_libraries.unplayed.cheapest_games.recommend_3

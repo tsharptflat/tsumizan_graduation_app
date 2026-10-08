@@ -15,7 +15,7 @@ div.mx-auto.mt-5 style="max-width: 960px;"
               div.fw-bold = @game.game_genre_types.map(&:name).join('/')
             div
               div.small.text-muted-steam 価格
-              div.fw-bold = number_to_currency(@game.price, precision: 0, unit: '¥', format: '%u%n')
+              div.fw-bold = game_price_label(@game)
             div.text-end
               - if @current_user_game
                 - if @current_user_game.cleared_date

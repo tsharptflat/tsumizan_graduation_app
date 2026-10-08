@@ -23,7 +23,7 @@ div.card.text-white.border-0.mx-auto.mt-5.card-body-color style="max-width: 720p
                 div.fw-bold = "#{@all_games_count.fetch(game.id, 0)}人"
               div.game-row-stat
                 div.small.text-muted-steam 価格
-                div.fw-bold = "¥#{game.price}"
+                div.fw-bold = game_price_label(game)
               div.game-row-stat
                 div.small.text-muted-steam 積み率
                 div.fw-bold = "#{UserGameLibrary.unplayed_rate_for(game, @all_games_count, @all_unplayed_games_count)}%"

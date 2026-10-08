@@ -40,7 +40,7 @@ div.card.text-white.border-0.mx-auto.mt-5 style="max-width: 720px;" data-control
                         div.fw-bold = "#{(library.minutes_played / 60.0).round(1)}時間"
                       div
                         div.small.text-muted-steam 価格
-                        div.fw-bold = "¥#{library.game.price}"
+                        div.fw-bold = game_price_label(library.game)
                       - if library.unplayed_date && library.cleared_date.nil?
                         div
                           div.small.text-muted-steam 積み時間

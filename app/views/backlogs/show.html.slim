@@ -26,7 +26,7 @@ div.card.text-white.border-0.mx-auto.mt-5.card-body-color style="max-width: 720p
                   div.fw-bold = "#{(library.minutes_played/60.0).round(1)}時間"
                 div.game-row-stat
                   div.small.text-muted-steam 価格
-                  div.fw-bold = "¥#{library.game.price}"
+                  div.fw-bold = game_price_label(library.game)
                 div.game-row-stat
                   - if library.cleared_date
                     = button_to '未クリアに戻す', revert_cleared_game_backlog_path(library_id: library.id), method: :patch, class: 'btn btn-color text-white btn-sm'

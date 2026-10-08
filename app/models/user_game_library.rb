@@ -43,8 +43,7 @@ class UserGameLibrary < ApplicationRecord
       end
       library.save!
     end
-    UpdateGamePriceJob.perform_later(user.id, game.steam_app_id) if game.price.nil?
-    UpdateGameGenreJob.perform_later(game.steam_app_id) if game.game_genres.empty?
+    UpdateGameDetailsJob.perform_async(user.id, game.steam_app_id) if game.price.nil? || game.game_genres.empty?
   rescue => e
     Rails.logger.error(e.message)
     return
@@ -93,8 +92,14 @@ class UserGameLibrary < ApplicationRecord
     user.user_game_libraries.sum(:minutes_played)
   end
 
-  def self.any_library_game_prices_nil?(user)
-    user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil }).exists?
+  # 価格をまだ取得中の積みゲーがあるか(取得を失敗したゲームは「計算中」の対象から外す)
+  def self.any_library_game_prices_pending?(user)
+    user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil, price_fetch_failed_at: nil }).exists?
+  end
+
+  # 再試行しても価格を取得できなかった積みゲーの本数、注釈表示用(総額はこれらを除いて計算される)
+  def self.price_fetch_failed_games_count(user)
+    user.user_game_libraries.unplayed.joins(:game).where(games: { price: nil }).where.not(games: { price_fetch_failed_at: nil }).count
   end
 
 

@@ -143,5 +143,5 @@ div.mx-auto.mt-5 style="max-width: 960px;"
                 = image_tag steam_banner_image(library.game), class: 'w-100 rounded mb-2', style: 'height: 100px; object-fit: cover;', onerror: "this.onerror=null;this.src='#{broken_thumbnail_placeholder}'"
               div
                 = link_to library.game.game_title, game_path(library.game), class: 'link-steam-accent fw-bold'
-                div.text-muted-steam.small = "¥#{library.game.price} ／ #{(library.minutes_played/60.0).round(1)}時間 ／ コスパ指数: #{library.cost_performance_score}"
+                div.text-muted-steam.small = "#{game_price_label(library.game)} ／ #{(library.minutes_played/60.0).round(1)}時間 ／ コスパ指数: #{library.cost_performance_score}"
           = link_to '詳細へ', cost_performance_detailed_ranking_statistic_path, class: 'btn btn-secondary text-white align-self-end'
