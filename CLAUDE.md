@@ -33,7 +33,7 @@ docker compose exec web bundle exec brakeman
 
 `bin/dev` (via `Procfile.dev`) runs the Rails server plus `yarn build --watch` (JS) and `yarn watch:css` (Sass) concurrently — this is what starts inside the `web` container automatically.
 
-Sidekiq web UI is mounted at `/sidekiq`.
+Sidekiq web UI is mounted at `/sidekiq` (development only; check production job failures in the Render logs).
 
 ## Architecture
 
