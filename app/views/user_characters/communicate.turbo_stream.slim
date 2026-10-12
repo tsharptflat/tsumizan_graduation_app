@@ -3,3 +3,6 @@
     div.speech-bubble
       div.speech-bubble-content
         p.mb-0 #{@character_text.text}
+
+= turbo_stream.replace 'talk_button' do
+  = render 'talk_button', user_character: @user_character, character_text: @character_text

@@ -76,9 +76,7 @@ div.mx-auto.mt-5 style="max-width: 720px;"
                   div.friendship-bar-fill style="width: #{@user_character.friendship_point_progress_percent}%"
 
         div.col-lg-5.d-flex.gap-4
-          = link_to communicate_user_character_path, data: { turbo_stream: true }, class: 'btn btn-color text-white rounded-4 flex-grow-1 h-100 d-flex align-items-center justify-content-center' do
-            i.bi.bi-chat-dots-fill.me-2
-            | 話す
+          = render 'talk_button', user_character: @user_character, character_text: @character_text
           div.d-flex.flex-column.gap-3.flex-grow-1
             button.btn.btn-color.text-white.rounded-4.flex-grow-1.d-flex.align-items-center.justify-content-center type="button" data-bs-toggle="collapse" data-bs-target="#gift_item_panel"
               i.bi.bi-gift-fill.me-2
