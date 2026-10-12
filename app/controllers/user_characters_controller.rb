@@ -21,7 +21,8 @@ class UserCharactersController < ApplicationController
         @page = 'user_characters_show'
         @total_price = UserGameLibrary.total_price(current_user)
         @user_character = current_user.user_characters.find(params[:id])
-        @character_text = CharacterTextService.new.get_character_text(@user_character, @page, @total_price)
+        # 「話す」ボタンから送られる表示中のセリフID(URL由来で文字列のため数値に変換)。初回表示時はnil
+        @character_text = CharacterTextService.new.get_character_text(@user_character, @page, @total_price, params[:current_text_id]&.to_i)
         @character_expression = @character_text.character_expression
     end
 end

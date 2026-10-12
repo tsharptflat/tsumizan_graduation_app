@@ -1,0 +1,5 @@
+/ 同じセリフが2回連続で出ないよう、表示中のセリフのIDを送る。
+/ 話すたびにTurbo Streamでこのボタンごと差し替え、IDを最新のセリフに更新する
+= link_to communicate_user_character_path(user_character, current_text_id: character_text.id), id: 'talk_button', data: { turbo_stream: true }, class: 'btn btn-color text-white rounded-4 flex-grow-1 h-100 d-flex align-items-center justify-content-center' do
+  i.bi.bi-chat-dots-fill.me-2
+  | 話す
