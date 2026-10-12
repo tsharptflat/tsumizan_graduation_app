@@ -1,6 +1,7 @@
+### ユーザー・ゲーム（アプリの中心）
+
 ```mermaid
 erDiagram
-  %% ===== ユーザー・ゲーム =====
   users {
     bigint id PK
     string name "Steamのユーザー名"
@@ -42,7 +43,20 @@ erDiagram
     decimal unplayed_rate "積みゲー率"
   }
 
-  %% ===== マイレージ(タスク・ショップ) =====
+  users ||--o{ user_game_libraries : "所持"
+  games ||--o{ user_game_libraries : "所持される"
+  games ||--o{ game_genres : ""
+  game_genre_types ||--o{ game_genres : ""
+  users ||--o{ user_statistic_snapshots : "推移グラフの記録"
+```
+
+### マイレージ（タスク・ショップ）
+
+```mermaid
+erDiagram
+  users {
+    bigint id PK
+  }
   user_wallets {
     bigint id PK
     bigint user_id FK
@@ -107,7 +121,31 @@ erDiagram
     bigint outfit_item_id FK
   }
 
-  %% ===== キャラクター =====
+  users ||--o| user_wallets : ""
+  users ||--o{ user_tasks : ""
+  tasks ||--o{ user_tasks : ""
+  tasks ||--o| task_conditions : "達成条件"
+  tasks ||--o{ task_rewards : "報酬"
+  task_rewards }o--o| gift_items : "item"
+  task_rewards }o--o| outfit_items : "item"
+  shop_items }o--o| gift_items : "item"
+  shop_items }o--o| outfit_items : "item"
+  users ||--o{ user_gift_items : ""
+  gift_items ||--o{ user_gift_items : ""
+  users ||--o{ user_outfit_items : ""
+  outfit_items ||--o{ user_outfit_items : ""
+```
+
+### キャラクター
+
+```mermaid
+erDiagram
+  users {
+    bigint id PK
+  }
+  outfit_items {
+    bigint id PK
+  }
   character_types {
     bigint id PK
     string name UK
@@ -142,35 +180,6 @@ erDiagram
     text text "セリフ"
   }
 
-  %% ===== その他 =====
-  contacts {
-    bigint id PK
-    string name
-    string email
-    text content
-  }
-
-  %% ===== リレーション =====
-  users ||--o{ user_game_libraries : "所持"
-  games ||--o{ user_game_libraries : "所持される"
-  games ||--o{ game_genres : ""
-  game_genre_types ||--o{ game_genres : ""
-  users ||--o{ user_statistic_snapshots : "日々の記録"
-
-  users ||--o| user_wallets : ""
-  users ||--o{ user_tasks : ""
-  tasks ||--o{ user_tasks : ""
-  tasks ||--o| task_conditions : "達成条件"
-  tasks ||--o{ task_rewards : "報酬"
-  task_rewards }o--o| gift_items : "item"
-  task_rewards }o--o| outfit_items : "item"
-  shop_items }o--o| gift_items : "item"
-  shop_items }o--o| outfit_items : "item"
-  users ||--o{ user_gift_items : ""
-  gift_items ||--o{ user_gift_items : ""
-  users ||--o{ user_outfit_items : ""
-  outfit_items ||--o{ user_outfit_items : ""
-
   users ||--o{ user_characters : ""
   character_types ||--o{ user_characters : ""
   outfit_items |o--o{ user_characters : "装着"
@@ -181,4 +190,6 @@ erDiagram
 ```
 
 - `created_at` / `updated_at` は全テーブル共通のため省略
+- 複数の図にまたがるテーブル(`users`、`outfit_items`)は、2枚目以降では `id` のみ記載
 - `task_rewards` と `shop_items` の `item` は、`item_type`(GiftItem / OutfitItem)と `item_id` によるポリモーフィック関連
+- `contacts`(お問い合わせ)は他のテーブルと関連を持たないため省略
