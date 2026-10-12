@@ -1,52 +1,33 @@
+### ログインからマイページまで
+
 ```mermaid
-flowchart TD
-  subgraph guest["ログイン不要"]
-    top["トップ<br/>（積みゲー金額ランキング）"]
-    steam["Steamログイン<br/>（外部サイト）"]
-    share["シェアページ<br/>（Xで共有される総額ページ）"]
-    static["利用規約 / プライバシーポリシー<br/>クレジット"]
-    contact["お問い合わせ<br/>入力 → 確認 → 完了"]
-  end
-
-  subgraph member["ログイン後"]
-    loading["ライブラリ同期<br/>（画面なし・自動で遷移）"]
-    mypage["マイページ<br/>（積みゲー総額＋キャラ）"]
-    header{{"ヘッダーメニュー<br/>（全ページ共通）"}}
-
-    subgraph analysis["積みゲー分析"]
-      statistic["積みゲー統計<br/>（推移グラフ・ネクストプレイ提案・逆レコメンド）"]
-      ranking["コスパランキング詳細"]
-      backlog["あなたの積みゲー一覧"]
-      games["みんなのゲーム一覧<br/>（検索結果）"]
-      game["ゲーム詳細"]
-      focus["プレイ状況<br/>（今プレイ中 / 次にプレイ）"]
-      picker["ゲーム選択"]
-    end
-
-    subgraph mileage["積みゲーマイレージ"]
-      tasks["マイレージ確認（タスク）"]
-      shop["マイレージショップ"]
-      character["キャラ交流<br/>（話す・プレゼント）"]
-    end
-  end
+flowchart LR
+  top["トップ<br/>（積みゲー金額ランキング）"]
+  steam["Steamログイン<br/>（外部サイト）"]
+  loading["ライブラリ同期<br/>（画面なし）"]
+  mypage["マイページ<br/>（積みゲー総額＋キャラ）"]
+  statistic["積みゲー統計"]
+  share["シェアページ<br/>（ログイン不要）"]
 
   top -->|Steamアカウントでログイン| steam
   steam -->|認証成功| loading
-  loading --> mypage
+  loading -->|自動で遷移| mypage
   mypage -->|積みゲー統計へ| statistic
   mypage -.->|Xで共有| share
-  share -.-> top
+  share -.->|アプリを見る| top
+```
 
-  header --- mypage
-  header --- statistic
-  header --- backlog
-  header --- games
-  header --- focus
-  header --- tasks
-  header --- shop
-  header --- character
-  header -->|検索候補を選択| game
-  header -->|ログアウト| top
+### 積みゲー分析
+
+```mermaid
+flowchart LR
+  statistic["積みゲー統計<br/>（推移グラフ・ネクストプレイ提案<br/>逆レコメンド・コスパランキング）"]
+  ranking["コスパランキング詳細"]
+  backlog["あなたの積みゲー一覧"]
+  games["みんなのゲーム一覧<br/>（ヘッダーの検索結果）"]
+  game["ゲーム詳細"]
+  focus["プレイ状況<br/>（今プレイ中 / 次にプレイ）"]
+  picker["ゲーム選択"]
 
   statistic --> ranking
   statistic --> backlog
@@ -56,17 +37,22 @@ flowchart TD
   backlog --> game
   games --> game
   focus --> game
-  focus --> picker
-  picker -->|ゲームを設定| focus
-
-  tasks -->|報酬を受け取る| tasks
-  shop -->|ポイントで交換| shop
-  character -->|プレゼントがない時| shop
-  character -->|プレゼントがない時| tasks
-
-  static -.-> contact
+  focus -->|ゲームを選ぶ| picker
+  picker -->|設定する| focus
 ```
 
-- 実線：画面内のリンク・ボタンによる遷移、点線：外部サービス経由やフッターからの遷移
-- ヘッダーメニュー（全ページ共通）から、ログイン後の各画面へ移動できる
-- フッター（全ページ共通）から、利用規約・プライバシーポリシー・クレジット・お問い合わせへ移動できる
+### 積みゲーマイレージ
+
+```mermaid
+flowchart LR
+  character["キャラ交流<br/>（話す・プレゼントを渡す）"]
+  shop["マイレージショップ<br/>（ポイントでアイテムと交換）"]
+  tasks["マイレージ確認<br/>（タスクの報酬を受け取る）"]
+
+  character -->|プレゼントがない時| shop
+  character -->|プレゼントがない時| tasks
+```
+
+- ログイン後の各画面（マイページ・積みゲー統計・積みゲー一覧・みんなのゲーム一覧・プレイ状況・マイレージ確認・ショップ・キャラ交流）へは、全ページ共通のヘッダーメニューから移動できる。ヘッダーの検索では、候補からゲーム詳細へ直接移動できる
+- 全ページ共通のフッターから、利用規約・プライバシーポリシー・クレジット・お問い合わせ（入力 → 確認 → 完了）へ移動できる
+- 点線は、外部サービス（X）を経由した遷移
