@@ -87,6 +87,9 @@ div.mx-auto.mt-5 style="max-width: 960px;"
                   div.fs-5.fw-bold
                     - if @current_user_game && @current_user_game.unplayed_date
                       = "#{(Date.current - @current_user_game.unplayed_date).to_i}日"
+                    / unplayed_dateは一度でもプレイしたゲームにしか入らないため、未プレイのゲームはここで判定する
+                    - elsif @current_user_game && @current_user_game.minutes_played.zero? && @current_user_game.cleared_date.nil?
+                      | 未プレイ
                     - elsif @current_user_game
                       | 積んでいません
                     - else
