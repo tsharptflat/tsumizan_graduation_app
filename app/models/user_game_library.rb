@@ -17,10 +17,10 @@ class UserGameLibrary < ApplicationRecord
   validate :play_focus_slot_limit, if: :play_focus_changed?
 
   scope :not_recently_played, -> { where(last_played_at: nil).or(where('last_played_at < ?', 1.month.ago)) }
-  scope :not_cleared, -> { where(cleared_date: nil)}
-  scope :cleared, -> { where.not(cleared_date: nil)}
+  scope :not_cleared, -> { where(cleared_date: nil) }
+  scope :cleared, -> { where.not(cleared_date: nil) }
   scope :unplayed, -> { where('minutes_played <= ?', UNPLAYED_THRESHOLD_MINUTES).merge(not_recently_played).merge(not_cleared) }
-  scope :cleared_after_unplayed, -> { where.not(unplayed_date: nil).merge(cleared)}
+  scope :cleared_after_unplayed, -> { where.not(unplayed_date: nil).merge(cleared) }
 
   scope :cheapest_games, -> { joins(:game).merge(Game.order(price: 'asc')).limit(CHEAPEST_GAMES_LIMIT) }
 
@@ -46,11 +46,11 @@ class UserGameLibrary < ApplicationRecord
     UpdateGameDetailsJob.perform_async(user.id, game.steam_app_id) if game.price.nil? || game.game_genres.empty?
   rescue => e
     Rails.logger.error(e.message)
-    return
+    nil
   end
 
   def self.cost_performance_ranking(user)
-    ranked = user.user_game_libraries.includes(:game).joins(:game).where.not(games: { price: nil }).where('games.price > 0').sort_by{ |library| -((library.minutes_played + 1).to_f / library.game.price)}
+    ranked = user.user_game_libraries.includes(:game).joins(:game).where.not(games: { price: nil }).where('games.price > 0').sort_by { |library| -((library.minutes_played + 1).to_f / library.game.price) }
     {
       best: ranked.first(COST_PERFORMANCE_RANKING_LIMIT),
       worst: ranked.last(COST_PERFORMANCE_RANKING_LIMIT).reverse,
@@ -77,7 +77,7 @@ class UserGameLibrary < ApplicationRecord
   def self.unplayed_game_genres(user)
     libraries = user.user_game_libraries.unplayed.includes(game: :game_genre_types)
     genre_names = libraries.flat_map { |library| library.game.game_genre_types.map { |genre| genre.name } }
-    genre_names.tally.sort_by{ |x| x[1] }
+    genre_names.tally.sort_by { |x| x[1] }
   end
 
   def self.cleared_game_count_rate(user)
@@ -103,7 +103,7 @@ class UserGameLibrary < ApplicationRecord
   end
 
 
-#ゲームの一覧画面に使用
+  # ゲームの一覧画面に使用
   def self.all_games_count
     UserGameLibrary.group(:game_id).count
   end
@@ -116,8 +116,8 @@ class UserGameLibrary < ApplicationRecord
     (all_unplayed_games_count.fetch(game.id, 0).to_f / all_games_count.fetch(game.id, 0).to_f * 100).round(1)
   end
 
-  
-#ゲームごとの詳細画面に使用
+
+  # ゲームごとの詳細画面に使用
   def self.game_statistics_count(game)
     game.user_game_libraries.size
   end
@@ -137,7 +137,7 @@ class UserGameLibrary < ApplicationRecord
   def self.game_statistics_average_playtime(game)
     game.user_game_libraries.average(:minutes_played)
   end
-  
+
   def self.game_statistics_average_unplayed_time(game)
     unplayed_time_array = game.user_game_libraries.unplayed.where.not(user_game_libraries: { unplayed_date: nil }).pluck(:unplayed_date).map { |date| (Date.current - date).to_i }
     return 0 if unplayed_time_array.empty?

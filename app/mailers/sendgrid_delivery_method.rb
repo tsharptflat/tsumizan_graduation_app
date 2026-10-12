@@ -27,10 +27,10 @@ class SendgridDeliveryMethod
     personalization[:bcc] = mail.bcc.map { |address| { email: address } } if mail.bcc.present?
 
     {
-      personalizations: [personalization],
+      personalizations: [ personalization ],
       from: { email: mail.from.first },
       subject: mail.subject,
-      content: [{ type: 'text/html', value: mail.body.decoded }]
+      content: [ { type: 'text/html', value: mail.body.decoded } ]
     }
   end
 end

@@ -16,7 +16,7 @@ class UserCharacter < ApplicationRecord
   end
 
   def current_friendship_level
-    FRIENDSHIP_LEVEL_THRESHOLDS.select {|level, required_point| required_point <= friendship_point }.keys.max
+    FRIENDSHIP_LEVEL_THRESHOLDS.select { |level, required_point| required_point <= friendship_point }.keys.max
   end
 
   def max_friendship_level?
@@ -36,6 +36,6 @@ class UserCharacter < ApplicationRecord
   def friendship_point_progress_percent
     return 100 if max_friendship_level?
 
-    [(friendship_point_within_current_level.to_f / friendship_point_required_for_current_level * 100), 100].min
+    [ (friendship_point_within_current_level.to_f / friendship_point_required_for_current_level * 100), 100 ].min
   end
 end

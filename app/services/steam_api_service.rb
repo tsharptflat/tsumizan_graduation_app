@@ -24,8 +24,8 @@ class SteamApiService
     parsed = response.parsed_response
     data = parsed.is_a?(Hash) ? parsed.values.first&.dig('data') : nil
     # success: false(ストアから削除されたゲーム等)の場合。通信自体は成功しているため再試行はしない
-    return {price: nil, genres: nil, name: nil} unless data.is_a?(Hash)
+    return { price: nil, genres: nil, name: nil } unless data.is_a?(Hash)
     # セール適用後の価格(final)ではなく、本来の資産価値を示すため定価(initial)を使う
-    {price: data.dig('price_overview', 'initial')&./(100.0), genres: data.dig('genres'), name: data['name']}
+    { price: data.dig('price_overview', 'initial')&./(100.0), genres: data.dig('genres'), name: data['name'] }
   end
 end

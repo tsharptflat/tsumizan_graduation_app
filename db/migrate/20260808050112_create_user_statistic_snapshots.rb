@@ -9,6 +9,6 @@ class CreateUserStatisticSnapshots < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :user_statistic_snapshots, [:user_id, :recorded_on], unique: true
+    add_index :user_statistic_snapshots, [ :user_id, :recorded_on ], unique: true
   end
 end
