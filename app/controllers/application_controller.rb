@@ -40,5 +40,4 @@ class ApplicationController < ActionController::Base
   def set_default_user_character
     @default_user_character = UserCharacter.find_or_create_default_character(current_user)
   end
-
 end

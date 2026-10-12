@@ -1,6 +1,6 @@
 class UserCharactersController < ApplicationController
-    before_action :set_character_texts, only: [:show, :communicate]
-    before_action :set_user_gift_items, only: [:show]
+    before_action :set_character_texts, only: [ :show, :communicate ]
+    before_action :set_user_gift_items, only: [ :show ]
 
     def index
     end

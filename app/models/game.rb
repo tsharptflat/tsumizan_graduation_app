@@ -17,7 +17,7 @@ class Game < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["game_title"]
+    [ "game_title" ]
   end
 
   def self.ransackable_associations(auth_object = nil)

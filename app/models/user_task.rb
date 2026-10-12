@@ -2,8 +2,8 @@ class UserTask < ApplicationRecord
     belongs_to :user
     belongs_to :task
 
-    scope :obtainable, -> { where.not(completed_at: nil).where(accepted_reward_at: nil)}
-    scope :obtained, -> { where.not(completed_at: nil).where.not(accepted_reward_at: nil)}
+    scope :obtainable, -> { where.not(completed_at: nil).where(accepted_reward_at: nil) }
+    scope :obtained, -> { where.not(completed_at: nil).where.not(accepted_reward_at: nil) }
 
     def self.obtain_all_rewards(user)
         user.user_tasks.obtainable.each do |user_task|

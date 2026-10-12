@@ -46,13 +46,13 @@ class StatisticsController < ApplicationController
   private
 
   def chart_series(snapshots, start_date, end_date)
-    return [snapshots.pluck(:recorded_on), snapshots.pluck(:total_price), snapshots.pluck(:unplayed_rate)] unless start_date
+    return [ snapshots.pluck(:recorded_on), snapshots.pluck(:total_price), snapshots.pluck(:unplayed_rate) ] unless start_date
 
     snapshots_by_date = snapshots.index_by(&:recorded_on)
     dates = (start_date..end_date).to_a
     prices = dates.map { |date| snapshots_by_date[date]&.total_price }
     rates = dates.map { |date| snapshots_by_date[date]&.unplayed_rate }
-    [dates, prices, rates]
+    [ dates, prices, rates ]
   end
 
   def chart_range_period(range, offset)
@@ -60,19 +60,19 @@ class StatisticsController < ApplicationController
     case range
     when 'week'
       start_date = today.beginning_of_week - offset.weeks
-      [start_date, start_date.end_of_week]
+      [ start_date, start_date.end_of_week ]
     when 'month'
       start_date = today.beginning_of_month - offset.months
-      [start_date, start_date.end_of_month]
+      [ start_date, start_date.end_of_month ]
     when 'half_year'
       current_half_start = today.month <= 6 ? today.beginning_of_year : today.beginning_of_year + 6.months
       start_date = current_half_start - (offset * 6).months
-      [start_date, start_date + 6.months - 1.day]
+      [ start_date, start_date + 6.months - 1.day ]
     when 'year'
       start_date = today.beginning_of_year - offset.years
-      [start_date, start_date.end_of_year]
+      [ start_date, start_date.end_of_year ]
     else
-      [nil, nil]
+      [ nil, nil ]
     end
   end
 
@@ -81,7 +81,7 @@ class StatisticsController < ApplicationController
 
     (0...CHART_RANGE_OFFSET_OPTIONS_COUNT).map do |offset|
       start_date, end_date = chart_range_period(range, offset)
-      [chart_range_period_label(range, start_date, end_date), offset]
+      [ chart_range_period_label(range, start_date, end_date), offset ]
     end
   end
 
