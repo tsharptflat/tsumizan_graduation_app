@@ -1,6 +1,8 @@
 # 積み算
 
-<!-- TODO: アプリURL / トップ画像 -->
+積み算：https://graduation-app-kjas.onrender.com/
+
+![マイページアイキャッチ](docs/images/mypage_eyecatch.png)
 
 ## サービス概要
 
@@ -49,50 +51,130 @@
 
 ## 主な機能
 
-<!-- TODO: 画面キャプチャ付きで機能を紹介 -->
+### 積みゲー総額算出機能
+![あ](docs/images/mypage.png)
+
+一定の基準に沿って積みゲーと判定されたゲームの定価合計額を算出して表示する機能です。
+積みゲー判定基準は「プレイ時間が2時間以下」かつ「直近1か月プレイされていない」かつ「未クリア」のすべてを満たしていることです。積みゲー総額に応じてキャラクターのセリフが変動します。
+
+### 積みゲー統計
+![あ](docs/images/statistics_summary.png)
+
+所持ゲームの合計本数や、そのうち積みゲー判定となっているゲームの本数など簡単な統計情報の表示です。
+
+### 積み状況推移記録機能
+![あ](docs/images/statistics_trend_chart.png)
+
+積みゲー総額と積みゲー率（所持ゲームのうち、何パーセントが積みゲー判定となっているか）を、日付を横軸としたグラフで記録表示する機能です。ログインしていない日は記録せず、ログインした状態でアクセスした日にのみ記録する仕様としております。ログインしない日にも記録する設計にすることも検討しましたが、ログインしていない日も自動記録にすると、非アクティブユーザーを含む全ユーザー分に比例してコストが増えてしまうため実装時点では見送りとしました。しかし当然ログインしていない間の変動は記録されないという弱みがあるため、改善するとしたら直近でアクセスしたユーザーに絞って毎日自動で記録し、一定期間以上ログインがなかったアカウントについては記録を停止する、といった方向性で考えています。
+
+### 積みゲー各種情報確認機能
+![あ](docs/images/game_detail.png)
+
+ゲーム毎の詳細情報を確認できる画面です。ユーザーの所持ゲームだけでなく、データベースに登録されたすべてのゲームの詳細を閲覧することができます。ゲーム毎の価格情報やストアへのリンク、ユーザー全体における積み率や、自分と自分以外のユーザーの比較などの情報を載せています。ゲーム毎のクリアフラグは手動で立てる必要があるため、合わせて「クリア済みにする」ボタンを設置しています。
+
+### 積みゲー一覧/コスパランキング
+![あ](docs/images/statistics_backlog_and_cost_performance.png)
+
+- プレイ時間/ゲームの定価 という式で算出したユーザーごとのゲームコスパランキングを閲覧できる機能です。ゲームの価格が安く、プレイ時間が長いほどコスパが高いという意図になります。
+
+`app/models/user_game_library.rb`
+```ruby
+def self.cost_performance_ranking(user)
+  ranked = user.user_game_libraries.includes(:game).joins(:game).where.not(games: { price: nil }).where('games.price > 0').sort_by{ |library| -((library.minutes_played + 1).to_f / library.game.price)}
+  {
+    best: ranked.first(COST_PERFORMANCE_RANKING_LIMIT),
+    worst: ranked.last(COST_PERFORMANCE_RANKING_LIMIT).reverse,
+    all: ranked
+  }
+end
+```
+
+- 価格が0のものは除外（0除算回避のため。また、無料ゲームは課金要素があるものがほとんどですが、課金額まで把握することが不可能なため）
+- プレイ時間が0（未プレイ）のものをそのまま式に入れると価格に関わらずコスパ指数が0になってしまうため、一律でプレイ時間に1分加算しています。これによってプレイ履歴のあるゲームにはほとんど影響を出さずに未プレイのものも正しい順位を算出することができます
+
+### 現在プレイ中・次にプレイするゲーム設定機能
+![あ](docs/images/play_focus_full.png)
+
+- 現在プレイ中のゲームを3つまで、次にプレイ予定のゲームを1つまで設定することができる機能です。
+
+![あ](docs/images/play_focus_picker_search.png)
+
+- ゲーム選択画面ではフィルタ機能と、検索結果をリアルタイム反映する検索機能を実装することでUXの向上を図っています。
+
+### オリジナルキャラクターとの交流機能
+![あ](docs/images/character.png)
+
+- オリジナルキャラクターとの交流機能です。「話す」ボタンを押すとキャラ固有のセリフがランダムで表示されます。
+
+### キャラクターへのプレゼント機能
+![あ](docs/images/character_gift_presented.png)
+
+- 条件で獲得できるポイントを利用して購入できるアイテムをプレゼントすることができる機能です。プレゼントを渡すことで固有のセリフが表示され、アイテムごとに設定されている値分好感度が上昇します。
+
+### キャラクターへのプレゼント機能、アイテムがない場合
+![あ](docs/images/character_no_gift.png)
+
+- 「プレゼントを渡す」ボタンを押した際に所持アイテムがない際はマイレージ確認画面および交換画面への導線が表示されます。
+
+### ポイント獲得機能
+![あ](docs/images/tasks.png)
+
+- 主にゲームのクリア本数や総プレイ時間などに応じてポイントを獲得できる機能です。
+- 条件が達成されたタスクの色やアイコンを変更したり、達成済みのタスクの合計数を各所に表示させることでUXの向上を図っています。
+
+### ポイント交換機能
+![あ](docs/images/shop.png)
+![あ](docs/images/shop_purchase_modal.png)
+
+- 獲得したポイントを使用して各種アイテムと交換することができる機能です。
+- 購入処理をtransactionで囲うことで、通信エラーなどで処理が失敗してしまった場合に、ポイントが消費されているのにアイテムが入手できていない といった現象が発生しないようにしています。
+- 実装当初はポイントの減算処理を`possessed_user_points.decrement!`で実装していましたが、機能確認時にポイント残高が足りない場合でも購入処理ができてしまうことが判明しました。これはRailsの仕様上`decrement!`では`UserWallet`に設定しているバリデーションを通らずに直接DBの値を書き換えてしまうことが原因だったため、必ずバリデーションを通る`update!`に変更することで残高が足りない場合にはエラーで止まるようにしています。
+
+`app/models/shop_item.rb`
+```ruby
+possessed_user_points.update!(point: possessed_user_points.point - total_shop_items_price)
+```
 
 ---
 
 ## 使用技術
 
-- フレームワーク：Ruby on Rails
-- DB：PostgreSQL（ホスティング：Neon）
-- デプロイ先：Render
-- 使用ライブラリ（Gem）：
-  - sidekiq / redis：非同期ジョブ処理（Steam Store APIからの価格・ジャンル取得等）
-  - turbo-rails / stimulus-rails：Hotwire、リアルタイム画面更新
-  - devise / omniauth-steam / omniauth-rails_csrf_protection：Steam OpenID認証
-  - slim-rails：テンプレートエンジン
-  - bootstrap：CSSフレームワーク
-  - cloudinary：画像配信
-  - ransack：検索機能
-  - kaminari：ページネーション
-  - ruby-vips：OGP画像生成
-  - meta-tags：OGP/SEOメタタグ
-  - rexml / httparty：Steam Web API・Steam Store APIとの通信
-  - rspec-rails / factory_bot_rails：テスト
-  - rubocop-rails-omakase：Lint
-  - brakeman：セキュリティスキャン
-  - bullet：N+1クエリ検出
-  - annotate：モデルへのスキーマ情報自動追記
-  - pry-rails：開発時のデバッグ
-
-- 使用ライブラリ（JavaScript）：
-  - @hotwired/turbo-rails / @hotwired/stimulus：Hotwire
-  - chart.js：積みゲー推移グラフ
-  - bootstrap / bootstrap-icons
-  - esbuild：JSバンドル
-  - sass / postcss：CSSビルド
-
-- OpenID
-- Steamworks WebAPI
-- Steam Store API（非公式・コミュニティで広く利用されているエンドポイント）
-  - ゲームの定価取得に使用
-  - 公式ドキュメントは存在しないが、多くの開発者に利用されている
+| カテゴリ | 技術 |
+| --- | --- |
+| フロントエンド | ・turbo-rails / stimulus-rails：Hotwire、リアルタイム画面更新<br>・slim-rails：テンプレートエンジン<br>・bootstrap：CSSフレームワーク<br>・使用ライブラリ（JavaScript）：<br>　・@hotwired/turbo-rails / @hotwired/stimulus：Hotwire<br>　・chart.js：積みゲー推移グラフ<br>　・bootstrap / bootstrap-icons<br>　・esbuild：JSバンドル<br>　・sass / postcss：CSSビルド |
+| バックエンド | ・フレームワーク：Ruby on Rails<br>・sidekiq / redis：非同期ジョブ処理（Steam Store APIからの価格・ジャンル取得等）<br>・ransack：検索機能<br>・kaminari：ページネーション<br>・ruby-vips：OGP画像生成<br>・meta-tags：OGP/SEOメタタグ<br>・rexml / httparty：Steam Web API・Steam Store APIとの通信<br>・Steamworks WebAPI<br>・Steam Store API（非公式・コミュニティで広く利用されているエンドポイント）<br>　・ゲームの定価取得に使用<br>　・公式ドキュメントは存在しないが、多くの開発者に利用されている |
+| データベース | ・DB：PostgreSQL（ホスティング：Neon） |
+| 認証 | ・devise / omniauth-steam / omniauth-rails_csrf_protection：Steam OpenID認証<br>・OpenID |
+| 環境構築 | ・Docker / Docker Compose|
+| CI/CD | ・|
+| インフラ | ・デプロイ先：Render<br>・cloudinary：画像配信 |
+| その他 | ・rspec-rails / factory_bot_rails：テスト<br>・rubocop-rails-omakase：Lint<br>・brakeman：セキュリティスキャン<br>・bullet：N+1クエリ検出<br>・annotate：モデルへのスキーマ情報自動追記<br>・pry-rails：開発時のデバッグ |
 
 ---
 
 ## 技術選定理由
+
+### 【バックエンド】
+#### UX向上のため
+- 本アプリはログイン後のページでユーザーの積みゲー総額を表示する設計になっております。
+- 積みゲー総額の算出にはユーザーの所持ゲーム情報の取得・更新の必要があるため、処理がすべて終わって初めてページ遷移が行われる形になります。
+- しかしユーザーごとのライブラリ取得は1度のAPI呼び出しで取得・更新が済む一方で、ゲーム毎の価格取得は1本毎に呼び出しが必要になります。
+- そのため所持ゲーム本数が多いほどページ遷移に時間がかかることになってしまう事態を避けるため、ゲームごとの情報取得のみ切り分けて非同期化し、総額表示を保留しつつページ遷移のみ先んじて完了させる設計とするためにSidekiqとRedisを採用しました
+- 本番環境でSidekiqを動かすにはWebとは別の有料サーバー（Background Worker）が必要でした。非同期化させずにジョブをその場で実行させることで無料で済ませることも可能でしたが、上記の待ち時間発生回避のためにコストをかける判断をしました。
+
+### 【データベース】
+- PostgreSQLでは公式のDockerイメージが用意されており、環境構築に採用しているDockerとの相性が良いため採用しております。
+- またRenderの無料枠でPostgreSQLを作成した場合、作成から30日でDBが削除されてしまいますが、これを回避するためにそういった期限のないNeonをホスティング先に使用しております。
+
+### 【認証】
+- OpenIDの話
+
+### 【環境構築】
+- Dockerの話
+
+
+
+
 
 - 学習してきたRailsの技術を活かし、開発スピードを重視したため選定しています。
 - SteamのOpenID連携を使用することでセキュリティリスクを減らし、かつアカウント作成の手間を削減しています。
@@ -104,6 +186,42 @@
 
 - 不安な点
   - ユーザーのsteam所持ゲーム本数が多い場合の情報取得における効率的な実装ができるか
+
+
+### フロントエンド
+- bootstrap
+- turbo-rails / stimulus-rails：Hotwire、リアルタイム画面更新
+・使用ライブラリ（JavaScript）：
+　・@hotwired/turbo-rails / @hotwired/stimulus：Hotwire
+
+- ゲーム価格取得中の「計算中…」表示から価格取得が完了したときの表示更新や、キャラクターのセリフ表示更新など、画面全体の更新を挟まずに一部の表示を変更させたい処理複数存在するため、turbo-railsとstimulus-railsを採用しました。
+
+### バックエンド
+- ・フレームワーク：Ruby on Rails
+
+- ・sidekiq / redis：非同期ジョブ処理（Steam Store APIからの価格・ジャンル取得等）
+
+- ・rexml / httparty：Steam Web API・Steam Store APIとの通信
+・Steamworks WebAPI
+・Steam Store API（非公式・コミュニティで広く利用されているエンドポイント）
+
+### データベース
+- DB：PostgreSQL（ホスティング：Neon）
+
+### 認証
+- devise / omniauth-steam / omniauth-rails_csrf_protection：Steam OpenID認証<br>・OpenID
+
+### 環境構築
+- Docker
+
+### CI/CD
+- 
+
+### インフラ
+- デプロイ先：Render<br>・cloudinary：画像配信
+
+### その他 いらないかも
+- bullet：N+1クエリ検出<br>・annotate：モデルへのスキーマ情報自動追記<br>・pry-rails：開発時のデバッグ
 
 ---
 
