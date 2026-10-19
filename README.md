@@ -155,7 +155,6 @@ possessed_user_points.update!(point: possessed_user_points.point - total_shop_it
 ## 技術選定理由
 
 ### 【バックエンド】
-#### UX向上のため
 - 本アプリはログイン後のページでユーザーの積みゲー総額を表示する設計になっております。
 - 積みゲー総額の算出にはユーザーの所持ゲーム情報の取得・更新の必要があるため、処理がすべて終わって初めてページ遷移が行われる形になります。
 - しかしユーザーごとのライブラリ取得は1度のAPI呼び出しで取得・更新が済む一方で、ゲーム毎の価格取得は1本毎に呼び出しが必要になります。
@@ -167,100 +166,303 @@ possessed_user_points.update!(point: possessed_user_points.point - total_shop_it
 - またRenderの無料枠でPostgreSQLを作成した場合、作成から30日でDBが削除されてしまいますが、これを回避するためにそういった期限のないNeonをホスティング先に使用しております。
 
 ### 【認証】
-- OpenIDの話
+- Steamアカウントでログインできる機能（SSO）を実装しました。
+- ユーザーライブラリの情報取得のために必要となるSteam上のIDの取得に加えて、アカウント作成手間の省略とセキュリティリスクを抑えるためアプリ側でパスワードを持たない設計にしたいと考えておりました。
+- これらを実現するために[公式に提供されている手段](https://partner.steamgames.com/doc/features/auth?l=japanese)がOpenIDを利用するものだったため採用するに至りました。
 
 ### 【環境構築】
-- Dockerの話
-
-
-
-
-
-- 学習してきたRailsの技術を活かし、開発スピードを重視したため選定しています。
-- SteamのOpenID連携を使用することでセキュリティリスクを減らし、かつアカウント作成の手間を削減しています。
-- Steamユーザーのライブラリおよび各ゲームのプレイ状況を取得する必要があるため、Web API連携を選定しています。
-
-- 今回チャレンジしたい点：
-  - OpenIDの仕組み理解及び実装
-  - Steam連携におけるユーザーライブラリやプレイ状況および定価、また可能であれば各ゲームにおける最安値の取得に伴う複数APIの組み合わせ
-
-- 不安な点
-  - ユーザーのsteam所持ゲーム本数が多い場合の情報取得における効率的な実装ができるか
-
-
-### フロントエンド
-- bootstrap
-- turbo-rails / stimulus-rails：Hotwire、リアルタイム画面更新
-・使用ライブラリ（JavaScript）：
-　・@hotwired/turbo-rails / @hotwired/stimulus：Hotwire
-
-- ゲーム価格取得中の「計算中…」表示から価格取得が完了したときの表示更新や、キャラクターのセリフ表示更新など、画面全体の更新を挟まずに一部の表示を変更させたい処理複数存在するため、turbo-railsとstimulus-railsを採用しました。
-
-### バックエンド
-- ・フレームワーク：Ruby on Rails
-
-- ・sidekiq / redis：非同期ジョブ処理（Steam Store APIからの価格・ジャンル取得等）
-
-- ・rexml / httparty：Steam Web API・Steam Store APIとの通信
-・Steamworks WebAPI
-・Steam Store API（非公式・コミュニティで広く利用されているエンドポイント）
-
-### データベース
-- DB：PostgreSQL（ホスティング：Neon）
-
-### 認証
-- devise / omniauth-steam / omniauth-rails_csrf_protection：Steam OpenID認証<br>・OpenID
-
-### 環境構築
-- Docker
-
-### CI/CD
-- 
-
-### インフラ
-- デプロイ先：Render<br>・cloudinary：画像配信
-
-### その他 いらないかも
-- bullet：N+1クエリ検出<br>・annotate：モデルへのスキーマ情報自動追記<br>・pry-rails：開発時のデバッグ
+- デスクトップパソコンとノートパソコンの2台を使用して開発を行っていたため、Dockerを使用することによりPC間での環境の違いによるトラブルを避けることができていたと感じております。
 
 ---
 
+<!-- TODO: インフラ構成図
 ## インフラ構成図
 
-<!-- TODO: インフラ構成図 -->
-
 ---
+-->
 
 ## ER図
 
-https://gyazo.com/5a13f0ed00763b0e789691848377097c
+### ユーザー・ゲーム（アプリの中心）
+
+```mermaid
+erDiagram
+  users {
+    bigint id PK
+    string name "Steamのユーザー名"
+    string provider "steam"
+    string uid "SteamID"
+  }
+  games {
+    bigint id PK
+    integer steam_app_id UK "SteamのアプリID"
+    string game_title
+    integer price "定価(円) 未取得はnull"
+    datetime price_fetch_failed_at "価格取得を諦めた日時"
+  }
+  user_game_libraries {
+    bigint id PK
+    bigint user_id FK
+    bigint game_id FK
+    float minutes_played "プレイ時間(分)"
+    datetime last_played_at
+    date unplayed_date "積みゲーになった日"
+    date cleared_date "クリアした日"
+    integer play_focus "今プレイ中/次にプレイ"
+  }
+  game_genre_types {
+    bigint id PK
+    integer genre_id "SteamのジャンルID"
+    string name
+  }
+  game_genres {
+    bigint id PK
+    bigint game_id FK
+    bigint game_genre_type_id FK
+  }
+  user_statistic_snapshots {
+    bigint id PK
+    bigint user_id FK
+    date recorded_on "記録日(1ユーザー1日1件)"
+    integer total_price "積みゲー総額"
+    decimal unplayed_rate "積みゲー率"
+  }
+
+  users ||--o{ user_game_libraries : "所持"
+  games ||--o{ user_game_libraries : "所持される"
+  games ||--o{ game_genres : ""
+  game_genre_types ||--o{ game_genres : ""
+  users ||--o{ user_statistic_snapshots : "推移グラフの記録"
+```
+
+### マイレージ（タスク・ショップ）
+
+```mermaid
+erDiagram
+  users {
+    bigint id PK
+  }
+  user_wallets {
+    bigint id PK
+    bigint user_id FK
+    integer point "所持ポイント"
+  }
+  tasks {
+    bigint id PK
+    string name
+    string description
+    integer task_genre "積みゲー/プレイ時間/好感度"
+  }
+  task_conditions {
+    bigint id PK
+    bigint task_id FK
+    integer condition_type
+    integer required_count "達成に必要な数"
+  }
+  task_rewards {
+    bigint id PK
+    bigint task_id FK
+    string item_type "GiftItem or OutfitItem"
+    bigint item_id "ポリモーフィック関連"
+    integer quantity
+    integer point "報酬ポイント"
+  }
+  user_tasks {
+    bigint id PK
+    bigint user_id FK
+    bigint task_id FK
+    integer current_value "現在の進捗"
+    datetime completed_at "達成日時"
+    datetime accepted_reward_at "報酬受取日時"
+  }
+  shop_items {
+    bigint id PK
+    string item_type "GiftItem or OutfitItem"
+    bigint item_id "ポリモーフィック関連"
+    float price "交換に必要なポイント"
+  }
+  gift_items {
+    bigint id PK
+    string name
+    string description
+    string image_path
+    integer friendship_point "渡すと上がる好感度"
+  }
+  user_gift_items {
+    bigint id PK
+    bigint user_id FK
+    bigint gift_item_id FK
+    integer quantity "所持数"
+  }
+  outfit_items {
+    bigint id PK
+    string name UK
+    string description
+    string image_path
+  }
+  user_outfit_items {
+    bigint id PK
+    bigint user_id FK
+    bigint outfit_item_id FK
+  }
+
+  users ||--o| user_wallets : ""
+  users ||--o{ user_tasks : ""
+  tasks ||--o{ user_tasks : ""
+  tasks ||--o| task_conditions : "達成条件"
+  tasks ||--o{ task_rewards : "報酬"
+  task_rewards }o--o| gift_items : "item"
+  task_rewards }o--o| outfit_items : "item"
+  shop_items }o--o| gift_items : "item"
+  shop_items }o--o| outfit_items : "item"
+  users ||--o{ user_gift_items : ""
+  gift_items ||--o{ user_gift_items : ""
+  users ||--o{ user_outfit_items : ""
+  outfit_items ||--o{ user_outfit_items : ""
+```
+
+### キャラクター
+
+```mermaid
+erDiagram
+  users {
+    bigint id PK
+  }
+  outfit_items {
+    bigint id PK
+  }
+  character_types {
+    bigint id PK
+    string name UK
+    string image_path
+  }
+  user_characters {
+    bigint id PK
+    bigint user_id FK
+    bigint character_type_id FK
+    bigint outfit_item_id FK "装着中の衣装"
+    string name
+    integer friendship_point "好感度"
+  }
+  character_expressions {
+    bigint id PK
+    bigint character_type_id FK
+    string emotion_type "表情の種類"
+    string image_path
+  }
+  character_text_conditions {
+    bigint id PK
+    bigint character_type_id FK
+    string page "表示するページ"
+    integer friendship_level "必要な好感度レベル"
+    integer min_price "積みゲー総額の下限"
+    integer max_price "積みゲー総額の上限"
+  }
+  character_texts {
+    bigint id PK
+    bigint character_text_condition_id FK
+    bigint character_expression_id FK
+    text text "セリフ"
+  }
+
+  users ||--o{ user_characters : ""
+  character_types ||--o{ user_characters : ""
+  outfit_items |o--o{ user_characters : "装着"
+  character_types ||--o{ character_expressions : "表情差分"
+  character_types ||--o{ character_text_conditions : "セリフの出現条件"
+  character_text_conditions ||--o{ character_texts : ""
+  character_expressions |o--o{ character_texts : ""
+```
+
+- `created_at` / `updated_at` は全テーブル共通のため省略
+- 複数の図にまたがるテーブル(`users`、`outfit_items`)は、2枚目以降では `id` のみ記載
+- `task_rewards` と `shop_items` の `item` は、`item_type`(GiftItem / OutfitItem)と `item_id` によるポリモーフィック関連
+- `contacts`(お問い合わせ)は他のテーブルと関連を持たないため省略
 
 ---
 
+<!-- TODO: 工夫したポイント
 ## 工夫したポイント
 
-<!-- TODO: 工夫したポイント -->
-
 ---
+-->
 
 ## 画面遷移図
 
-Figma:
-https://www.figma.com/design/jpYQM16kqOQ2w9d3J5h353/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=2-1380&t=TQUh9pKaQL3aBRBF-4
+### ログインからマイページまで
+
+```mermaid
+flowchart LR
+  top["トップ<br/>（積みゲー金額ランキング）"]
+  steam["Steamログイン<br/>（外部サイト）"]
+  loading["ライブラリ同期<br/>（画面なし）"]
+  mypage["マイページ<br/>（積みゲー総額＋キャラ）"]
+  statistic["積みゲー統計"]
+  share["シェアページ<br/>（ログイン不要）"]
+
+  top -->|Steamアカウントでログイン| steam
+  steam -->|認証成功| loading
+  loading -->|自動で遷移| mypage
+  mypage -->|積みゲー統計へ| statistic
+  mypage -.->|Xで共有| share
+  share -.->|アプリを見る| top
+```
+
+### 積みゲー分析
+
+```mermaid
+flowchart LR
+  statistic["積みゲー統計<br/>（推移グラフ・ネクストプレイ提案<br/>逆レコメンド・コスパランキング）"]
+  ranking["コスパランキング詳細"]
+  backlog["あなたの積みゲー一覧"]
+  games["みんなのゲーム一覧<br/>（ヘッダーの検索結果）"]
+  game["ゲーム詳細"]
+  focus["プレイ状況<br/>（今プレイ中 / 次にプレイ）"]
+  picker["ゲーム選択"]
+
+  statistic --> ranking
+  statistic --> backlog
+  statistic -->|次にプレイに設定| focus
+  statistic --> game
+  ranking --> game
+  backlog --> game
+  games --> game
+  focus --> game
+  focus -->|ゲームを選ぶ| picker
+  picker -->|設定する| focus
+```
+
+### 積みゲーマイレージ
+
+```mermaid
+flowchart LR
+  character["キャラ交流<br/>（話す・プレゼントを渡す）"]
+  shop["マイレージショップ<br/>（ポイントでアイテムと交換）"]
+  tasks["マイレージ確認<br/>（タスクの報酬を受け取る）"]
+
+  character -->|プレゼントがない時| shop
+  character -->|プレゼントがない時| tasks
+```
+
+- ログイン後の各画面（マイページ・積みゲー統計・積みゲー一覧・みんなのゲーム一覧・プレイ状況・マイレージ確認・ショップ・キャラ交流）へは、全ページ共通のヘッダーメニューから移動できる。ヘッダーの検索では、候補からゲーム詳細へ直接移動できる
+- 全ページ共通のフッターから、利用規約・プライバシーポリシー・クレジット・お問い合わせ（入力 → 確認 → 完了）へ移動できる
+- 点線は、外部サービス（X）を経由した遷移
+
+企画時の画面遷移図（Figma）：https://www.figma.com/design/jpYQM16kqOQ2w9d3J5h353/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=2-1380&t=TQUh9pKaQL3aBRBF-4
 
 ---
 
+<!-- TODO: セットアップ手順・開発環境構築方法
 ## セットアップ手順 / 開発環境構築
 
-<!-- TODO: セットアップ手順・開発環境構築方法 -->
-
 ---
+-->
 
+<!-- TODO: 今後の予定
 ## 今後の予定
 
-<!-- TODO: 今後の予定 -->
-
 ---
+-->
 
 ## 企画段階の設計
 
@@ -408,6 +610,21 @@ https://www.figma.com/design/jpYQM16kqOQ2w9d3J5h353/%E7%94%BB%E9%9D%A2%E9%81%B7%
 - シェア機能
 - オリジナルキャラクターとの交流機能
 - オリジナルキャラクターとの交流を促進するポイント獲得機能
+
+---
+
+### 技術の選定（企画時）
+
+- 学習してきたRailsの技術を活かし、開発スピードを重視したため選定しています。
+- SteamのOpenID連携を使用することでセキュリティリスクを減らし、かつアカウント作成の手間を削減しています。
+- Steamユーザーのライブラリおよび各ゲームのプレイ状況を取得する必要があるため、Web API連携を選定しています。
+
+- 今回チャレンジしたい点：
+  - OpenIDの仕組み理解及び実装
+  - Steam連携におけるユーザーライブラリやプレイ状況および定価、また可能であれば各ゲームにおける最安値の取得に伴う複数APIの組み合わせ
+
+- 不安な点
+  - ユーザーのsteam所持ゲーム本数が多い場合の情報取得における効率的な実装ができるか
 
 ---
 
